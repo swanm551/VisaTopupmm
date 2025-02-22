@@ -208,3 +208,20 @@ window.addEventListener('scroll', function() {
     
     lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
 });
+window.addEventListener(&quot;load&quot;, function () {
+    if (!window.gaLoaded) {
+        var script = document.createElement(&quot;script&quot;);
+        script.src = &quot;https://www.googletagmanager.com/gtag/js?id= G-MHEMV9YYNG&quot;; 
+        script.async = true;
+        document.head.appendChild(script);
+
+        script.onload = function () {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){ dataLayer.push(arguments); }
+            window.gtag = gtag;
+            gtag(&quot;js&quot;, new Date());
+            gtag(&quot;config&quot;, &quot;G-MHEMV9YYNG&quot;);
+            window.gaLoaded = true;
+        };
+    }
+});
