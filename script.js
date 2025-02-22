@@ -222,6 +222,6 @@ window.addEventListener(&quot;load&quot;, function () {
             gtag(&quot;js&quot;, new Date());
             gtag(&quot;config&quot;, &quot;G-MHEMV9YYNG&quot;);
             window.gaLoaded = true;
-        };
+        
     
 });
