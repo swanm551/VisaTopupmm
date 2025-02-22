@@ -1,71 +1,64 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2821
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visa Topup Myanmar</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="dark-theme">
+    <header class="header">
+        <div class="logo-section">
+            <img alt="Logo" class="logo" height="40" loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjTJPVeQW1cclrlsa-4Gc37Xc78TrYiJm2P9_nwoI8CQidMyHhRCQPUeFj_Io2rWX1kFZeXlmjWlvf68IRb-zJyFOv-NtFzM9DrDNRp7u7f3yKKOk9AilhVz-SNxIDyiwzuyLxaccqE1tx155TrR9naJ1rWqCcqa2-ESNjn7A9QDluxNRCnlLDt-dydgJqh/s320/Untitled%20design%20%2820%29.png" width="320">
+            <h1 class="site-title">Visa Topup Myanmar</h1>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <i class="fas fa-sun"></i>
+        </button>
+    </header>
+    <div class="opening-hours">Open hours: 9AM to 9PM</div>
 
-\f0\fs24 \cf0 <!DOCTYPE html>\
-<html lang="en">\
-<head>\
-    <meta charset="UTF-8">\
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
-    <title>Visa Topup Myanmar</title>\
-    <link rel="stylesheet" href="style.css">\
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">\
-</head>\
-<body class="dark-theme">\
-    <header class="header">\
-        <div class="logo-section">\
-            <img alt="Logo" class="logo" height="40" loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjTJPVeQW1cclrlsa-4Gc37Xc78TrYiJm2P9_nwoI8CQidMyHhRCQPUeFj_Io2rWX1kFZeXlmjWlvf68IRb-zJyFOv-NtFzM9DrDNRp7u7f3yKKOk9AilhVz-SNxIDyiwzuyLxaccqE1tx155TrR9naJ1rWqCcqa2-ESNjn7A9QDluxNRCnlLDt-dydgJqh/s320/Untitled%20design%20%2820%29.png" width="320">\
-            <h1 class="site-title">Visa Topup Myanmar</h1>\
-        </div>\
-        <button class="theme-toggle" onclick="toggleTheme()">\
-            <i class="fas fa-sun"></i>\
-        </button>\
-    </header>\
-    <div class="opening-hours">Open hours: 9AM to 9PM</div>\
-\
-    <main>\
-        <div class="exchange-table" id="rateTable">\
-            <div class="loading">Loading rates...</div>\
-        </div>\
-        <div class="update-time" id="updateTime"></div>\
-        <div class="fee-buttons">\
-            <button class="fee-button" onclick="showFeeTable('uab')">UAB Topup Fee</button>\
-            <button class="fee-button" onclick="showFeeTable('aya')">AYA Topup Fee</button>\
-            <button class="fee-button" onclick="showFeeTable('cb')">CB Topup Fee</button>\
-            <button class="fee-button" onclick="showFeeTable('kbz')">KBZ Topup Fee</button>\
-            <button class="fee-button" onclick="showFeeTable('mab')">MAB Topup Fee</button>\
-        </div>\
-        <div class="fee-tables" id="feeTables"></div>\
-    </main>\
-\
-    <div id="return-to-top" onclick="scrollToTop()">\
-        <i class="fas fa-arrow-up"></i>\
-    </div>\
-\
-    <footer class="footer">\
-        <a class="social-button call-btn" href="tel:+959770770640">\
-            <i class="fas fa-phone"></i>\
-        </a>\
-        <a class="social-button messenger-btn" href="https://m.me/VisaTopup.mm">\
-            <i class="fab fa-facebook-messenger"></i>\
-        </a>\
-        <a class="social-button facebook-btn" href="https://www.facebook.com/VisaTopup.mm">\
-            <i class="fab fa-facebook-f"></i>\
-        </a>\
-        <a class="social-button messenger-broadcast-btn" href="https://www.messenger.com/channel/VisaTopup.mm">\
-            <i class="fas fa-broadcast-tower"></i>\
-        </a>\
-        <a class="social-button telegram-btn" href="https://t.me/visatopupmm">\
-            <i class="fab fa-telegram"></i>\
-        </a>\
-        <a class="social-button viber-btn" href="https://connect.viber.com/business/bd431ce0-b17d-11ef-9d00-aaf31c97cca2">\
-            <i class="fab fa-viber"></i>\
-        </a>\
-    </footer>\
-\
-    <script src="script.js"></script>\
-</body>\
-</html>}
+    <main>
+        <div class="exchange-table" id="rateTable">
+            <div class="loading">Loading rates...</div>
+        </div>
+        <div class="update-time" id="updateTime"></div>
+        <div class="fee-buttons">
+            <button class="fee-button" onclick="showFeeTable('uab')">UAB Topup Fee</button>
+            <button class="fee-button" onclick="showFeeTable('aya')">AYA Topup Fee</button>
+            <button class="fee-button" onclick="showFeeTable('cb')">CB Topup Fee</button>
+            <button class="fee-button" onclick="showFeeTable('kbz')">KBZ Topup Fee</button>
+            <button class="fee-button" onclick="showFeeTable('mab')">MAB Topup Fee</button>
+        </div>
+        <div class="fee-tables" id="feeTables"></div>
+    </main>
+
+    <div id="return-to-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <footer class="footer">
+        <a class="social-button call-btn" href="tel:+959770770640">
+            <i class="fas fa-phone"></i>
+        </a>
+        <a class="social-button messenger-btn" href="https://m.me/VisaTopup.mm">
+            <i class="fab fa-facebook-messenger"></i>
+        </a>
+        <a class="social-button facebook-btn" href="https://www.facebook.com/VisaTopup.mm">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+        <a class="social-button messenger-broadcast-btn" href="https://www.messenger.com/channel/VisaTopup.mm">
+            <i class="fas fa-broadcast-tower"></i>
+        </a>
+        <a class="social-button telegram-btn" href="https://t.me/visatopupmm">
+            <i class="fab fa-telegram"></i>
+        </a>
+        <a class="social-button viber-btn" href="https://connect.viber.com/business/bd431ce0-b17d-11ef-9d00-aaf31c97cca2">
+            <i class="fab fa-viber"></i>
+        </a>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
