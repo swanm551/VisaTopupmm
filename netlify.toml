@@ -1,0 +1,3 @@
+[build]
+  command = ""  # Build command ကို ဗလာထားပါ
+  publish = "/"  # Publish directory ကို root folder အဖြစ်ထည့်ပါ
