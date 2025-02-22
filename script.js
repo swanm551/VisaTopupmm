@@ -83,7 +83,7 @@ function updateTime() {
     const dateString = now.toLocaleDateString('en-GB', {
         day: '2-digit',
         month: '2-digit',
-        year: '2-digit'
+        year: '4-digit'
     });
     document.getElementById('updateTime').textContent = 
         `Exchange Rate Update on: ${timeString}, ${dateString}`;
