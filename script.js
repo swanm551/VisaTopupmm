@@ -86,7 +86,7 @@ function updateTime() {
         year: '2-digit'
     });
     document.getElementById('updateTime').textContent = 
-        `Exchange Rate Update on: ${timeString}, ${dateString}`;
+        `Exchange rate last updated: ${timeString}, ${dateString}`;
 }
 
 let feeDataCache = {};
