@@ -117,6 +117,7 @@ body.light-theme .theme-toggle {
 
 .exchange-table {
     width: 85%;
+    max-width: 1000px;
     margin: 0px auto;
     margin-top: 10px;
     overflow-x: auto;
