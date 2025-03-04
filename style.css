@@ -185,7 +185,7 @@ body.light-theme .exchange-table td {
     margin-bottom: 120px;
     border-radius: 5px;
     overflow: hidden;
-    font-size: 12px;
+    font-size: 10px;
 }
 
 .fee-table th {
@@ -193,7 +193,7 @@ body.light-theme .exchange-table td {
     color: white;
     padding: 12px;
     text-align: center;
-    font-size: 15px;
+    font-size: 12px;
 }
 
 .fee-table td {
@@ -201,7 +201,7 @@ body.light-theme .exchange-table td {
     border: 1px solid var(--border-color-light);
     text-align: center;
     transition: all 0.3s ease;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 @media (max-width: 768px) {
