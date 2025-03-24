@@ -435,14 +435,18 @@ body.light-theme .footer {
     text-align: center;
     color: var(--accent-blue);
     margin: 20px 0 30px;
-    font-size: 24px;
+    font-size: 18px;
 }
 
 .subpage-table {
-    width: 100%;
+     width: 90%;
+    max-width: 1000px;
     border-collapse: collapse;
-    margin: 20px 0;
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    margin:  0 auto;
+    margin-bottom: 120px;
+    border-radius: 5px;
+    overflow: hidden;
+    font-size: 10px;
 }
 
 .subpage-table th {
