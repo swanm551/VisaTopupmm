@@ -424,46 +424,74 @@ body.light-theme .footer {
         font-size: 16px;
     }
 
-/* Subpage Specific Styles */
+/* Subpage Table Styles */
 .subpage-container {
-    max-width: 800px;
-    margin: 0 auto;
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
     padding: 20px;
 }
 
 .subpage-title {
     text-align: center;
     color: var(--accent-blue);
-    margin: 20px 0 30px;
-    font-size: 24px;
+    margin: 30px 0;
+    font-size: 28px;
+}
+
+#subpageTableContainer {
+    width: 100%;
+    overflow-x: auto;
 }
 
 .subpage-table {
     width: 100%;
+    min-width: 600px; /* Desktop အတွက် minimum width */
     border-collapse: collapse;
-    margin: 20px 0;
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+    margin: 20px 0 50px;
 }
 
 .subpage-table th {
     background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
     color: white;
-    padding: 12px;
+    padding: 15px;
     text-align: center;
+    position: sticky;
+    top: 0;
+    font-weight: 600;
 }
 
 .subpage-table td {
-    padding: 10px;
-    border: 1px solid var(--border-color-light);
+    padding: 12px;
     text-align: center;
+    border: 1px solid var(--border-color-dark);
 }
 
 .subpage-table tr:nth-child(even) {
-    background-color: rgba(59, 130, 246, 0.1);
+    background-color: rgba(59, 130, 246, 0.08);
 }
 
-body.dark-theme .subpage-table tr:nth-child(even) {
+.subpage-table tr:nth-child(odd) {
     background-color: var(--bg-secondary-dark);
+}
+
+.subpage-table tr:hover td {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+/* Desktop specific styles */
+@media (min-width: 768px) {
+    .subpage-table {
+        font-size: 16px;
+    }
+    
+    .subpage-table th, 
+    .subpage-table td {
+        padding: 15px 20px;
+    }
 }
 
 .subpage-table tr:hover td {
