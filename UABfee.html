@@ -3,48 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UAB Topup Fee</title>
+    <title>UAB Pay/Visa Card Topup Fee</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet"> <!-- Main CSS file ကို link ချိတ်ပါ -->
+    <link href="styles.css" rel="stylesheet">
 </head>
-<body class="light-theme">
-    <div class="container">
-        <h1>UAB Pay/ Visa card topup fee</h1>
-        <div id="feeTables" class="fee-tables">
+<body>
+    <div class="table-container">
+        <h1>UAB Pay/Visa Card Topup Fee</h1>
+        <div id="feeTables">
             <div class="loading">Loading fee table...</div>
         </div>
     </div>
 
-    <script src="script.js"></script> <!-- Main JavaScript file ကို link ချိတ်ပါ -->
+    <script src="script.js"></script>
     <script>
-        // UAB fee table ကိုပဲ specific ပြဖို့ function
+        // Specific function for UAB fee table
         async function loadUABFeeTable() {
             const rows = await fetchFeeData('uab');
             const feeTablesDiv = document.getElementById('feeTables');
 
-            if (rows) {
-                let tableHTML = `<table class="fee-table"><thead><tr>`;
+            if (rows && rows.length > 0) {
+                let tableHTML = '<table class="fee-table"><thead><tr>';
+                
+                // Add headers
                 rows[0].forEach(header => {
-                    tableHTML += `<th>${header}</th>`;
+                    tableHTML += `<th>${header.trim()}</th>`;
                 });
                 tableHTML += '</tr></thead><tbody>';
-
+                
+                // Add rows with alternating colors
                 for (let i = 1; i < rows.length; i++) {
-                    tableHTML += '<tr>';
+                    const rowClass = i % 2 === 0 ? 'even' : 'odd';
+                    tableHTML += `<tr class="${rowClass}">`;
+                    
                     rows[i].forEach((cell, index) => {
-                        tableHTML += `<td>${index > 0 && !isNaN(cell.trim()) ? cell.trim() + ' Ks' : cell}</td>`;
+                        const cellValue = cell.trim();
+                        tableHTML += `<td>${index > 0 && !isNaN(cellValue) ? cellValue + ' Ks' : cellValue}</td>`;
                     });
                     tableHTML += '</tr>';
                 }
                 tableHTML += '</tbody></table>';
-
+                
                 feeTablesDiv.innerHTML = tableHTML;
             } else {
-                feeTablesDiv.innerHTML = '<div class="error">Failed to load fee table.</div>';
+                feeTablesDiv.innerHTML = '<div class="error">Failed to load fee table. Please try again later.</div>';
             }
         }
 
-        // Page load ဖြစ်တာနဲ့ UAB fee table ကို ပြမယ်
+        // Load the table when page loads
         document.addEventListener('DOMContentLoaded', loadUABFeeTable);
     </script>
 </body>
