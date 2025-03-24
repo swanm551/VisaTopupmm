@@ -210,7 +210,7 @@ window.addEventListener('scroll', function() {
 });
 
 // Subpage loader function
- function loadSubpageTable(bank) {
+function loadSubpageTable(bank) {
     const container = document.getElementById('subpageTableContainer');
     container.innerHTML = '<div class="loading">Loading fee table...</div>';
     
@@ -224,14 +224,13 @@ window.addEventListener('scroll', function() {
             
             for (let i = 1; i < rows.length; i++) {
                 html += `<tr>${rows[i].map((cell, j) => 
-                    `<td>${j > 0 && !isNaN(cell) ? parseInt(cell).toLocaleString() + ' Ks' : cell}</td>`
+                    `<td>${j > 0 && !isNaN(cell) ? cell + ' Ks' : cell}</td>`
                 ).join('')}</tr>`;
             }
             
             container.innerHTML = html + '</tbody></table>';
         })
         .catch(error => {
-            console.error('Error loading table:', error);
             container.innerHTML = '<div class="error">Failed to load fee table. Please try again later.</div>';
         });
 }
