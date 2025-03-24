@@ -1,6 +1,16 @@
 function toggleTheme() {
-    const body = document.body;
-    const icon = document.querySelector('.theme-toggle i');
+    // DOM Elements
+const body = document.body;
+const icon = document.querySelector('.theme-toggle i');
+const returnToTopBtn = document.getElementById('return-to-top');
+const rateTable = document.getElementById('rateTable');
+const updateTimeElement = document.getElementById('updateTime');
+const feeTablesDiv = document.getElementById('feeTables');
+const footer = document.querySelector('.footer');
+
+// Theme Toggle Function
+function toggleTheme() {
+    if (!body || !icon) return;
     
     if (body.classList.contains('dark-theme')) {
         body.classList.remove('dark-theme');
@@ -15,13 +25,16 @@ function toggleTheme() {
     }
 }
 
-window.onscroll = function() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        document.getElementById('return-to-top').style.display = 'flex';
-    } else {
-        document.getElementById('return-to-top').style.display = 'none';
-    }
-};
+// Scroll to Top Functionality
+if (returnToTopBtn) {
+    window.onscroll = function() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            returnToTopBtn.style.display = 'flex';
+        } else {
+            returnToTopBtn.style.display = 'none';
+        }
+    };
+}
 
 function scrollToTop() {
     window.scrollTo({
@@ -30,17 +43,27 @@ function scrollToTop() {
     });
 }
 
+// Exchange Rates Functions
 async function fetchRates() {
+    if (!rateTable || !updateTimeElement) return;
+    
     const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?output=csv&gid=0';
+    
     try {
+        rateTable.innerHTML = '<div class="loading">Loading rates...</div>';
+        
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
         
         const response = await fetch(url, { signal: controller.signal });
         clearTimeout(timeoutId);
         
+        if (!response.ok) throw new Error('Network response was not ok');
+        
         const data = await response.text();
         const rows = data.split('\n').map(row => row.split(','));
+        
+        if (rows.length === 0) throw new Error('No data received');
         
         let tableHTML = '<table><thead><tr>';
         rows[0].forEach(header => {
@@ -51,29 +74,26 @@ async function fetchRates() {
         for (let i = 1; i < rows.length; i++) {
             tableHTML += '<tr>';
             rows[i].forEach((cell, index) => {
-                if (index > 0 && !isNaN(cell.trim())) {
-                    tableHTML += `<td>${cell.trim()} Ks</td>`;
-                } else {
-                    tableHTML += `<td>${cell}</td>`;
-                }
+                const cellValue = cell.trim();
+                tableHTML += `<td>${index > 0 && !isNaN(cellValue) ? parseInt(cellValue).toLocaleString() + ' Ks' : cellValue}</td>`;
             });
             tableHTML += '</tr>';
         }
         tableHTML += '</tbody></table>';
         
-        document.getElementById('rateTable').innerHTML = tableHTML;
+        rateTable.innerHTML = tableHTML;
         updateTime();
     } catch (error) {
-        if (error.name === 'AbortError') {
-            document.getElementById('rateTable').innerHTML = '<div class="error">Loading timeout. Please refresh.</div>';
-        } else {
-            console.error('Error:', error);
-            document.getElementById('rateTable').innerHTML = '<div class="error">Failed to load rates.</div>';
-        }
+        console.error('Error:', error);
+        rateTable.innerHTML = error.name === 'AbortError'
+            ? '<div class="error">Loading timeout. Please refresh.</div>'
+            : '<div class="error">Failed to load rates.</div>';
     }
 }
 
 function updateTime() {
+    if (!updateTimeElement) return;
+    
     const now = new Date();
     const timeString = now.toLocaleTimeString('en-US', {
         hour: '2-digit',
@@ -85,10 +105,10 @@ function updateTime() {
         month: '2-digit',
         year: '2-digit'
     });
-    document.getElementById('updateTime').textContent = 
-        `Exchange rate last updated: ${timeString}, ${dateString}`;
+    updateTimeElement.textContent = `Exchange Rate Update on: ${timeString}, ${dateString}`;
 }
 
+// Fee Table Functions
 let feeDataCache = {};
 
 async function fetchFeeData(bank) {
@@ -115,6 +135,8 @@ async function fetchFeeData(bank) {
 
     try {
         const response = await fetch(urls[bank]);
+        if (!response.ok) throw new Error('Network response was not ok');
+        
         const data = await response.text();
         const rows = data.split('\n').map(row => row.split(','));
 
@@ -132,9 +154,9 @@ async function fetchFeeData(bank) {
 }
 
 async function showFeeTable(bank) {
-    const feeTablesDiv = document.getElementById('feeTables');
+    if (!feeTablesDiv) return;
+    
     const existingTable = document.getElementById(`fee-table-${bank}`);
-
     if (existingTable) {
         existingTable.remove();
         return;
@@ -154,11 +176,8 @@ async function showFeeTable(bank) {
         for (let i = 1; i < rows.length; i++) {
             tableHTML += '<tr>';
             rows[i].forEach((cell, index) => {
-                if (index > 0 && !isNaN(cell.trim())) {
-                    tableHTML += `<td>${cell.trim()} Ks</td>`;
-                } else {
-                    tableHTML += `<td>${cell}</td>`;
-                }
+                const cellValue = cell.trim();
+                tableHTML += `<td>${index > 0 && !isNaN(cellValue) ? parseInt(cellValue).toLocaleString() + ' Ks' : cellValue}</td>`;
             });
             tableHTML += '</tr>';
         }
@@ -170,48 +189,11 @@ async function showFeeTable(bank) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    const body = document.body;
-    const icon = document.querySelector('.theme-toggle i');
-    
-    if (savedTheme === 'light') {
-        body.classList.remove('dark-theme');
-        body.classList.add('light-theme');
-        icon.className = 'fas fa-moon';
-    }
-    
-    fetchRates();
-    setInterval(fetchRates, 30000);
-
-    preloadFeeData();
-});
-
-async function preloadFeeData() {
-    const banks = ['uab', 'aya', 'cb', 'kbz', 'mab'];
-    for (const bank of banks) {
-        await fetchFeeData(bank);
-    }
-}
-
-let lastScrollTop = 0;
-const footer = document.querySelector('.footer');
-
-window.addEventListener('scroll', function() {
-    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-    if (scrollTop > lastScrollTop) {
-        footer.style.bottom = '-100px';
-    } else {
-        footer.style.bottom = '0';
-    }
-    
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-});
-
-// Subpage loader function
+// Subpage Functions
 function loadSubpageTable(bank) {
     const container = document.getElementById('subpageTableContainer');
+    if (!container) return;
+    
     container.innerHTML = '<div class="loading">Loading fee table...</div>';
     
     fetchFeeData(bank)
@@ -224,13 +206,53 @@ function loadSubpageTable(bank) {
             
             for (let i = 1; i < rows.length; i++) {
                 html += `<tr>${rows[i].map((cell, j) => 
-                    `<td>${j > 0 && !isNaN(cell) ? cell + ' Ks' : cell}</td>`
+                    `<td>${j > 0 && !isNaN(cell) ? parseInt(cell).toLocaleString() + ' Ks' : cell}</td>`
                 ).join('')}</tr>`;
             }
             
             container.innerHTML = html + '</tbody></table>';
         })
         .catch(error => {
+            console.error('Error:', error);
             container.innerHTML = '<div class="error">Failed to load fee table. Please try again later.</div>';
         });
+}
+
+// Initialize on DOM Load
+document.addEventListener('DOMContentLoaded', function() {
+    // Theme setup
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (body && icon) {
+        if (savedTheme === 'light') {
+            body.classList.remove('dark-theme');
+            body.classList.add('light-theme');
+            icon.className = 'fas fa-moon';
+        }
+    }
+    
+    // Load rates
+    if (rateTable) {
+        fetchRates();
+        setInterval(fetchRates, 30000);
+    }
+
+    // Preload fee data
+    preloadFeeData();
+
+    // Footer scroll effect
+    if (footer) {
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            footer.style.bottom = scrollTop > lastScrollTop ? '-100px' : '0';
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        });
+    }
+});
+
+async function preloadFeeData() {
+    const banks = ['uab', 'aya', 'cb', 'kbz', 'mab'];
+    for (const bank of banks) {
+        await fetchFeeData(bank);
+    }
 }
