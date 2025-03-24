@@ -1,5 +1,4 @@
-
-    // DOM Elements
+// DOM Elements
 const body = document.body;
 const icon = document.querySelector('.theme-toggle i');
 const returnToTopBtn = document.getElementById('return-to-top');
@@ -75,7 +74,7 @@ async function fetchRates() {
             tableHTML += '<tr>';
             rows[i].forEach((cell, index) => {
                 const cellValue = cell.trim();
-                tableHTML += `<td>${index > 0 && !isNaN(cellValue) ? parseInt(cellValue).toLocaleString() + ' Ks' : cellValue}</td>`;
+                tableHTML += `<td>${index > 0 && !isNaN(cellValue) ? parseInt(cellValue) + ' Ks' : cellValue}</td>`;
             });
             tableHTML += '</tr>';
         }
