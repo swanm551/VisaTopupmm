@@ -1,4 +1,4 @@
-function toggleTheme() {
+
     // DOM Elements
 const body = document.body;
 const icon = document.querySelector('.theme-toggle i');
