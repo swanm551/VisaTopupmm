@@ -455,6 +455,11 @@ body.light-theme .footer {
     padding: 12px;
     text-align: center;
 }
+@media (max-width: 768px) {
+    .subpage-table {
+        width: 100%;
+        font-size: 12px;
+    }
 
 .subpage-table td {
     padding: 10px;
