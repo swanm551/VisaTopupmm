@@ -208,3 +208,29 @@ window.addEventListener('scroll', function() {
     
     lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
 });
+
+// Subpage loader function
+function loadSubpageTable(bank) {
+    const container = document.getElementById('subpageTableContainer');
+    container.innerHTML = '<div class="loading">Loading fee table...</div>';
+    
+    fetchFeeData(bank)
+        .then(rows => {
+            if (!rows || rows.length === 0) throw new Error('No data');
+            
+            let html = `<table class="subpage-table">
+                <thead><tr>${rows[0].map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                <tbody>`;
+            
+            for (let i = 1; i < rows.length; i++) {
+                html += `<tr>${rows[i].map((cell, j) => 
+                    `<td>${j > 0 && !isNaN(cell) ? cell + ' Ks' : cell}</td>`
+                ).join('')}</tr>`;
+            }
+            
+            container.innerHTML = html + '</tbody></table>';
+        })
+        .catch(error => {
+            container.innerHTML = '<div class="error">Failed to load fee table. Please try again later.</div>';
+        });
+}
