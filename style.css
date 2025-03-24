@@ -423,4 +423,50 @@ body.light-theme .footer {
         height: 35px;
         font-size: 16px;
     }
+
+/* Subpage Specific Styles */
+.subpage-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.subpage-title {
+    text-align: center;
+    color: var(--accent-blue);
+    margin: 20px 0 30px;
+    font-size: 24px;
+}
+
+.subpage-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+}
+
+.subpage-table th {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
+    color: white;
+    padding: 12px;
+    text-align: center;
+}
+
+.subpage-table td {
+    padding: 10px;
+    border: 1px solid var(--border-color-light);
+    text-align: center;
+}
+
+.subpage-table tr:nth-child(even) {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+body.dark-theme .subpage-table tr:nth-child(even) {
+    background-color: var(--bg-secondary-dark);
+}
+
+.subpage-table tr:hover td {
+    background: rgba(59, 130, 246, 0.2);
+}
 }
