@@ -1,48 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visa Topup Myanmar</title>
-    <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjOd1ufKHkNXLPmTI4s1feQWObG7DwY1cpIkYwBbMJJqm7JOLEKrKMAdNIE565tOmPKGbm9Ku_SdUbsKXN6YcANjGBHMLvJpsQgelcjFabjrb2_TJGLssQLmQWOfDvFPd7A1erbv_IGfK626zMfMpVfNJtZNNtR2pIsOK0HTdLqXnProNxWiPaWwAvZ2Gez/s1600/Webp.net-resizeimage.png">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <!-- ... အခြား meta tags ... -->
+    <style>
+        :root {
+            --bg-primary-dark: #0A0A0A;
+            --bg-secondary-dark: #1A1A1A;
+            --text-primary-dark: #ffffff;
+            --accent-blue: #3B82F6;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary-dark);
+            color: var(--text-primary-dark);
+        }
+        
+        .table-container {
+            width: 95%;
+            max-width: 1000px;
+            margin: 30px auto;
+            overflow-x: auto;
+        }
+        
+        .fee-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .fee-table th {
+            background: linear-gradient(135deg, var(--accent-blue), #2563EB);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .fee-table td {
+            padding: 12px;
+            border: 1px solid #2d2d2d;
+            text-align: center;
+        }
+        
+        .fee-table tr:nth-child(even) {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+    </style>
 </head>
 <body class="dark-theme">
-    <header class="header">
-        <div class="logo-section">
-            <img alt="Logo" class="logo" height="40" loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png" width="320">
-            <h1 class="site-title">Visa Topup Myanmar</h1>
-        </div>
-        <button class="theme-toggle" onclick="toggleTheme()">
-            <i class="fas fa-sun"></i>
-        </button>
-    </header>
+    <!-- ... header content ... -->
 
-    <div class="subpage-container">
-        <h2 class="subpage-title">UAB Pay / Visa Card Topup Fee</h2>
-        <div id="subpageTableContainer"></div>
+    <div class="table-container">
+        <table class="fee-table" id="uabFeeTable">
+            <!-- Data will be loaded here by JavaScript -->
+        </table>
     </div>
 
-    <div id="return-to-top" onclick="scrollToTop()">
-        <i class="fas fa-arrow-up"></i>
-    </div>
-
-   
-
-    <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Apply saved theme
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            if (savedTheme === 'light') {
-                document.body.classList.replace('dark-theme', 'light-theme');
-                document.querySelector('.theme-toggle i').className = 'fas fa-moon';
-            }
-            
-            // Load UAB fee table
-            loadSubpageTable('uab');
-        });
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=245625530&single=true&output=csv');
+            const data = await response.text();
+            const rows = data.split('\n').map(row => row.split(','));
+
+            let tableHTML = '';
+            rows.forEach((row, i) => {
+                if (i === 0) {
+                    tableHTML += '<thead><tr>';
+                    row.forEach(cell => tableHTML += `<th>${cell}</th>`);
+                    tableHTML += '</tr></thead><tbody>';
+                } else {
+                    tableHTML += '<tr>';
+                    row.forEach((cell, j) => {
+                        tableHTML += `<td>${j > 0 ? cell + ' Ks' : cell}</td>`;
+                    });
+                    tableHTML += '</tr>';
+                }
+            });
+
+            document.getElementById('uabFeeTable').innerHTML = tableHTML;
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('uabFeeTable').innerHTML = `
+                <tr>
+                    <td colspan="3" style="color: red; padding: 20px;">
+                        Failed to load data. Please try again later.
+                    </td>
+                </tr>`;
+        }
+    });
     </script>
 </body>
 </html>
