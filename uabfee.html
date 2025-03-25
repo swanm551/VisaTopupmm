@@ -32,15 +32,16 @@
             font-family: 'Inter', sans-serif;
             transition: all 0.1s ease;
         }
-body.dark-theme {
-    background: var(--bg-primary-dark);
-    color: var(--text-primary-dark);
-}
 
-body.light-theme {
-    background: var(--bg-primary-light);
-    color: var(--text-primary-light);
-}
+        body.dark-theme {
+            background: var(--bg-primary-dark);
+            color: var(--text-primary-dark);
+        }
+
+        body.light-theme {
+            background: var(--bg-primary-light);
+            color: var(--text-primary-light);
+        }
 
         /* Header Styles */
         .header {
@@ -55,6 +56,16 @@ body.light-theme {
             backdrop-filter: blur(10px);
         }
 
+        body.dark-theme .header {
+            background: rgba(10, 10, 10, 0.8);
+            border-bottom: 1px solid var(--border-color-dark);
+        }
+
+        body.light-theme .header {
+            background: rgba(245, 245, 245, 0.8);
+            border-bottom: 1px solid var(--border-color-light);
+        }
+
         .logo-section {
             display: flex;
             align-items: center;
@@ -66,24 +77,22 @@ body.light-theme {
             width: auto;
         }
 
-        /* Replace the existing .site-title and light theme styles with this: */
-.site-title {
-    font-size: 28px;
-    font-weight: 600;
-    margin: 0;
-    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
-                 0 0 40px rgba(59, 130, 246, 0.3);
-    background: linear-gradient(135deg, #ffffff, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+        .site-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                         0 0 40px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-body.light-theme .site-title {
-    background: linear-gradient(135deg, #1a1a1a, #2563eb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-
+        body.light-theme .site-title {
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
         }
 
         @keyframes waveText {
@@ -195,54 +204,26 @@ body.light-theme .site-title {
 
         /* Scroll to Top Button */
         #return-to-top {
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 1000;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-}
-
-#return-to-top:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
         }
 
-        /* Light Theme Styles */
-        body.light-theme {
-            background: var(--bg-primary-light);
-            color: var(--text-primary-light);
-        }
-
-        body.light-theme .header {
-    background: rgba(245, 245, 245, 0.8);
-    border-bottom: 1px solid var(--border-color-light);
-        }
-
-        body.light-theme .theme-toggle {
-            background: var(--bg-secondary-light);
-            color: var(--text-primary-light);
-        }
-
-        body.light-theme .site-title {
-            background: linear-gradient(135deg, #1a1a1a, #2563eb);
-        }
-
-        body.light-theme .subpage-table td {
-            border-color: var(--border-color-light);
-        }
-
-        body.light-theme .subpage-table tr:nth-child(even) {
-            background-color: var(--bg-secondary-light);
+        #return-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
         }
 
         /* Responsive Styles */
@@ -272,14 +253,14 @@ body.light-theme .site-title {
 </head>
 <body class="dark-theme">
     <header class="header">
-    <div class="logo-section">
-        <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
-        <h1 class="site-title">Visa Topup Myanmar</h1>
-    </div>
-    <button class="theme-toggle" onclick="toggleTheme()">
-        <i class="fas fa-sun"></i>
-    </button>
-</header>
+        <div class="logo-section">
+            <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
+            <h1 class="site-title">Visa Topup Myanmar</h1>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <i class="fas fa-sun"></i>
+        </button>
+    </header>
 
     <div class="subpage-container">
         <h2 class="subpage-title">UAB Pay / Visa Card Topup Fee</h2>
@@ -292,41 +273,34 @@ body.light-theme .site-title {
         <i class="fas fa-arrow-up"></i>
     </div>
 
-     <script>
+    <script>
+        // DOM Elements
+        const body = document.body;
+        const icon = document.querySelector('.theme-toggle i');
+        const returnToTopBtn = document.getElementById('return-to-top');
+
         // Theme Toggle Function
         function toggleTheme() {
-    if (!body || !icon) return;
-    
-    if (body.classList.contains('dark-theme')) {
-        body.classList.remove('dark-theme');
-        body.classList.add('light-theme');
-        icon.className = 'fas fa-moon';
-        localStorage.setItem('theme', 'light');
-    } else {
-        body.classList.remove('light-theme');
-        body.classList.add('dark-theme');
-        icon.className = 'fas fa-sun';
-        localStorage.setItem('theme', 'dark');
-    }
-}
-
-// Scroll to Top Functionality
-if (returnToTopBtn) {
-    window.onscroll = function() {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            returnToTopBtn.style.display = 'flex';
-        } else {
-            returnToTopBtn.style.display = 'none';
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
         }
-    };
-}
 
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
+        // Scroll to Top Function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
 
         // Load UAB Fee Table
         async function loadSubpageTable(bank) {
@@ -354,7 +328,6 @@ function scrollToTop() {
                     tableHTML += '<tr>';
                     rows[i].forEach((cell, index) => {
                         const cellValue = cell.trim();
-                        // Remove comma formatting and add 'Ks' only to numeric values
                         tableHTML += `<td>${index > 0 && !isNaN(cellValue.replace(/[^0-9.]/g, '')) 
                             ? parseInt(cellValue.replace(/[^0-9.]/g, '')) + ' Ks' 
                             : cellValue}</td>`;
@@ -374,8 +347,8 @@ function scrollToTop() {
             // Apply saved theme
             const savedTheme = localStorage.getItem('theme') || 'dark';
             if (savedTheme === 'light') {
-                document.body.classList.replace('dark-theme', 'light-theme');
-                document.querySelector('.theme-toggle i').className = 'fas fa-moon';
+                body.classList.replace('dark-theme', 'light-theme');
+                icon.className = 'fas fa-moon';
             }
             
             // Load the UAB fee table
@@ -383,9 +356,10 @@ function scrollToTop() {
             
             // Set up scroll to top button
             window.onscroll = function() {
-                const btn = document.getElementById('return-to-top');
-                if (btn) {
-                    btn.style.display = (window.scrollY > 100) ? 'flex' : 'none';
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    returnToTopBtn.style.display = 'flex';
+                } else {
+                    returnToTopBtn.style.display = 'none';
                 }
             };
         });
