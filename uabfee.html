@@ -68,7 +68,7 @@
             background-size: 200% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: waveText 3s infinite linear;
+            animation: waveText 2s infinite linear;
         }
 
         @keyframes waveText {
@@ -94,50 +94,52 @@
 
         /* Subpage Content Styles */
         .subpage-container {
-            width: 90%;
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 20px;
+            max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
         }
 
         .subpage-title {
             text-align: center;
             color: var(--accent-blue);
             margin-bottom: 30px;
-            font-size: 28px;
+            font-size: 20px;
             font-weight: 600;
         }
 
         /* Table Styles */
-        #subpageTableContainer {
+        .subpageTableContainer {
             width: 100%;
             overflow-x: auto;
             margin-bottom: 80px;
         }
 
         .subpage-table {
-            width: 100%;
-            min-width: 600px;
-            border-collapse: collapse;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+     width: 90%;
+    max-width: 800px;
+    border-collapse: collapse;
+    margin:  0 auto;
+    margin-bottom: 120px;
+    border-radius: 5px;
+    overflow: hidden;
+    font-size: 10px;
         }
 
         .subpage-table th {
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
+    color: white;
+    padding: 12px;
+    text-align: center;
         }
-
+@media (max-width: 768px) {
+    .subpage-table {
+        width: 100%;
+        font-size: 12px;
+    }
         .subpage-table td {
-            padding: 12px;
-            border: 1px solid var(--border-color-dark);
-            text-align: center;
+    padding: 10px;
+    border: 1px solid var(--border-color-light);
+    text-align: center;
         }
 
         .subpage-table tr:nth-child(even) {
@@ -230,7 +232,7 @@
             }
             
             .subpage-title {
-                font-size: 24px;
+                font-size: 18px;
             }
             
             .subpage-table {
