@@ -73,13 +73,13 @@ body.light-theme {
     margin: 0;
     text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
                  0 0 40px rgba(59, 130, 246, 0.3);
-    background: linear-gradient(135deg, #3B82F6, #2563EB);
+    background: linear-gradient(135deg, #ffffff, #3b82f6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 body.light-theme .site-title {
-    background: linear-gradient(135deg, #2563EB, #1D4ED8);
+    background: linear-gradient(135deg, #1a1a1a, #2563eb);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
@@ -274,7 +274,7 @@ body.light-theme .site-title {
     <header class="header">
     <div class="logo-section">
         <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
-        <h1 class="site-title">UAB Topup Fee</h1>
+        <h1 class="site-title">Visa Topup Myanmar</h1>
     </div>
     <button class="theme-toggle" onclick="toggleTheme()">
         <i class="fas fa-sun"></i>
@@ -292,32 +292,41 @@ body.light-theme .site-title {
         <i class="fas fa-arrow-up"></i>
     </div>
 
-    <script>
+     <script>
         // Theme Toggle Function
         function toggleTheme() {
-            const body = document.body;
-            const icon = document.querySelector('.theme-toggle i');
-            
-            if (body.classList.contains('dark-theme')) {
-                body.classList.remove('dark-theme');
-                body.classList.add('light-theme');
-                icon.className = 'fas fa-moon';
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.classList.remove('light-theme');
-                body.classList.add('dark-theme');
-                icon.className = 'fas fa-sun';
-                localStorage.setItem('theme', 'dark');
-            }
-        }
+    if (!body || !icon) return;
+    
+    if (body.classList.contains('dark-theme')) {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        icon.className = 'fas fa-moon';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        icon.className = 'fas fa-sun';
+        localStorage.setItem('theme', 'dark');
+    }
+}
 
-        // Scroll to Top Function
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+// Scroll to Top Functionality
+if (returnToTopBtn) {
+    window.onscroll = function() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            returnToTopBtn.style.display = 'flex';
+        } else {
+            returnToTopBtn.style.display = 'none';
         }
+    };
+}
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
 
         // Load UAB Fee Table
         async function loadSubpageTable(bank) {
