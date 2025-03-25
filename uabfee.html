@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visa Topup Myanmar</title>
+    <title>UAB Pay / Visa Card Topup Fee</title>
     <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjOd1ufKHkNXLPmTI4s1feQWObG7DwY1cpIkYwBbMJJqm7JOLEKrKMAdNIE565tOmPKGbm9Ku_SdUbsKXN6YcANjGBHMLvJpsQgelcjFabjrb2_TJGLssQLmQWOfDvFPd7A1erbv_IGfK626zMfMpVfNJtZNNtR2pIsOK0HTdLqXnProNxWiPaWwAvZ2Gez/s1600/Webp.net-resizeimage.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-<style>
+    <style>
 /* Subpage Specific Styles */
 .subpage-container {
     max-width: 800px;
@@ -68,8 +67,8 @@ body.dark-theme .subpage-table tr:nth-child(even) {
 <body class="dark-theme">
     <header class="header">
         <div class="logo-section">
-            <img alt="Logo" class="logo" height="40" loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png" width="320">
-            <h1 class="site-title">Visa Topup Myanmar</h1>
+            <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
+            <h1 class="site-title">UAB Topup Fee</h1>
         </div>
         <button class="theme-toggle" onclick="toggleTheme()">
             <i class="fas fa-sun"></i>
@@ -78,17 +77,81 @@ body.dark-theme .subpage-table tr:nth-child(even) {
 
     <div class="subpage-container">
         <h2 class="subpage-title">UAB Pay / Visa Card Topup Fee</h2>
-        <div id="subpageTableContainer"></div>
+        <div id="subpageTableContainer">
+            <div class="loading">Loading fee table...</div>
+        </div>
     </div>
 
     <div id="return-to-top" onclick="scrollToTop()">
         <i class="fas fa-arrow-up"></i>
     </div>
 
-   
-
-    <script src="script.js"></script>
     <script>
+        // Theme Toggle Function
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.querySelector('.theme-toggle i');
+            
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Scroll to Top Function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Load UAB Fee Table
+        async function loadSubpageTable(bank) {
+            const container = document.getElementById('subpageTableContainer');
+            if (!container) return;
+            
+            try {
+                const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=245625530&single=true&output=csv';
+                const response = await fetch(url);
+                
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const data = await response.text();
+                const rows = data.split('\n').map(row => row.split(','));
+                
+                if (!rows || rows.length === 0) throw new Error('No data received');
+                
+                let tableHTML = '<table class="subpage-table"><thead><tr>';
+                rows[0].forEach(header => {
+                    tableHTML += `<th>${header}</th>`;
+                });
+                tableHTML += '</tr></thead><tbody>';
+                
+                for (let i = 1; i < rows.length; i++) {
+                    tableHTML += '<tr>';
+                    rows[i].forEach((cell, index) => {
+                        const cellValue = cell.trim();
+                        tableHTML += `<td>${index > 0 && !isNaN(cellValue) ? parseInt(cellValue).toLocaleString() + ' Ks' : cellValue}</td>`;
+                    });
+                    tableHTML += '</tr>';
+                }
+                
+                container.innerHTML = tableHTML + '</tbody></table>';
+            } catch (error) {
+                console.error('Error loading fee table:', error);
+                container.innerHTML = '<div class="error">Failed to load fee table. Please try again later.</div>';
+            }
+        }
+
+        // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Apply saved theme
             const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -97,8 +160,16 @@ body.dark-theme .subpage-table tr:nth-child(even) {
                 document.querySelector('.theme-toggle i').className = 'fas fa-moon';
             }
             
-            // Load UAB fee table
+            // Load the UAB fee table
             loadSubpageTable('uab');
+            
+            // Set up scroll to top button
+            window.onscroll = function() {
+                const btn = document.getElementById('return-to-top');
+                if (btn) {
+                    btn.style.display = (window.scrollY > 100) ? 'flex' : 'none';
+                }
+            };
         });
     </script>
 </body>
