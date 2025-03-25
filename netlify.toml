@@ -1,3 +1,11 @@
 [build]
   command = ""  # Build command ကို ဗလာထားပါ
   publish = "/"  # Publish directory ကို root folder အဖြစ်ထည့်ပါ
+# netlify.toml ဖိုင်တွင် အောက်ပါ setting များထည့်ပါ
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[build.environment]
+  NODE_ENV = "production"
+  NPM_FLAGS = "--production" # မလိုအပ်သော devDependencies တွေကို install မလုပ်ပါ
