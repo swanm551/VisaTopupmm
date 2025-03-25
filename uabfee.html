@@ -27,26 +27,23 @@
 
         /* Base Styles */
         body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: var(--bg-primary-dark);
-            color: var(--text-primary-dark);
-            transition: background 0.3s ease;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.1s ease;
         }
 
         /* Header Styles */
         .header {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(26, 26, 26, 0.8);
-            border-bottom: 1px solid var(--border-color-dark);
-            backdrop-filter: blur(10px);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
         }
 
         .logo-section {
@@ -61,15 +58,21 @@
         }
 
         .site-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin: 0;
-            background: linear-gradient(90deg, #ffffff, #3b82f6);
-            background-size: 200% 100%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: waveText 1.5s infinite linear;
-        }
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                 0 0 40px rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, #ffffff, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.light-theme .site-title {
+    background: linear-gradient(135deg, #1a1a1a, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
 
         @keyframes waveText {
             0% { background-position: 0% 50%; }
@@ -77,20 +80,28 @@
         }
 
         .theme-toggle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
-            background: var(--bg-secondary-dark);
-            color: var(--text-primary-dark);
-        }
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+body.dark-theme .theme-toggle {
+    background: var(--bg-secondary-dark);
+    color: var(--text-primary-dark);
+}
+
+body.light-theme .theme-toggle {
+    background: var(--bg-secondary-light);
+    color: var(--text-primary-light);
+}
 
         /* Subpage Content Styles */
         .subpage-container {
@@ -132,10 +143,7 @@
     text-align: center;
         }
 @media (max-width: 768px) {
-    .subpage-table {
-        width: 100%;
-        font-size: 12px;
-    }
+    
         .subpage-table td {
     padding: 10px;
     border: 1px solid var(--border-color-light);
