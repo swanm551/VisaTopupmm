@@ -148,7 +148,7 @@ body.light-theme .site-title {
 
         .subpage-table {
             width: 90%;
-            max-width: 850px;
+            max-width: 1000px;
             border-collapse: collapse;
             margin: 0 auto;
             margin-bottom: 120px;
@@ -168,7 +168,10 @@ body.light-theme .site-title {
         body.light-theme .subpage-table td {
             border-color: var(--border-color-light);
         }
-
+ @media (max-width: 768px) {
+    .fee-table {
+        width: 100%;
+        font-size: 12px;
         .subpage-table th {
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
             color: white;
