@@ -78,21 +78,21 @@
         }
 
         .site-title {
-    font-size: 28px;
-    font-weight: 600;
-    margin: 0;
-    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
-                 0 0 40px rgba(59, 130, 246, 0.3);
-    background: linear-gradient(135deg, #ffffff, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                         0 0 40px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-body.light-theme .site-title {
-    background: linear-gradient(135deg, #1a1a1a, #2563eb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+        body.light-theme .site-title {
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
         }
 
         @keyframes waveText {
@@ -144,18 +144,20 @@ body.light-theme .site-title {
             width: 100%;
             overflow-x: auto;
             margin-bottom: 80px;
+            min-height: 300px;
         }
 
         .subpage-table {
             width: 90%;
-            max-width: 1000px;
+            max-width: 800px;
             border-collapse: collapse;
             margin: 0 auto;
             margin-bottom: 120px;
             border-radius: 5px;
             overflow: hidden;
-            font-size: 10px;
+            font-size: 14px;
         }
+
         .subpage-table th, 
         .subpage-table td {
             padding: 12px;
@@ -167,10 +169,7 @@ body.light-theme .site-title {
         body.light-theme .subpage-table td {
             border-color: var(--border-color-light);
         }
- @media (max-width: 768px) {
-    .fee-table {
-        width: 100%;
-        font-size: 12px;
+
         .subpage-table th {
             background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
             color: white;
@@ -202,6 +201,25 @@ body.light-theme .site-title {
             padding: 30px;
             color: #ff4444;
             font-size: 18px;
+        }
+
+        /* Skeleton Loading */
+        .skeleton-row {
+            height: 20px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        body.dark-theme .skeleton-row {
+            background: linear-gradient(90deg, #2d2d2d 25%, #3d3d3d 50%, #2d2d2d 75%);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         /* Scroll to Top Button */
@@ -280,6 +298,145 @@ body.light-theme .site-title {
         const body = document.body;
         const icon = document.querySelector('.theme-toggle i');
         const returnToTopBtn = document.getElementById('return-to-top');
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=245625530&single=true&output=csv';
+        
+        // Cache အတွက် variable
+        let cachedData = null;
+        let lastFetchTime = 0;
+        const CACHE_DURATION = 5 * 60 * 1000; // 5 မိနစ်
+
+        // Skeleton Loading UI ပြမည်
+        function showSkeleton() {
+            const container = document.getElementById('subpageTableContainer');
+            let skeletonHTML = '';
+            for (let i = 0; i < 8; i++) {
+                skeletonHTML += '<div class="skeleton-row"></div>';
+            }
+            container.innerHTML = skeletonHTML;
+        }
+
+        // Table Render Function
+        function renderTable(csvData) {
+            const rows = csvData.split('\n').map(row => row.split(','));
+            let tableHTML = '<table class="subpage-table"><thead><tr>';
+            
+            // Header Row
+            rows[0].forEach(header => {
+                tableHTML += `<th>${header.trim()}</th>`;
+            });
+            tableHTML += '</tr></thead><tbody>';
+            
+            // Data Rows
+            for (let i = 1; i < rows.length; i++) {
+                tableHTML += '<tr>';
+                rows[i].forEach((cell, index) => {
+                    const cellValue = cell.trim();
+                    tableHTML += `<td>${index > 0 && !isNaN(cellValue.replace(/[^0-9.]/g, '')) 
+                        ? parseInt(cellValue.replace(/[^0-9.]/g, '')) + ' Ks' 
+                        : cellValue}</td>`;
+                });
+                tableHTML += '</tr>';
+            }
+            
+            tableHTML += '</tbody></table>';
+            document.getElementById('subpageTableContainer').innerHTML = tableHTML;
+            
+            // Cache ထဲသိမ်းမည်
+            cachedData = csvData;
+            lastFetchTime = Date.now();
+            localStorage.setItem('uabFeeData', JSON.stringify({
+                data: csvData,
+                timestamp: lastFetchTime
+            }));
+        }
+
+        // Data Fetch Function
+        async function fetchData() {
+            showSkeleton();
+            
+            try {
+                // Cache ထဲမှာရှိပြီးသားဆိုပြန်သုံး
+                const now = Date.now();
+                const cached = JSON.parse(localStorage.getItem('uabFeeData'));
+                
+                if (cached && (now - cached.timestamp < CACHE_DURATION)) {
+                    renderTable(cached.data);
+                    return;
+                }
+                
+                // အသစ်ပြန်ဖတ်
+                const response = await fetch(`${SHEET_URL}&t=${now}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const data = await response.text();
+                renderTable(data);
+                
+                // Background တွင် Service Worker ကို update အကြောင်းကြား
+                if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
+                        type: 'UPDATE_DATA',
+                        data: data,
+                        timestamp: now
+                    });
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                document.getElementById('subpageTableContainer').innerHTML = 
+                    '<div class="error">Failed to load data. Please refresh.</div>';
+                
+                // Cache ထဲကဒေတာရှိရင်ပြန်ပြ
+                if (cachedData) {
+                    renderTable(cachedData);
+                }
+            }
+        }
+
+        // Service Worker Registration
+        async function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register('/sw.js');
+                    console.log('ServiceWorker registered');
+                    
+                    // Update ရရင် refresh လုပ်မည်
+                    navigator.serviceWorker.addEventListener('message', event => {
+                        if (event.data.type === 'NEW_DATA_AVAILABLE') {
+                            fetchData();
+                        }
+                    });
+                } catch (error) {
+                    console.error('ServiceWorker registration failed:', error);
+                }
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply saved theme
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                body.classList.replace('dark-theme', 'light-theme');
+                icon.className = 'fas fa-moon';
+            }
+            
+            // Register Service Worker
+            registerServiceWorker();
+            
+            // Load initial data
+            fetchData();
+            
+            // 5 မိနစ်တစ်ခါ data ပြန်ဖတ်
+            setInterval(fetchData, CACHE_DURATION);
+            
+            // Set up scroll to top button
+            window.onscroll = function() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    returnToTopBtn.style.display = 'flex';
+                } else {
+                    returnToTopBtn.style.display = 'none';
+                }
+            };
+        });
 
         // Theme Toggle Function
         function toggleTheme() {
@@ -303,68 +460,6 @@ body.light-theme .site-title {
                 behavior: 'smooth'
             });
         }
-
-        // Load UAB Fee Table
-        async function loadSubpageTable(bank) {
-            const container = document.getElementById('subpageTableContainer');
-            if (!container) return;
-            
-            try {
-                const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=245625530&single=true&output=csv';
-                const response = await fetch(url);
-                
-                if (!response.ok) throw new Error('Network response was not ok');
-                
-                const data = await response.text();
-                const rows = data.split('\n').map(row => row.split(','));
-                
-                if (!rows || rows.length === 0) throw new Error('No data received');
-                
-                let tableHTML = '<table class="subpage-table"><thead><tr>';
-                rows[0].forEach(header => {
-                    tableHTML += `<th>${header.trim()}</th>`;
-                });
-                tableHTML += '</tr></thead><tbody>';
-                
-                for (let i = 1; i < rows.length; i++) {
-                    tableHTML += '<tr>';
-                    rows[i].forEach((cell, index) => {
-                        const cellValue = cell.trim();
-                        tableHTML += `<td>${index > 0 && !isNaN(cellValue.replace(/[^0-9.]/g, '')) 
-                            ? parseInt(cellValue.replace(/[^0-9.]/g, '')) + ' Ks' 
-                            : cellValue}</td>`;
-                    });
-                    tableHTML += '</tr>';
-                }
-                
-                container.innerHTML = tableHTML + '</tbody></table>';
-            } catch (error) {
-                console.error('Error loading fee table:', error);
-                container.innerHTML = '<div class="error">Failed to load fee table. Please try again later.</div>';
-            }
-        }
-
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Apply saved theme
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            if (savedTheme === 'light') {
-                body.classList.replace('dark-theme', 'light-theme');
-                icon.className = 'fas fa-moon';
-            }
-            
-            // Load the UAB fee table
-            loadSubpageTable('uab');
-            
-            // Set up scroll to top button
-            window.onscroll = function() {
-                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                    returnToTopBtn.style.display = 'flex';
-                } else {
-                    returnToTopBtn.style.display = 'none';
-                }
-            };
-        });
     </script>
 </body>
 </html>
