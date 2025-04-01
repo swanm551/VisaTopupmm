@@ -255,3 +255,71 @@ async function preloadFeeData() {
         await fetchFeeData(bank);
     }
 }
+
+// သင့် main JavaScript ဖိုင်ထဲမှာ
+const SHEET_TYPES = ['uab', 'aya', 'cb', 'kbz', 'mab', 'exchange'];
+
+// Service Worker Registration
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log('SW registered for scope:', registration.scope);
+        
+        // Listen for updates from SW
+        navigator.serviceWorker.addEventListener('message', event => {
+          if (event.data.type === 'DATA_UPDATED') {
+            const { sheetType } = event.data;
+            if (sheetType === currentActiveTab) { // currentActiveTab က လက်ရှိ active tab
+              fetchData(sheetType);
+            }
+          }
+        });
+      })
+      .catch(err => console.error('SW registration failed:', err));
+  }
+}
+
+// Fetch Data with Cache First Strategy
+async function fetchData(sheetType) {
+  const url = `https://docs.google.com/spreadsheets/d/e/...${sheetType}...`;
+  
+  try {
+    // Try cache first
+    const cache = await caches.open('visa-topup-cache-v3');
+    const cachedResponse = await cache.match(url);
+    
+    if (cachedResponse) {
+      const data = await cachedResponse.text();
+      renderTable(data, sheetType);
+    }
+    
+    // Then fetch fresh data
+    const networkResponse = await fetch(`${url}&t=${Date.now()}`);
+    const freshData = await networkResponse.text();
+    renderTable(freshData, sheetType);
+    
+    // Update cache
+    const response = new Response(freshData);
+    await cache.put(url, response);
+    
+    // Notify other tabs
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'UPDATE_SHEET',
+        sheetType: sheetType,
+        data: freshData
+      });
+    }
+  } catch (error) {
+    console.error(`Error fetching ${sheetType} data:`, error);
+  }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  registerServiceWorker();
+  
+  // Load initial data
+  fetchData('uab'); // Default load UAB data
+});
