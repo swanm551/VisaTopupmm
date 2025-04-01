@@ -78,22 +78,22 @@
         }
 
         .site-title {
-            font-size: 28px;
-            font-weight: 600;
-            margin: 0;
-            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
-                         0 0 40px rgba(59, 130, 246, 0.3);
-            background: linear-gradient(135deg, #3B82F6, #2563EB);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                 0 0 40px rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, #ffffff, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-        body.light-theme .site-title {
-            background: linear-gradient(135deg, #2563EB, #1D4ED8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-        }
+body.light-theme .site-title {
+    background: linear-gradient(135deg, #1a1a1a, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
 
         @keyframes waveText {
             0% { background-position: 0% 50%; }
@@ -148,14 +148,14 @@
         }
 
         .subpage-table {
-            width: 90%;
-            max-width: 800px;
+            width: 95%;
+            max-width: 1000px;
             border-collapse: collapse;
             margin: 0 auto;
             margin-bottom: 120px;
             border-radius: 5px;
             overflow: hidden;
-            font-size: 14px;
+            font-size: 10px;
         }
 
         .subpage-table th, 
@@ -205,12 +205,12 @@
 
         /* Skeleton Loading */
         .skeleton-row {
-            height: 20px;
+            height: 30px;
             background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
             background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
+            animation: shimmer 1s infinite;
             margin: 10px 0;
-            border-radius: 4px;
+            border-radius: 5px;
         }
 
         body.dark-theme .skeleton-row {
@@ -261,7 +261,7 @@
             }
             
             .subpage-table {
-                font-size: 14px;
+                font-size: 12px;
             }
             
             .subpage-table th, 
