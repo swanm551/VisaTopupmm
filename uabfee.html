@@ -57,7 +57,7 @@
             top: 0;
             z-index: 100;
             transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(2px);
         }
 
         body.dark-theme .header {
@@ -82,7 +82,6 @@
             height: 40px;
             width: auto;
             }
-
         .site-title {
     font-size: 28px;
     font-weight: 600;
@@ -171,7 +170,7 @@ body.light-theme .site-title {
             text-align: center;
             color: var(--accent-blue);
             margin-bottom: 30px;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
             padding: 15px;
             border-radius: 12px;
@@ -198,20 +197,21 @@ body.light-theme .site-title {
             margin-bottom: 30px;
             min-height: 300px;
             border-radius: 16px;
-            padding: 10px;
+            padding: 0px;
         }
 
         .subpage-table {
-            width: 98%;
+            width: 100%;
             max-width: 1000px;
             border-collapse: separate;
             border-spacing: 0;
             margin: 0 auto;
             margin-bottom: 100px;
-            border-radius: 10px;
+            border-radius: 16px;
             overflow: hidden;
             font-size: 14px;
             transition: all 0.3s ease;
+            box-shadow: none;
         }
 
         body.dark-theme .subpage-table {
@@ -416,7 +416,7 @@ body.light-theme .site-title {
         /* Responsive Styles */
         @media (max-width: 768px) {
             .site-title {
-                font-size: 22px;
+                font-size: 20px;
             }
             
             .logo {
@@ -424,7 +424,7 @@ body.light-theme .site-title {
             }
             
             .subpage-title {
-                font-size: 20px;
+                font-size: 16px;
             }
             
             .subpage-table {
@@ -467,10 +467,6 @@ body.light-theme .site-title {
                 padding: 15px;
             }
             
-            .site-title {
-                font-size: 18px;
-            }
-            
             .logo {
                 height: 32px;
             }
@@ -508,29 +504,7 @@ body.light-theme .site-title {
 .logo-section a:active {
     transform: translateY(1px);
 }
-
-/* Logo Image Styling */
-.logo {
-    height: 40px;
-    width: auto;
-    border-radius: 8px;
-    box-shadow: 
-        5px 5px 10px rgba(0, 0, 0, 0.2),
-        -5px -5px 10px rgba(255, 255, 255, 0.1);
 }
-
-/* Site Title Styling */
-.site-title {
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-    letter-spacing: -0.5px;
-} 
-        }
     </style>
 </head>
 <body class="dark-theme">
