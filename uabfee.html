@@ -57,7 +57,7 @@
             top: 0;
             z-index: 100;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
         }
 
         body.dark-theme .header {
@@ -75,32 +75,35 @@
         .logo-section {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
         }
 
         .logo {
             height: 40px;
             width: auto;
-            border-radius: 8px;
-            box-shadow: 
-                5px 5px 10px rgba(0, 0, 0, 0.2),
-                -5px -5px 10px rgba(255, 255, 255, 0.1);
-        }
+            }
 
         .site-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-            letter-spacing: -0.5px;
-        }
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                 0 0 40px rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, #ffffff, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-        body.light-theme .site-title {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-        }
+body.light-theme .site-title {
+    background: linear-gradient(135deg, #1a1a1a, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+@keyframes waveText{
+0%{ background-position: 0% 50%; }
+100% {background-position: 100% 50% ; }
+}
 
         .theme-toggle {
             width: 44px;
@@ -204,8 +207,8 @@
             border-collapse: separate;
             border-spacing: 0;
             margin: 0 auto;
-            margin-bottom: 30px;
-            border-radius: 16px;
+            margin-bottom: 100px;
+            border-radius: 10px;
             overflow: hidden;
             font-size: 14px;
             transition: all 0.3s ease;
@@ -485,22 +488,59 @@
             
             .subpage-table {
                 font-size: 12px;
-                border-radius: 12px;
+                border-radius: 10px;
             }
             
             .subpage-table th, 
             .subpage-table td {
                 padding: 10px 6px;
             }
+        /* Logo Link Hover Effects */
+.logo-section a {
+    transition: all 0.3s ease;
+}
+
+.logo-section a:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.logo-section a:active {
+    transform: translateY(1px);
+}
+
+/* Logo Image Styling */
+.logo {
+    height: 40px;
+    width: auto;
+    border-radius: 8px;
+    box-shadow: 
+        5px 5px 10px rgba(0, 0, 0, 0.2),
+        -5px -5px 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Site Title Styling */
+.site-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    letter-spacing: -0.5px;
+} 
         }
     </style>
 </head>
 <body class="dark-theme">
      <header class="header">
         <div class="logo-section">
-            <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
-            <h1 class="site-title">Visa Topup Myanmar</h1>
-        </div>
+    <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+        <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
+        <h1 class="site-title">Visa Topup Myanmar</h1>
+    </a>
+</div> 
         <button class="theme-toggle" onclick="toggleTheme()">
             <i class="fas fa-sun"></i>
         </button>
