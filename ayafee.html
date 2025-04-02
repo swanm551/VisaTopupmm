@@ -510,11 +510,11 @@ body.light-theme .site-title {
 <body class="dark-theme">
      <header class="header">
         <div class="logo-section">
-    <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-        <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
-        <h1 class="site-title">Visa Topup Myanmar</h1>
-    </a>
-</div> 
+            <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+                <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
+                <h1 class="site-title">Visa Topup Myanmar</h1>
+            </a>
+        </div> 
         <button class="theme-toggle" onclick="toggleTheme()">
             <i class="fas fa-sun"></i>
         </button>
@@ -536,14 +536,17 @@ body.light-theme .site-title {
         const body = document.body;
         const icon = document.querySelector('.theme-toggle i');
         const returnToTopBtn = document.getElementById('return-to-top');
+        
+        // AYA Fee specific Google Sheets URL
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=1640510518&single=true&output=csv';
         
-        // Cache အတွက် variable
+        // Cache variables for AYA
         let cachedData = null;
         let lastFetchTime = 0;
-        const CACHE_DURATION = 5 * 60 * 1000; // 5 မိနစ်
+        const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+        const CACHE_KEY = 'ayaFeeData'; // Changed to AYA specific cache key
 
-        // Skeleton Loading UI ပြမည်
+        // Skeleton Loading UI
         function showSkeleton() {
             const container = document.getElementById('subpageTableContainer');
             let skeletonHTML = '';
@@ -579,10 +582,10 @@ body.light-theme .site-title {
             tableHTML += '</tbody></table>';
             document.getElementById('subpageTableContainer').innerHTML = tableHTML;
             
-            // Cache ထဲသိမ်းမည်
+            // Cache the data with AYA specific key
             cachedData = csvData;
             lastFetchTime = Date.now();
-            localStorage.setItem('uabFeeData', JSON.stringify({
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
                 data: csvData,
                 timestamp: lastFetchTime
             }));
@@ -593,23 +596,23 @@ body.light-theme .site-title {
             showSkeleton();
             
             try {
-                // Cache ထဲမှာရှိပြီးသားဆိုပြန်သုံး
+                // Check cache first
                 const now = Date.now();
-                const cached = JSON.parse(localStorage.getItem('uabFeeData'));
+                const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
                 
                 if (cached && (now - cached.timestamp < CACHE_DURATION)) {
                     renderTable(cached.data);
                     return;
                 }
                 
-                // အသစ်ပြန်ဖတ်
+                // Fetch new data
                 const response = await fetch(`${SHEET_URL}&t=${now}`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 
                 const data = await response.text();
                 renderTable(data);
                 
-                // Background တွင် Service Worker ကို update အကြောင်းကြား
+                // Notify Service Worker if available
                 if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                     navigator.serviceWorker.controller.postMessage({
                         type: 'UPDATE_DATA',
@@ -622,7 +625,7 @@ body.light-theme .site-title {
                 document.getElementById('subpageTableContainer').innerHTML = 
                     '<div class="error">Failed to load data. Please refresh.</div>';
                 
-                // Cache ထဲကဒေတာရှိရင်ပြန်ပြ
+                // Fallback to cached data if available
                 if (cachedData) {
                     renderTable(cachedData);
                 }
@@ -636,7 +639,7 @@ body.light-theme .site-title {
                     const registration = await navigator.serviceWorker.register('/sw.js');
                     console.log('ServiceWorker registered');
                     
-                    // Update ရရင် refresh လုပ်မည်
+                    // Listen for updates
                     navigator.serviceWorker.addEventListener('message', event => {
                         if (event.data.type === 'NEW_DATA_AVAILABLE') {
                             fetchData();
@@ -663,7 +666,7 @@ body.light-theme .site-title {
             // Load initial data
             fetchData();
             
-            // 5 မိနစ်တစ်ခါ data ပြန်ဖတ်
+            // Refresh data periodically
             setInterval(fetchData, CACHE_DURATION);
             
             // Set up scroll to top button
@@ -676,7 +679,7 @@ body.light-theme .site-title {
             };
         });
 
-        // Theme Toggle Function
+        // Theme Toggle Function (unchanged)
         function toggleTheme() {
             if (body.classList.contains('dark-theme')) {
                 body.classList.remove('dark-theme');
@@ -691,7 +694,7 @@ body.light-theme .site-title {
             }
         }
 
-        // Scroll to Top Function
+        // Scroll to Top Function (unchanged)
         function scrollToTop() {
             window.scrollTo({
                 top: 0,
