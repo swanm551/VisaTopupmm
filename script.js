@@ -104,7 +104,7 @@ function updateTime() {
         month: '2-digit',
         year: '2-digit'
     });
-    updateTimeElement.textContent = `Exchange Rate Update on: ${timeString}, ${dateString}`;
+    updateTimeElement.textContent = `Exchange rate updated on: ${timeString}, ${dateString}`;
 }
 
 // Fee Table Functions
@@ -187,36 +187,6 @@ async function showFeeTable(bank) {
         feeTablesDiv.innerHTML = '<div class="error">Failed to load fee table.</div>';
     }
 }
-
-// Subpage Functions
-function loadSubpageTable(bank) {
-    const container = document.getElementById('subpageTableContainer');
-    if (!container) return;
-    
-    container.innerHTML = '<div class="loading">Loading fee table...</div>';
-    
-    fetchFeeData(bank)
-        .then(rows => {
-            if (!rows || rows.length === 0) throw new Error('No data');
-            
-            let html = `<table class="subpage-table">
-                <thead><tr>${rows[0].map(h => `<th>${h}</th>`).join('')}</tr></thead>
-                <tbody>`;
-            
-            for (let i = 1; i < rows.length; i++) {
-                html += `<tr>${rows[i].map((cell, j) => 
-                    `<td>${j > 0 && !isNaN(cell) ? parseInt(cell).toLocaleString() + ' Ks' : cell}</td>`
-                ).join('')}</tr>`;
-            }
-            
-            container.innerHTML = html + '</tbody></table>';
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            container.innerHTML = '<div class="error">Failed to load fee table. Please try again later.</div>';
-        });
-}
-
 // Initialize on DOM Load
 document.addEventListener('DOMContentLoaded', function() {
     // Theme setup
