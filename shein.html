@@ -81,28 +81,30 @@
         .logo {
             height: 40px;
             width: auto;
-            }
-        .site-title {
-    font-size: 28px;
-    font-weight: 600;
-    margin: 0;
-    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
-                 0 0 40px rgba(59, 130, 246, 0.3);
-    background: linear-gradient(135deg, #ffffff, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+        }
 
-body.light-theme .site-title {
-    background: linear-gradient(135deg, #1a1a1a, #2563eb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-}
-@keyframes waveText{
-0%{ background-position: 0% 50%; }
-100% {background-position: 100% 50% ; }
-}
+        .site-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                         0 0 40px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #ffffff, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.light-theme .site-title {
+            background: linear-gradient(135deg, #1a1a1a, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+        }
+
+        @keyframes waveText {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
 
         .theme-toggle {
             width: 44px;
@@ -413,7 +415,101 @@ body.light-theme .site-title {
             transform: translateY(2px);
         }
 
-        /* Responsive Styles */
+        /* Carousel Container */
+        #cardCarouselContainer {
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 10px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Carousel Track */
+        .carousel-track {
+            display: flex;
+            gap: 20px;
+            user-select: none;
+            padding: 10px 0;
+            width: max-content; /* Support infinite loop */
+        }
+
+        /* Glassmorphism Card */
+        .carousel-card {
+            flex: 0 0 200px;
+            height: 140px; /* Increased height for logo */
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 15px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            position: relative;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Card Styles for Dark Theme */
+        body.dark-theme .carousel-card {
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 
+                5px 5px 15px rgba(0, 0, 0, 0.2),
+                -5px -5px 15px rgba(50, 50, 50, 0.1);
+            color: var(--text-primary-dark);
+        }
+
+        /* Card Styles for Light Theme */
+        body.light-theme .carousel-card {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                5px 5px 15px rgba(0, 0, 0, 0.1),
+                -5px -5px 15px rgba(255, 255, 255, 0.7);
+            color: var(--text-primary-light);
+        }
+
+        /* Active Card (Centered/Focused) */
+        .carousel-card.active {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        /* Inactive Cards (Blurred Background) */
+        .carousel-card:not(.active) {
+            filter: blur(2px);
+            opacity: 0.7;
+        }
+
+        /* Card Hover Effect */
+        .carousel-card:hover {
+            transform: scale(1.15);
+            filter: none;
+            opacity: 1;
+        }
+
+        /* Card Dragging State */
+        .carousel-card:active {
+            cursor: grabbing;
+        }
+
+        /* Card Text */
+        .carousel-card p {
+            margin: 5px 0;
+        }
+
+        /* SHEIN Logo */
+        .carousel-card img.shein-logo {
+            width: 40px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Adjustments */
         @media (max-width: 768px) {
             .site-title {
                 font-size: 20px;
@@ -460,8 +556,18 @@ body.light-theme .site-title {
                 bottom: 20px;
                 right: 20px;
             }
+
+            .carousel-card {
+                flex: 0 0 160px;
+                height: 120px;
+                font-size: 14px;
+            }
+
+            .carousel-card img.shein-logo {
+                width: 30px;
+            }
         }
-        
+
         @media (max-width: 480px) {
             .header {
                 padding: 15px;
@@ -491,24 +597,35 @@ body.light-theme .site-title {
             .subpage-table td {
                 padding: 10px 6px;
             }
+
+            .carousel-card {
+                flex: 0 0 140px;
+                height: 100px;
+                font-size: 12px;
+            }
+
+            .carousel-card img.shein-logo {
+                width: 25px;
+            }
+        }
+
         /* Logo Link Hover Effects */
-.logo-section a {
-    transition: all 0.3s ease;
-}
+        .logo-section a {
+            transition: all 0.3s ease;
+        }
 
-.logo-section a:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
+        .logo-section a:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
 
-.logo-section a:active {
-    transform: translateY(1px);
-}
-}
+        .logo-section a:active {
+            transform: translateY(1px);
+        }
     </style>
 </head>
 <body class="dark-theme">
-     <header class="header">
+    <header class="header">
         <div class="logo-section">
             <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
                 <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
@@ -524,6 +641,9 @@ body.light-theme .site-title {
         <h2 class="subpage-title">SHEIN Gift card</h2>
         <div id="subpageTableContainer">
             <div class="loading">Loading fee table...</div>
+        </div>
+        <div id="cardCarouselContainer">
+            <div class="carousel-track"></div>
         </div>
     </div>
 
@@ -589,6 +709,9 @@ body.light-theme .site-title {
                 data: csvData,
                 timestamp: lastFetchTime
             }));
+
+            // Initialize carousel
+            initializeCarousel(rows);
         }
 
         // Data Fetch Function
@@ -651,6 +774,164 @@ body.light-theme .site-title {
             }
         }
 
+        // Carousel Functionality
+        function initializeCarousel(dataRows) {
+            const track = document.querySelector('.carousel-track');
+            track.innerHTML = ''; // Clear existing cards
+
+            // SHEIN Logo URL (replace with actual SHEIN logo URL)
+            const sheinLogoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Shein_logo.svg/1200px-Shein_logo.svg.png';
+
+            // Generate cards based on table data
+            const cardsData = [];
+            for (let i = 1; i < dataRows.length; i++) { // Skip header row
+                const row = dataRows[i];
+                if (row.length < 2) continue; // Skip invalid rows
+                cardsData.push({
+                    amount: row[0].trim(),
+                    price: parseInt(row[1].trim().replace(/[^0-9.]/g, '')) + ' Ks'
+                });
+            }
+
+            // Create multiple sets of cards for infinite loop (3 sets for smooth looping)
+            for (let set = 0; set < 3; set++) {
+                cardsData.forEach((cardData, index) => {
+                    const card = document.createElement('div');
+                    card.classList.add('carousel-card');
+                    card.setAttribute('data-index', index); // Store original index
+                    card.innerHTML = `
+                        <img src="${sheinLogoUrl}" alt="SHEIN Logo" class="shein-logo">
+                        <p>${cardData.amount}</p>
+                        <p>${cardData.price}</p>
+                    `;
+                    track.appendChild(card);
+                });
+            }
+
+            // Initialize first card as active
+            const cards = track.querySelectorAll('.carousel-card');
+            if (cards.length > 0) {
+                cards[cardsData.length].classList.add('active'); // Center set
+            }
+
+            // Dragging Functionality
+            let isDragging = false;
+            let startX, scrollLeft;
+            let animationFrame;
+
+            track.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.pageX - track.offsetLeft;
+                scrollLeft = track.scrollLeft;
+                track.style.cursor = 'grabbing';
+                cancelAnimationFrame(animationFrame);
+            });
+
+            track.addEventListener('mouseleave', () => {
+                isDragging = false;
+                track.style.cursor = 'grab';
+            });
+
+            track.addEventListener('mouseup', () => {
+                isDragging = false;
+                track.style.cursor = 'grab';
+                snapToNearestCard();
+            });
+
+            track.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - track.offsetLeft;
+                const walk = (x - startX) * 2; // Adjust drag speed
+                track.scrollLeft = scrollLeft - walk;
+                checkInfiniteScroll();
+            });
+
+            // Touch Support
+            track.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                startX = e.touches[0].pageX - track.offsetLeft;
+                scrollLeft = track.scrollLeft;
+                cancelAnimationFrame(animationFrame);
+            });
+
+            track.addEventListener('touchend', () => {
+                isDragging = false;
+                snapToNearestCard();
+            });
+
+            track.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const x = e.touches[0].pageX - track.offsetLeft;
+                const walk = (x - startX) * 2;
+                track.scrollLeft = scrollLeft - walk;
+                checkInfiniteScroll();
+            });
+
+            // Infinite Scroll Logic
+            function checkInfiniteScroll() {
+                const cardWidth = cards[0].offsetWidth + 20; // Include gap
+                const totalCards = cardsData.length;
+                const setWidth = cardWidth * totalCards;
+                const scrollPosition = track.scrollLeft;
+
+                // If scrolled too far left, jump to the right set
+                if (scrollPosition < setWidth * 0.5) {
+                    track.scrollLeft += setWidth;
+                }
+                // If scrolled too far right, jump to the left set
+                else if (scrollPosition > setWidth * 1.5) {
+                    track.scrollLeft -= setWidth;
+                }
+            }
+
+            // Snap to Nearest Card
+            function snapToNearestCard() {
+                const cardWidth = cards[0].offsetWidth + 20; // Include gap
+                const totalCards = cardsData.length;
+                const setWidth = cardWidth * totalCards;
+                const scrollPosition = track.scrollLeft;
+                let nearestIndex = Math.round(scrollPosition / cardWidth) % totalCards;
+                if (nearestIndex < 0) nearestIndex += totalCards;
+
+                const targetScroll = nearestIndex * cardWidth + setWidth; // Snap to middle set
+                animationFrame = requestAnimationFrame(() => {
+                    track.scrollTo({
+                        left: targetScroll,
+                        behavior: 'smooth'
+                    });
+                });
+
+                // Update active card
+                cards.forEach((card) => {
+                    const cardIndex = parseInt(card.getAttribute('data-index'));
+                    card.classList.toggle('active', cardIndex === nearestIndex);
+                });
+
+                // Ensure scroll stays in bounds
+                setTimeout(checkInfiniteScroll, 300); // After snap animation
+            }
+
+            // Update active card on scroll
+            track.addEventListener('scroll', () => {
+                const cardWidth = cards[0].offsetWidth + 20;
+                const totalCards = cardsData.length;
+                const setWidth = cardWidth * totalCards;
+                const scrollPosition = track.scrollLeft;
+                let nearestIndex = Math.round(scrollPosition / cardWidth) % totalCards;
+                if (nearestIndex < 0) nearestIndex += totalCards;
+
+                cards.forEach((card) => {
+                    const cardIndex = parseInt(card.getAttribute('data-index'));
+                    card.classList.toggle('active', cardIndex === nearestIndex);
+                });
+            });
+
+            // Initialize scroll to middle set
+            const cardWidth = cards[0].offsetWidth + 20;
+            track.scrollLeft = cardWidth * cardsData.length; // Start at middle set
+        }
+
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Apply saved theme
@@ -679,7 +960,7 @@ body.light-theme .site-title {
             };
         });
 
-        // Theme Toggle Function (unchanged)
+        // Theme Toggle Function
         function toggleTheme() {
             if (body.classList.contains('dark-theme')) {
                 body.classList.remove('dark-theme');
@@ -694,7 +975,7 @@ body.light-theme .site-title {
             }
         }
 
-        // Scroll to Top Function (unchanged)
+        // Scroll to Top Function
         function scrollToTop() {
             window.scrollTo({
                 top: 0,
