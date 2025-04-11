@@ -115,7 +115,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: bold;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -420,8 +420,9 @@
             width: 100%;
             max-width: 1000px;
             margin: 20px auto;
-            padding: 10px 0;
+            padding: 20px 0;
             overflow: hidden;
+            perspective: 1000px; /* For 3D wheel effect */
             position: relative;
         }
 
@@ -430,14 +431,14 @@
             display: flex;
             gap: 20px;
             user-select: none;
-            padding: 10px 0;
             width: max-content; /* Support infinite loop */
+            transition: transform 0.3s ease;
         }
 
         /* Glassmorphism Card */
         .carousel-card {
-            flex: 0 0 200px;
-            height: 140px; /* Increased height for logo */
+            flex: 0 0 240px; /* ATM card width */
+            height: 160px; /* ATM card height, 3:2 ratio */
             border-radius: 12px;
             display: flex;
             flex-direction: column;
@@ -453,6 +454,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 16px;
             font-weight: 500;
+            transform-style: preserve-3d;
         }
 
         /* Card Styles for Dark Theme */
@@ -475,11 +477,11 @@
 
         /* Active Card (Centered/Focused) */
         .carousel-card.active {
-            transform: scale(1.1);
+            transform: scale(1.1) rotateY(0deg) translateZ(50px);
             z-index: 10;
         }
 
-        /* Inactive Cards (Blurred Background) */
+        /* Inactive Cards (Blurred and Rotated) */
         .carousel-card:not(.active) {
             filter: blur(2px);
             opacity: 0.7;
@@ -487,7 +489,7 @@
 
         /* Card Hover Effect */
         .carousel-card:hover {
-            transform: scale(1.15);
+            transform: scale(1.15) rotateY(0deg) translateZ(50px);
             filter: none;
             opacity: 1;
         }
@@ -502,11 +504,23 @@
             margin: 5px 0;
         }
 
-        /* SHEIN Logo */
-        .carousel-card img.shein-logo {
-            width: 40px;
-            height: auto;
+        /* SHEIN Logo Text */
+        .shein-logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
             margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        body.dark-theme .shein-logo {
+            color: var(--accent-blue);
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        body.light-theme .shein-logo {
+            color: var(--accent-blue-dark);
+            text-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
         }
 
         /* Responsive Adjustments */
@@ -558,16 +572,16 @@
             }
 
             .carousel-card {
-                flex: 0 0 160px;
+                flex: 0 0 180px;
                 height: 120px;
                 font-size: 14px;
             }
 
-            .carousel-card img.shein-logo {
-                width: 30px;
+            .shein-logo {
+                font-size: 16px;
             }
         }
-
+        
         @media (max-width: 480px) {
             .header {
                 padding: 15px;
@@ -599,13 +613,13 @@
             }
 
             .carousel-card {
-                flex: 0 0 140px;
+                flex: 0 0 150px;
                 height: 100px;
                 font-size: 12px;
             }
 
-            .carousel-card img.shein-logo {
-                width: 25px;
+            .shein-logo {
+                font-size: 14px;
             }
         }
 
@@ -714,6 +728,161 @@
             initializeCarousel(rows);
         }
 
+        // Carousel Functionality
+        function initializeCarousel(dataRows) {
+            const track = document.querySelector('.carousel-track');
+            track.innerHTML = ''; // Clear existing cards
+
+            // Store original data for looping
+            const originalCards = [];
+
+            // Generate cards based on table data
+            for (let i = 1; i < dataRows.length; i++) { // Skip header row
+                const row = dataRows[i];
+                if (row.length < 2) continue; // Skip invalid rows
+                const cardData = {
+                    amount: row[0].trim(),
+                    price: parseInt(row[1].trim().replace(/[^0-9.]/g, '')) + ' Ks'
+                };
+                originalCards.push(cardData);
+            }
+
+            // Duplicate cards for infinite loop (3 sets for smooth looping)
+            const totalCards = originalCards.length;
+            if (totalCards === 0) return; // Exit if no data
+
+            for (let i = 0; i < totalCards * 3; i++) {
+                const cardData = originalCards[i % totalCards];
+                const card = document.createElement('div');
+                card.classList.add('carousel-card');
+                card.innerHTML = `
+                    <div class="shein-logo">SHEIN</div>
+                    <p>${cardData.amount}</p>
+                    <p>${cardData.price}</p>
+                `;
+                track.appendChild(card);
+            }
+
+            // Initialize carousel position
+            const cards = track.querySelectorAll('.carousel-card');
+            if (cards.length > 0) {
+                cards[totalCards].classList.add('active'); // Start in middle set
+            }
+
+            // Dragging Functionality
+            let isDragging = false;
+            let startX, scrollLeft;
+            let animationFrame;
+
+            function updateCardTransforms() {
+                const cardWidth = cards[0].offsetWidth + 20; // Include gap
+                const containerWidth = document.getElementById('cardCarouselContainer').offsetWidth;
+                const centerOffset = containerWidth / 2 - cardWidth / 2;
+                const scrollPosition = track.scrollLeft;
+
+                cards.forEach((card, index) => {
+                    const cardOffset = index * cardWidth - scrollPosition;
+                    const distanceFromCenter = (cardOffset - centerOffset) / cardWidth;
+                    const angle = distanceFromCenter * 20; // Rotate up to 20 degrees
+                    const scale = 1 - Math.abs(distanceFromCenter) * 0.1; // Scale down slightly
+                    const translateZ = -Math.abs(distanceFromCenter) * 50; // Push back in Z-axis
+
+                    card.style.transform = `
+                        rotateY(${angle}deg)
+                        scale(${Math.max(scale, 0.8)})
+                        translateZ(${translateZ}px)
+                    `;
+                    card.classList.toggle('active', Math.abs(distanceFromCenter) < 0.5);
+                });
+
+                animationFrame = requestAnimationFrame(updateCardTransforms);
+            }
+
+            // Start animation
+            updateCardTransforms();
+
+            track.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.pageX - track.offsetLeft;
+                scrollLeft = track.scrollLeft;
+                track.style.cursor = 'grabbing';
+                cancelAnimationFrame(animationFrame); // Pause animation during drag
+            });
+
+            track.addEventListener('mouseleave', () => {
+                isDragging = false;
+                track.style.cursor = 'grab';
+                updateCardTransforms(); // Resume animation
+            });
+
+            track.addEventListener('mouseup', () => {
+                isDragging = false;
+                track.style.cursor = 'grab';
+                snapToNearestCard();
+                updateCardTransforms();
+            });
+
+            track.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - track.offsetLeft;
+                const walk = (x - startX) * 2; // Adjust drag speed
+                track.scrollLeft = scrollLeft - walk;
+                handleInfiniteScroll();
+            });
+
+            // Touch Support
+            track.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                startX = e.touches[0].pageX - track.offsetLeft;
+                scrollLeft = track.scrollLeft;
+                cancelAnimationFrame(animationFrame);
+            });
+
+            track.addEventListener('touchend', () => {
+                isDragging = false;
+                snapToNearestCard();
+                updateCardTransforms();
+            });
+
+            track.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const x = e.touches[0].pageX - track.offsetLeft;
+                const walk = (x - startX) * 2;
+                track.scrollLeft = scrollLeft - walk;
+                handleInfiniteScroll();
+            });
+
+            // Infinite Scroll Handling
+            function handleInfiniteScroll() {
+                const cardWidth = cards[0].offsetWidth + 20;
+                const totalWidth = cardWidth * totalCards;
+                const scrollPosition = track.scrollLeft;
+
+                if (scrollPosition < totalWidth * 0.5) {
+                    track.scrollLeft += totalWidth;
+                } else if (scrollPosition > totalWidth * 2.5) {
+                    track.scrollLeft -= totalWidth;
+                }
+            }
+
+            // Snap to Nearest Card
+            function snapToNearestCard() {
+                const cardWidth = cards[0].offsetWidth + 20;
+                const scrollPosition = track.scrollLeft;
+                const nearestIndex = Math.round(scrollPosition / cardWidth);
+                track.scrollTo({
+                    left: nearestIndex * cardWidth,
+                    behavior: 'smooth'
+                });
+            }
+
+            // Update on scroll
+            track.addEventListener('scroll', () => {
+                handleInfiniteScroll();
+            });
+        }
+
         // Data Fetch Function
         async function fetchData() {
             showSkeleton();
@@ -772,164 +941,6 @@
                     console.error('ServiceWorker registration failed:', error);
                 }
             }
-        }
-
-        // Carousel Functionality
-        function initializeCarousel(dataRows) {
-            const track = document.querySelector('.carousel-track');
-            track.innerHTML = ''; // Clear existing cards
-
-            // SHEIN Logo URL (replace with actual SHEIN logo URL)
-            const sheinLogoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Shein_logo.svg/1200px-Shein_logo.svg.png';
-
-            // Generate cards based on table data
-            const cardsData = [];
-            for (let i = 1; i < dataRows.length; i++) { // Skip header row
-                const row = dataRows[i];
-                if (row.length < 2) continue; // Skip invalid rows
-                cardsData.push({
-                    amount: row[0].trim(),
-                    price: parseInt(row[1].trim().replace(/[^0-9.]/g, '')) + ' Ks'
-                });
-            }
-
-            // Create multiple sets of cards for infinite loop (3 sets for smooth looping)
-            for (let set = 0; set < 3; set++) {
-                cardsData.forEach((cardData, index) => {
-                    const card = document.createElement('div');
-                    card.classList.add('carousel-card');
-                    card.setAttribute('data-index', index); // Store original index
-                    card.innerHTML = `
-                        <img src="${sheinLogoUrl}" alt="SHEIN Logo" class="shein-logo">
-                        <p>${cardData.amount}</p>
-                        <p>${cardData.price}</p>
-                    `;
-                    track.appendChild(card);
-                });
-            }
-
-            // Initialize first card as active
-            const cards = track.querySelectorAll('.carousel-card');
-            if (cards.length > 0) {
-                cards[cardsData.length].classList.add('active'); // Center set
-            }
-
-            // Dragging Functionality
-            let isDragging = false;
-            let startX, scrollLeft;
-            let animationFrame;
-
-            track.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                startX = e.pageX - track.offsetLeft;
-                scrollLeft = track.scrollLeft;
-                track.style.cursor = 'grabbing';
-                cancelAnimationFrame(animationFrame);
-            });
-
-            track.addEventListener('mouseleave', () => {
-                isDragging = false;
-                track.style.cursor = 'grab';
-            });
-
-            track.addEventListener('mouseup', () => {
-                isDragging = false;
-                track.style.cursor = 'grab';
-                snapToNearestCard();
-            });
-
-            track.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                e.preventDefault();
-                const x = e.pageX - track.offsetLeft;
-                const walk = (x - startX) * 2; // Adjust drag speed
-                track.scrollLeft = scrollLeft - walk;
-                checkInfiniteScroll();
-            });
-
-            // Touch Support
-            track.addEventListener('touchstart', (e) => {
-                isDragging = true;
-                startX = e.touches[0].pageX - track.offsetLeft;
-                scrollLeft = track.scrollLeft;
-                cancelAnimationFrame(animationFrame);
-            });
-
-            track.addEventListener('touchend', () => {
-                isDragging = false;
-                snapToNearestCard();
-            });
-
-            track.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                const x = e.touches[0].pageX - track.offsetLeft;
-                const walk = (x - startX) * 2;
-                track.scrollLeft = scrollLeft - walk;
-                checkInfiniteScroll();
-            });
-
-            // Infinite Scroll Logic
-            function checkInfiniteScroll() {
-                const cardWidth = cards[0].offsetWidth + 20; // Include gap
-                const totalCards = cardsData.length;
-                const setWidth = cardWidth * totalCards;
-                const scrollPosition = track.scrollLeft;
-
-                // If scrolled too far left, jump to the right set
-                if (scrollPosition < setWidth * 0.5) {
-                    track.scrollLeft += setWidth;
-                }
-                // If scrolled too far right, jump to the left set
-                else if (scrollPosition > setWidth * 1.5) {
-                    track.scrollLeft -= setWidth;
-                }
-            }
-
-            // Snap to Nearest Card
-            function snapToNearestCard() {
-                const cardWidth = cards[0].offsetWidth + 20; // Include gap
-                const totalCards = cardsData.length;
-                const setWidth = cardWidth * totalCards;
-                const scrollPosition = track.scrollLeft;
-                let nearestIndex = Math.round(scrollPosition / cardWidth) % totalCards;
-                if (nearestIndex < 0) nearestIndex += totalCards;
-
-                const targetScroll = nearestIndex * cardWidth + setWidth; // Snap to middle set
-                animationFrame = requestAnimationFrame(() => {
-                    track.scrollTo({
-                        left: targetScroll,
-                        behavior: 'smooth'
-                    });
-                });
-
-                // Update active card
-                cards.forEach((card) => {
-                    const cardIndex = parseInt(card.getAttribute('data-index'));
-                    card.classList.toggle('active', cardIndex === nearestIndex);
-                });
-
-                // Ensure scroll stays in bounds
-                setTimeout(checkInfiniteScroll, 300); // After snap animation
-            }
-
-            // Update active card on scroll
-            track.addEventListener('scroll', () => {
-                const cardWidth = cards[0].offsetWidth + 20;
-                const totalCards = cardsData.length;
-                const setWidth = cardWidth * totalCards;
-                const scrollPosition = track.scrollLeft;
-                let nearestIndex = Math.round(scrollPosition / cardWidth) % totalCards;
-                if (nearestIndex < 0) nearestIndex += totalCards;
-
-                cards.forEach((card) => {
-                    const cardIndex = parseInt(card.getAttribute('data-index'));
-                    card.classList.toggle('active', cardIndex === nearestIndex);
-                });
-            });
-
-            // Initialize scroll to middle set
-            const cardWidth = cards[0].offsetWidth + 20;
-            track.scrollLeft = cardWidth * cardsData.length; // Start at middle set
         }
 
         // Initialize when page loads
