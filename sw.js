@@ -6,7 +6,10 @@ const SHEETS_CONFIG = {
   cb: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=605862732&single=true&output=csv',
   kbz: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=1744659778&single=true&output=csv',
   mab: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=1796926669&single=true&output=csv',
-  exchange: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=0&single=true&output=csv'
+  exchange: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=0&single=true&output=csv',
+  shein: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQMEfkm2e1w-xg5P-iQGJNjGCECWkHW-qHKr-tDfm971K70C8874Grf66mMHow0kOkyskk4EaXPCng_/pub?gid=1852260511&single=true&output=csv',
+  thaiph: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQMEfkm2e1w-xg5P-iQGJNjGCECWkHW-qHKr-tDfm971K70C8874Grf66mMHow0kOkyskk4EaXPCng_/pub?gid=1899732459&single=true&output=csv',
+  cashout: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQMEfkm2e1w-xg5P-iQGJNjGCECWkHW-qHKr-tDfm971K70C8874Grf66mMHow0kOkyskk4EaXPCng_/pub?gid=2001411383&single=true&output=csv'
 };
 
 // Install Event - Cache all resources
