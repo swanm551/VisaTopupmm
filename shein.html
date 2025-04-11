@@ -115,7 +115,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: bold;
+            font-size: 20px;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -424,6 +424,7 @@
             overflow: hidden;
             perspective: 1000px; /* For 3D wheel effect */
             position: relative;
+            z-index: 10; /* Ensure carousel is interactive */
         }
 
         /* Carousel Track */
@@ -432,7 +433,7 @@
             gap: 20px;
             user-select: none;
             width: max-content; /* Support infinite loop */
-            transition: transform 0.3s ease;
+            padding: 10px 0;
         }
 
         /* Glassmorphism Card */
@@ -455,6 +456,7 @@
             font-size: 16px;
             font-weight: 500;
             transform-style: preserve-3d;
+            pointer-events: auto; /* Ensure interactivity */
         }
 
         /* Card Styles for Dark Theme */
@@ -479,6 +481,8 @@
         .carousel-card.active {
             transform: scale(1.1) rotateY(0deg) translateZ(50px);
             z-index: 10;
+            filter: none;
+            opacity: 1;
         }
 
         /* Inactive Cards (Blurred and Rotated) */
@@ -677,7 +681,7 @@
         // Cache variables for Shein
         let cachedData = null;
         let lastFetchTime = 0;
-        const CACHE_DURATION = 1 * 60 * 1000; // 1 minutes
+        const CACHE_DURATION = 0.5 * 60 * 1000; // 0.5 minute
         const CACHE_KEY = 'sheinFeeData'; // SHEIN specific cache key
 
         // Skeleton Loading UI
@@ -713,7 +717,7 @@
                 tableHTML += '</tr>';
             }
             
-            tableHTML += '</tbody></table>';
+_SU            tableHTML += '</tbody></table>';
             document.getElementById('subpageTableContainer').innerHTML = tableHTML;
             
             // Cache the data with SHEIN specific key
@@ -731,6 +735,7 @@
         // Carousel Functionality
         function initializeCarousel(dataRows) {
             const track = document.querySelector('.carousel-track');
+            const container = document.getElementById('cardCarouselContainer');
             track.innerHTML = ''; // Clear existing cards
 
             // Store original data for looping
@@ -765,27 +770,29 @@
 
             // Initialize carousel position
             const cards = track.querySelectorAll('.carousel-card');
+            const cardWidth = cards[0].offsetWidth + 20; // Include gap
+            track.scrollLeft = totalCards * cardWidth; // Start in middle set
             if (cards.length > 0) {
-                cards[totalCards].classList.add('active'); // Start in middle set
+                cards[totalCards].classList.add('active');
             }
 
             // Dragging Functionality
             let isDragging = false;
-            let startX, scrollLeft;
-            let animationFrame;
+            let startX, currentScrollLeft;
+            let velocity = 0;
+            let lastX;
 
             function updateCardTransforms() {
-                const cardWidth = cards[0].offsetWidth + 20; // Include gap
-                const containerWidth = document.getElementById('cardCarouselContainer').offsetWidth;
+                const containerWidth = container.offsetWidth;
                 const centerOffset = containerWidth / 2 - cardWidth / 2;
                 const scrollPosition = track.scrollLeft;
 
                 cards.forEach((card, index) => {
                     const cardOffset = index * cardWidth - scrollPosition;
                     const distanceFromCenter = (cardOffset - centerOffset) / cardWidth;
-                    const angle = distanceFromCenter * 20; // Rotate up to 20 degrees
-                    const scale = 1 - Math.abs(distanceFromCenter) * 0.1; // Scale down slightly
-                    const translateZ = -Math.abs(distanceFromCenter) * 50; // Push back in Z-axis
+                    const angle = distanceFromCenter * 15; // Reduced rotation for smoother effect
+                    const scale = 1 - Math.abs(distanceFromCenter) * 0.1;
+                    const translateZ = -Math.abs(distanceFromCenter) * 30;
 
                     card.style.transform = `
                         rotateY(${angle}deg)
@@ -794,68 +801,114 @@
                     `;
                     card.classList.toggle('active', Math.abs(distanceFromCenter) < 0.5);
                 });
-
-                animationFrame = requestAnimationFrame(updateCardTransforms);
             }
 
-            // Start animation
-            updateCardTransforms();
+            // Auto-Scroll Functionality
+            let autoScrollInterval;
+            let isInteracting = false;
 
+            function startAutoScroll() {
+                stopAutoScroll(); // Clear any existing interval
+                autoScrollInterval = setInterval(() => {
+                    if (!isInteracting) {
+                        track.scrollLeft += cardWidth; // Move to next card
+                        handleInfiniteScroll();
+                        updateCardTransforms();
+                    }
+                }, 2000); // 2 seconds per card
+            }
+
+            function stopAutoScroll() {
+                clearInterval(autoScrollInterval);
+            }
+
+            // Start auto-scroll initially
+            startAutoScroll();
+
+            // Pause auto-scroll on interaction
+            container.addEventListener('mouseenter', () => {
+                isInteracting = true;
+                stopAutoScroll();
+            });
+
+            container.addEventListener('mouseleave', () => {
+                isInteracting = false;
+                startAutoScroll();
+            });
+
+            // Dragging Events
             track.addEventListener('mousedown', (e) => {
                 isDragging = true;
-                startX = e.pageX - track.offsetLeft;
-                scrollLeft = track.scrollLeft;
+                startX = e.pageX;
+                currentScrollLeft = track.scrollLeft;
+                lastX = startX;
+                velocity = 0;
                 track.style.cursor = 'grabbing';
-                cancelAnimationFrame(animationFrame); // Pause animation during drag
-            });
-
-            track.addEventListener('mouseleave', () => {
-                isDragging = false;
-                track.style.cursor = 'grab';
-                updateCardTransforms(); // Resume animation
-            });
-
-            track.addEventListener('mouseup', () => {
-                isDragging = false;
-                track.style.cursor = 'grab';
-                snapToNearestCard();
-                updateCardTransforms();
+                isInteracting = true;
+                stopAutoScroll();
             });
 
             track.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
                 e.preventDefault();
-                const x = e.pageX - track.offsetLeft;
-                const walk = (x - startX) * 2; // Adjust drag speed
-                track.scrollLeft = scrollLeft - walk;
+                const x = e.pageX;
+                const walk = (x - startX) * 2; // Adjust drag sensitivity
+                track.scrollLeft = currentScrollLeft - walk;
+                velocity = x - lastX;
+                lastX = x;
                 handleInfiniteScroll();
+                updateCardTransforms();
+            });
+
+            track.addEventListener('mouseup', () => {
+                isDragging = false;
+                track.style.cursor = 'grab';
+                snapToNearestCard(velocity);
+                isInteracting = false;
+                startAutoScroll();
+            });
+
+            track.addEventListener('mouseleave', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    track.style.cursor = 'grab';
+                    snapToNearestCard(velocity);
+                    isInteracting = false;
+                    startAutoScroll();
+                }
             });
 
             // Touch Support
             track.addEventListener('touchstart', (e) => {
                 isDragging = true;
-                startX = e.touches[0].pageX - track.offsetLeft;
-                scrollLeft = track.scrollLeft;
-                cancelAnimationFrame(animationFrame);
-            });
-
-            track.addEventListener('touchend', () => {
-                isDragging = false;
-                snapToNearestCard();
-                updateCardTransforms();
+                startX = e.touches[0].pageX;
+                currentScrollLeft = track.scrollLeft;
+                lastX = startX;
+                velocity = 0;
+                isInteracting = true;
+                stopAutoScroll();
             });
 
             track.addEventListener('touchmove', (e) => {
                 if (!isDragging) return;
-                const x = e.touches[0].pageX - track.offsetLeft;
+                const x = e.touches[0].pageX;
                 const walk = (x - startX) * 2;
-                track.scrollLeft = scrollLeft - walk;
+                track.scrollLeft = currentScrollLeft - walk;
+                velocity = x - lastX;
+                lastX = x;
                 handleInfiniteScroll();
+                updateCardTransforms();
+            });
+
+            track.addEventListener('touchend', () => {
+                isDragging = false;
+                snapToNearestCard(velocity);
+                isInteracting = false;
+                startAutoScroll();
             });
 
             // Infinite Scroll Handling
             function handleInfiniteScroll() {
-                const cardWidth = cards[0].offsetWidth + 20;
                 const totalWidth = cardWidth * totalCards;
                 const scrollPosition = track.scrollLeft;
 
@@ -866,21 +919,22 @@
                 }
             }
 
-            // Snap to Nearest Card
-            function snapToNearestCard() {
-                const cardWidth = cards[0].offsetWidth + 20;
+            // Snap to Nearest Card with Momentum
+            function snapToNearestCard(velocity) {
                 const scrollPosition = track.scrollLeft;
-                const nearestIndex = Math.round(scrollPosition / cardWidth);
+                const nearestIndex = Math.round((scrollPosition + velocity * 5) / cardWidth);
                 track.scrollTo({
                     left: nearestIndex * cardWidth,
                     behavior: 'smooth'
                 });
+                updateCardTransforms();
             }
 
-            // Update on scroll
-            track.addEventListener('scroll', () => {
-                handleInfiniteScroll();
-            });
+            // Update transforms on scroll
+            track.addEventListener('scroll', updateCardTransforms);
+
+            // Initial transform update
+            updateCardTransforms();
         }
 
         // Data Fetch Function
