@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjOd1ufKHkNXLPmTI4s1feQWObG7DwY1cpIkYwBbMJJqm7JOLEKrKMAdNIE565tOmPKGbm9Ku_SdUbsKXN6YcANjGBHMLvJpsQgelcjFabjrb2_TJGLssQLmQWOfDvFPd7A1erbv_IGfK626zMfMpVfNJtZNNtR2pIsOK0HTdLqXnProNxWiPaWwAvZ2Gez/s1600/Webp.net-resizeimage.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-         /* CSS Variables */
+        /* CSS Variables */
         :root {
             --bg-primary-light: #f0f0f0;
             --bg-secondary-light: #e0e0e0;
@@ -101,11 +101,6 @@
             text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
         }
 
-        @keyframes waveText {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-
         .theme-toggle {
             width: 44px;
             height: 44px;
@@ -197,7 +192,7 @@
             width: 100%;
             overflow-x: auto;
             margin-bottom: 0px;
-            min-height: 300px;
+            min-height: 200px;
             border-radius: 20px;
             padding: 5px;
         }
@@ -422,24 +417,27 @@
             margin: 20px auto;
             padding: 20px 0;
             overflow: hidden;
-            perspective: 1000px; /* For 3D wheel effect */
+            perspective: 1000px;
             position: relative;
-            z-index: 10; /* Ensure carousel is interactive */
+            z-index: 10;
         }
 
         /* Carousel Track */
         .carousel-track {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             user-select: none;
-            width: max-content; /* Support infinite loop */
+            width: max-content;
             padding: 10px 0;
+            scroll-behavior: smooth;
+            transition: transform 0.1s linear;
+            will-change: transform;
         }
 
         /* Glassmorphism Card */
         .carousel-card {
-            flex: 0 0 240px; /* ATM card width */
-            height: 160px; /* ATM card height, 3:2 ratio */
+            flex: 0 0 240px;
+            height: 160px;
             border-radius: 12px;
             display: flex;
             flex-direction: column;
@@ -450,13 +448,14 @@
             cursor: grab;
             transition: all 0.3s ease;
             position: relative;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 16px;
             font-weight: 500;
             transform-style: preserve-3d;
-            pointer-events: auto; /* Ensure interactivity */
+            pointer-events: auto;
+            flex-shrink: 0;
         }
 
         /* Card Styles for Dark Theme */
@@ -477,25 +476,26 @@
             color: var(--text-primary-light);
         }
 
-        /* Active Card (Centered/Focused) */
+        /* Active Card (Centered) */
         .carousel-card.active {
-            transform: scale(1.1) rotateY(0deg) translateZ(50px);
+            transform: scale(1.1);
             z-index: 10;
             filter: none;
             opacity: 1;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
         }
 
-        /* Inactive Cards (Blurred and Rotated) */
+        /* Inactive Cards */
         .carousel-card:not(.active) {
-            filter: blur(2px);
+            filter: none;
             opacity: 0.7;
         }
 
         /* Card Hover Effect */
         .carousel-card:hover {
-            transform: scale(1.15) rotateY(0deg) translateZ(50px);
+            transform: scale(1.15);
             filter: none;
-            opacity: 1;
+            opacity: 10;
         }
 
         /* Card Dragging State */
@@ -514,7 +514,7 @@
             font-weight: 700;
             letter-spacing: 2px;
             margin-bottom: 10px;
-            text-transform: uppercase;
+            text-transform: None;
         }
 
         body.dark-theme .shein-logo {
@@ -684,6 +684,9 @@
         const CACHE_DURATION = 1 * 60 * 1000; // 1 minute
         const CACHE_KEY = 'sheinFeeData'; // SHEIN specific cache key
 
+        // Fallback static data for testing
+        const FALLBACK_DATA = "Amount,Price\n100 ฿,15000\n200 ฿,30000\n500 ฿,75000";
+
         // Skeleton Loading UI
         function showSkeleton() {
             const container = document.getElementById('subpageTableContainer');
@@ -696,250 +699,140 @@
 
         // Table Render Function
         function renderTable(csvData) {
-            const rows = csvData.split('\n').map(row => row.split(','));
-            let tableHTML = '<table class="subpage-table"><thead><tr>';
-            
-            // Header Row
-            rows[0].forEach(header => {
-                tableHTML += `<th>${header.trim()}</th>`;
-            });
-            tableHTML += '</tr></thead><tbody>';
-            
-            // Data Rows
-            for (let i = 1; i < rows.length; i++) {
-                tableHTML += '<tr>';
-                rows[i].forEach((cell, index) => {
-                    const cellValue = cell.trim();
-                    tableHTML += `<td>${index > 0 && !isNaN(cellValue.replace(/[^0-9.]/g, '')) 
-                        ? parseInt(cellValue.replace(/[^0-9.]/g, '')) + ' Ks' 
-                        : cellValue}</td>`;
+            console.log('Rendering table with data:', csvData);
+            try {
+                const rows = csvData.split('\n').map(row => row.split(','));
+                if (rows.length < 2) throw new Error('CSV data is empty or malformed');
+
+                let tableHTML = '<table class="subpage-table"><thead><tr>';
+                
+                // Header Row
+                rows[0].forEach(header => {
+                    tableHTML += `<th>${header.trim()}</th>`;
                 });
-                tableHTML += '</tr>';
-            }
-            
-_SU            tableHTML += '</tbody></table>';
-            document.getElementById('subpageTableContainer').innerHTML = tableHTML;
-            
-            // Cache the data with SHEIN specific key
-            cachedData = csvData;
-            lastFetchTime = Date.now();
-            localStorage.setItem(CACHE_KEY, JSON.stringify({
-                data: csvData,
-                timestamp: lastFetchTime
-            }));
-
-            // Initialize carousel
-            initializeCarousel(rows);
-        }
-
-        // Carousel Functionality
-        function initializeCarousel(dataRows) {
-            const track = document.querySelector('.carousel-track');
-            const container = document.getElementById('cardCarouselContainer');
-            track.innerHTML = ''; // Clear existing cards
-
-            // Store original data for looping
-            const originalCards = [];
-
-            // Generate cards based on table data
-            for (let i = 1; i < dataRows.length; i++) { // Skip header row
-                const row = dataRows[i];
-                if (row.length < 2) continue; // Skip invalid rows
-                const cardData = {
-                    amount: row[0].trim(),
-                    price: parseInt(row[1].trim().replace(/[^0-9.]/g, '')) + ' Ks'
-                };
-                originalCards.push(cardData);
-            }
-
-            // Duplicate cards for infinite loop (3 sets for smooth looping)
-            const totalCards = originalCards.length;
-            if (totalCards === 0) return; // Exit if no data
-
-            for (let i = 0; i < totalCards * 3; i++) {
-                const cardData = originalCards[i % totalCards];
-                const card = document.createElement('div');
-                card.classList.add('carousel-card');
-                card.innerHTML = `
-                    <div class="shein-logo">SHEIN</div>
-                    <p>${cardData.amount}</p>
-                    <p>${cardData.price}</p>
-                `;
-                track.appendChild(card);
-            }
-
-            // Initialize carousel position
-            const cards = track.querySelectorAll('.carousel-card');
-            const cardWidth = cards[0].offsetWidth + 20; // Include gap
-            track.scrollLeft = totalCards * cardWidth; // Start in middle set
-            if (cards.length > 0) {
-                cards[totalCards].classList.add('active');
-            }
-
-            // Dragging Functionality
-            let isDragging = false;
-            let startX, currentScrollLeft;
-            let velocity = 0;
-            let lastX;
-
-            function updateCardTransforms() {
-                const containerWidth = container.offsetWidth;
-                const centerOffset = containerWidth / 2 - cardWidth / 2;
-                const scrollPosition = track.scrollLeft;
-
-                cards.forEach((card, index) => {
-                    const cardOffset = index * cardWidth - scrollPosition;
-                    const distanceFromCenter = (cardOffset - centerOffset) / cardWidth;
-                    const angle = distanceFromCenter * 15; // Reduced rotation for smoother effect
-                    const scale = 1 - Math.abs(distanceFromCenter) * 0.1;
-                    const translateZ = -Math.abs(distanceFromCenter) * 30;
-
-                    card.style.transform = `
-                        rotateY(${angle}deg)
-                        scale(${Math.max(scale, 0.8)})
-                        translateZ(${translateZ}px)
-                    `;
-                    card.classList.toggle('active', Math.abs(distanceFromCenter) < 0.5);
-                });
-            }
-
-            // Auto-Scroll Functionality
-            let autoScrollInterval;
-            let isInteracting = false;
-
-            function startAutoScroll() {
-                stopAutoScroll(); // Clear any existing interval
-                autoScrollInterval = setInterval(() => {
-                    if (!isInteracting) {
-                        track.scrollLeft += cardWidth; // Move to next card
-                        handleInfiniteScroll();
-                        updateCardTransforms();
-                    }
-                }, 2000); // 2 seconds per card
-            }
-
-            function stopAutoScroll() {
-                clearInterval(autoScrollInterval);
-            }
-
-            // Start auto-scroll initially
-            startAutoScroll();
-
-            // Pause auto-scroll on interaction
-            container.addEventListener('mouseenter', () => {
-                isInteracting = true;
-                stopAutoScroll();
-            });
-
-            container.addEventListener('mouseleave', () => {
-                isInteracting = false;
-                startAutoScroll();
-            });
-
-            // Dragging Events
-            track.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                startX = e.pageX;
-                currentScrollLeft = track.scrollLeft;
-                lastX = startX;
-                velocity = 0;
-                track.style.cursor = 'grabbing';
-                isInteracting = true;
-                stopAutoScroll();
-            });
-
-            track.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                e.preventDefault();
-                const x = e.pageX;
-                const walk = (x - startX) * 2; // Adjust drag sensitivity
-                track.scrollLeft = currentScrollLeft - walk;
-                velocity = x - lastX;
-                lastX = x;
-                handleInfiniteScroll();
-                updateCardTransforms();
-            });
-
-            track.addEventListener('mouseup', () => {
-                isDragging = false;
-                track.style.cursor = 'grab';
-                snapToNearestCard(velocity);
-                isInteracting = false;
-                startAutoScroll();
-            });
-
-            track.addEventListener('mouseleave', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    track.style.cursor = 'grab';
-                    snapToNearestCard(velocity);
-                    isInteracting = false;
-                    startAutoScroll();
+                tableHTML += '</tr></thead><tbody>';
+                
+                // Data Rows
+                for (let i = 1; i < rows.length; i++) {
+                    if (!rows[i] || rows[i].length < 2) continue; // Skip empty or invalid rows
+                    tableHTML += '<tr>';
+                    rows[i].forEach((cell, index) => {
+                        const cellValue = cell.trim();
+                        tableHTML += `<td>${index > 0 && !isNaN(cellValue.replace(/[^0-9.]/g, '')) 
+                            ? parseInt(cellValue.replace(/[^0-9.]/g, '')) + ' Ks' 
+                            : cellValue}</td>`;
+                    });
+                    tableHTML += '</tr>';
                 }
-            });
+                
+                tableHTML += '</tbody></table>';
+                document.getElementById('subpageTableContainer').innerHTML = tableHTML;
+                
+                // Cache the data
+                cachedData = csvData;
+                lastFetchTime = Date.now();
+                localStorage.setItem(CACHE_KEY, JSON.stringify({
+                    data: csvData,
+                    timestamp: lastFetchTime
+                }));
 
-            // Touch Support
-            track.addEventListener('touchstart', (e) => {
-                isDragging = true;
-                startX = e.touches[0].pageX;
-                currentScrollLeft = track.scrollLeft;
-                lastX = startX;
-                velocity = 0;
-                isInteracting = true;
-                stopAutoScroll();
-            });
-
-            track.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                const x = e.touches[0].pageX;
-                const walk = (x - startX) * 2;
-                track.scrollLeft = currentScrollLeft - walk;
-                velocity = x - lastX;
-                lastX = x;
-                handleInfiniteScroll();
-                updateCardTransforms();
-            });
-
-            track.addEventListener('touchend', () => {
-                isDragging = false;
-                snapToNearestCard(velocity);
-                isInteracting = false;
-                startAutoScroll();
-            });
-
-            // Infinite Scroll Handling
-            function handleInfiniteScroll() {
-                const totalWidth = cardWidth * totalCards;
-                const scrollPosition = track.scrollLeft;
-
-                if (scrollPosition < totalWidth * 0.5) {
-                    track.scrollLeft += totalWidth;
-                } else if (scrollPosition > totalWidth * 2.5) {
-                    track.scrollLeft -= totalWidth;
-                }
+                // Initialize carousel
+                initializeCarousel(rows);
+            } catch (error) {
+                console.error('Error rendering table:', error);
+                document.getElementById('subpageTableContainer').innerHTML = 
+                    '<div class="error">Error rendering data: ' + error.message + '</div>';
             }
-
-            // Snap to Nearest Card with Momentum
-            function snapToNearestCard(velocity) {
-                const scrollPosition = track.scrollLeft;
-                const nearestIndex = Math.round((scrollPosition + velocity * 5) / cardWidth);
-                track.scrollTo({
-                    left: nearestIndex * cardWidth,
-                    behavior: 'smooth'
-                });
-                updateCardTransforms();
-            }
-
-            // Update transforms on scroll
-            track.addEventListener('scroll', updateCardTransforms);
-
-            // Initial transform update
-            updateCardTransforms();
         }
+       // Carousel Functionality with Infinite Wheel-Like Rotation
+function initializeCarousel(dataRows) {
+    console.log('Initializing carousel with rows:', dataRows);
+    const track = document.querySelector('.carousel-track');
+    const container = document.getElementById('cardCarouselContainer');
+    track.innerHTML = ''; // Clear existing cards
+
+    // Store original data
+    const originalCards = [];
+
+    // Generate cards based on table data
+    for (let i = 1; i < dataRows.length; i++) {
+        const row = dataRows[i];
+        if (!row || row.length < 2) continue;
+        const cardData = {
+            amount: row[0].trim(),
+            price: parseInt(row[1].trim().replace(/[^0-9.]/g, '')) + ' Ks'
+        };
+        originalCards.push(cardData);
+    }
+
+    if (originalCards.length === 0) {
+        console.warn('No valid card data found');
+        track.innerHTML = '<p>No data available for carousel</p>';
+        return;
+    }
+
+    // Duplicate cards for infinite loop (at least 3 sets to cover viewport)
+    const totalCards = originalCards.length;
+    const loopCount = Math.ceil(window.innerWidth / (240 * totalCards)) + 2; // Ensure enough cards
+    for (let i = 0; i < loopCount; i++) {
+        originalCards.forEach((cardData, index) => {
+            const card = document.createElement('div');
+            card.classList.add('carousel-card');
+            card.dataset.index = index + i * totalCards;
+            card.innerHTML = `
+                <div class="shein-logo">SHEIN E-gift Card</div>
+                <p>${cardData.amount}</p>
+                <p>${cardData.price}</p>
+            `;
+            track.appendChild(card);
+        });
+    }
+
+    // Auto-scroll logic
+    let scrollPosition = 0;
+    const scrollSpeed = 1; // Pixels per frame (adjust for slower/faster rotation)
+    const cardWidth = 240; // Card width + gap (240px from CSS)
+    const trackWidth = cardWidth * totalCards; // Width of one full set of original cards
+    let animationFrame;
+
+    function autoScroll() {
+        scrollPosition += scrollSpeed;
+        // Reset when scrolled past one set of original cards
+        if (scrollPosition >= trackWidth) {
+            scrollPosition -= trackWidth; // Move back by one set
+            track.style.transition = 'none'; // Disable transition for reset
+            track.style.transform = `translateX(-${scrollPosition}px)`;
+            // Force reflow to apply transitionless change
+            track.offsetHeight;
+            track.style.transition = 'transform 0.1s linear'; // Re-enable smooth transition
+        }
+        track.style.transform = `translateX(-${scrollPosition}px)`;
+        animationFrame = requestAnimationFrame(autoScroll);
+    }
+
+    // Start auto-scrolling
+    track.style.transition = 'transform 0.1s linear';
+    animationFrame = requestAnimationFrame(autoScroll);
+
+    // Pause on hover (optional)
+    container.addEventListener('mouseenter', () => {
+        cancelAnimationFrame(animationFrame);
+    });
+
+    container.addEventListener('mouseleave', () => {
+        animationFrame = requestAnimationFrame(autoScroll);
+    });
+
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+        cancelAnimationFrame(animationFrame);
+    });
+}
 
         // Data Fetch Function
         async function fetchData() {
             showSkeleton();
+            console.log('Fetching data from:', SHEET_URL);
             
             try {
                 // Check cache first
@@ -947,15 +840,20 @@ _SU            tableHTML += '</tbody></table>';
                 const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
                 
                 if (cached && (now - cached.timestamp < CACHE_DURATION)) {
+                    console.log('Using cached data');
                     renderTable(cached.data);
                     return;
                 }
                 
                 // Fetch new data
-                const response = await fetch(`${SHEET_URL}&t=${now}`);
-                if (!response.ok) throw new Error('Network response was not ok');
+                const response = await fetch(`${SHEET_URL}&t=${now}`, {
+                    cache: 'no-store'
+                });
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 
                 const data = await response.text();
+                console.log('Fetched data:', data);
+                if (!data) throw new Error('No data returned from server');
                 renderTable(data);
                 
                 // Notify Service Worker if available
@@ -969,12 +867,10 @@ _SU            tableHTML += '</tbody></table>';
             } catch (error) {
                 console.error('Fetch error:', error);
                 document.getElementById('subpageTableContainer').innerHTML = 
-                    '<div class="error">Failed to load data. Please refresh.</div>';
+                    '<div class="error">Failed to load data: ' + error.message + '. Using fallback data.</div>';
                 
-                // Fallback to cached data if available
-                if (cachedData) {
-                    renderTable(cachedData);
-                }
+                // Use fallback data if fetch fails
+                renderTable(FALLBACK_DATA);
             }
         }
 
