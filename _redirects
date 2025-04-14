@@ -1,0 +1,11 @@
+# 1. HTTP → HTTPS အတင်းအကြပ် redirect
+http://yourdomain.com/*  https://yourdomain.com/:splat  301!
+
+# 2. Non-www → www redirect
+https://yourdomain.com/*  https://www.yourdomain.com/:splat  301
+
+# 3. Wildcard rewrite
+/*    https://yourdomain.com/:splat    200
+
+# 4. 404 handling
+/*  /404.html  404
