@@ -1,11 +1,9 @@
-# 1. HTTP → HTTPS အတင်းအကြပ် redirect
-http://visatopupmm.com//*  https://visatopupmm.com/:splat  301!
+# HTTP → HTTPS Redirect
+http://visatopupmm.com/*  https://www.visatopupmm.com/:splat  301!
+http://www.visatopupmm.com/*  https://www.visatopupmm.com/:splat  301!
 
-# 2. Non-www → www redirect
-https://visatopupmm.com/*  https://www.visatopupmm.com/:splat  301
+# Non-www → www Redirect
+https://visatopupmm.com/*  https://www.visatopupmm.com/:splat  301!
 
-# 3. Wildcard rewrite
-/*    https://visatopupmm.com/:splat    200
-
-# 4. 404 handling
-/*  /index.html  404
+# Redirect non-existent pages to homepage
+/*  https://www.visatopupmm.com  301
