@@ -5,5 +5,3 @@ http://www.visatopupmm.com/*  https://www.visatopupmm.com/:splat  301!
 # Non-www → www Redirect
 https://visatopupmm.com/*  https://www.visatopupmm.com/:splat  301!
 
-# Redirect non-existent pages to homepage
-/*  https://www.visatopupmm.com  301
