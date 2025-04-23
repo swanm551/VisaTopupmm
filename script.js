@@ -113,11 +113,11 @@ async function fetchFeeData(bank) {
     }
 
     const urls = {
-        uab: '...sheetName=uab',
-        aya: '...sheetName=aya',
-        cb: '...sheetName=cb',
-        kbz: '...sheetName=kbz',
-        mab: '...sheetName=mab'
+        uab: 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=uab',
+        aya: 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=aya',
+        cb: 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=cb',
+        kbz: 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=kbz',
+        mab: 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=mab'
     };
 
     try {
@@ -186,7 +186,7 @@ function registerServiceWorker() {
 
 // Fetch Data (optional for multi-sheet tabs)
 async function fetchData(sheetType) {
-    const url = `https://.../exec?sheetName=${sheetType}`;
+    const url = `https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=${sheetType}`;
     try {
         const cache = await caches.open('visa-topup-cache-v3');
         const cached = await cache.match(url);
