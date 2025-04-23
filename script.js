@@ -7,107 +7,100 @@ const updateTimeElement = document.getElementById('updateTime');
 const feeTablesDiv = document.getElementById('feeTables');
 const footer = document.querySelector('.footer');
 
-// Theme Toggle Function
+// Theme Toggle
 function toggleTheme() {
     if (!body || !icon) return;
-    
-    if (body.classList.contains('dark-theme')) {
-        body.classList.remove('dark-theme');
-        body.classList.add('light-theme');
-        icon.className = 'fas fa-moon';
-        localStorage.setItem('theme', 'light');
-    } else {
-        body.classList.remove('light-theme');
-        body.classList.add('dark-theme');
-        icon.className = 'fas fa-sun';
-        localStorage.setItem('theme', 'dark');
-    }
+
+    const isDark = body.classList.contains('dark-theme');
+    body.classList.toggle('dark-theme', !isDark);
+    body.classList.toggle('light-theme', isDark);
+    icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
 }
 
-// Scroll to Top Functionality
+// Scroll to Top
 if (returnToTopBtn) {
-    window.onscroll = function() {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            returnToTopBtn.style.display = 'flex';
-        } else {
-            returnToTopBtn.style.display = 'none';
-        }
+    window.onscroll = () => {
+        returnToTopBtn.style.display = (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) ? 'flex' : 'none';
     };
 }
 
 function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Exchange Rates Functions
-async function fetchRates() {
-    if (!rateTable || !updateTimeElement) return;
-    
-    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?output=csv&gid=0';
-    
-    try {
-        rateTable.innerHTML = '<div class="loading">Loading rates...</div>';
-        
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-        
-        const response = await fetch(url, { signal: controller.signal });
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) throw new Error('Network response was not ok');
-        
-        const data = await response.text();
-        const rows = data.split('\n').map(row => row.split(','));
-        
-        if (rows.length === 0) throw new Error('No data received');
-        
-        let tableHTML = '<table><thead><tr>';
-        rows[0].forEach(header => {
-            tableHTML += `<th>${header}</th>`;
-        });
-        tableHTML += '</tr></thead><tbody>';
-        
-        for (let i = 1; i < rows.length; i++) {
-            tableHTML += '<tr>';
-            rows[i].forEach((cell, index) => {
-                const cellValue = cell.trim();
-                tableHTML += `<td>${index > 0 && !isNaN(cellValue) ? parseInt(cellValue) + ' Ks' : cellValue}</td>`;
-            });
-            tableHTML += '</tr>';
+// Update Time
+function updateTime() {
+    if (!updateTimeElement) return;
+
+    const now = new Date();
+    const day = now.getDate();
+    const month = now.toLocaleString('en-US', { month: 'long' });
+    const year = now.getFullYear();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+
+    const formattedTime = `${hours}:${minutes} ${ampm}`;
+    const formattedDate = `${year} ${month} ${day}`;
+    updateTimeElement.textContent = `Exchange rate last updated: ${formattedDate}, ${formattedTime}`;
+}
+
+// Retry logic wrapper
+async function fetchWithRetry(url, timeout = 10000, retries = 1) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) throw new Error('Network response was not ok');
+            return await response.text();
+        } catch (err) {
+            if (attempt === retries) throw err;
         }
-        tableHTML += '</tbody></table>';
-        
-        rateTable.innerHTML = tableHTML;
-        updateTime();
-    } catch (error) {
-        console.error('Error:', error);
-        rateTable.innerHTML = error.name === 'AbortError'
-            ? '<div class="error">Loading timeout. Please refresh.</div>'
-            : '<div class="error">Failed to load rates.</div>';
     }
 }
 
-function updateTime() {
-    if (!updateTimeElement) return;
-    
-    const now = new Date();
-    const timeString = now.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
+// Fetch Exchange Rates
+async function fetchRates() {
+    if (!rateTable || !updateTimeElement) return;
+
+    const url = 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec';
+    rateTable.innerHTML = '<div class="loading">Loading rates...</div>';
+
+    try {
+        const data = await fetchWithRetry(url, 10000, 1);
+        const rows = data.split('\n').map(row => row.split(','));
+        if (rows.length === 0) throw new Error('No data');
+
+      let html = '<table><thead><tr>';
+rows[0].forEach(h => html += `<th>${h}</th>`);
+html += '</tr></thead><tbody>';
+for (let i = 1; i < rows.length; i++) {
+    html += '<tr>';
+    rows[i].forEach((cell, idx) => {
+        const value = cell.trim();
+        html += `<td>${idx > 0 && !isNaN(value) ? parseInt(value) + ' Ks' : value}</td>`;
     });
-    const dateString = now.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit'
-    });
-    updateTimeElement.textContent = `Exchange rate updated on: ${timeString}, ${dateString}`;
+    html += '</tr>';
+}
+html += '</tbody></table>';
+
+rateTable.innerHTML = html;
+        updateTime();
+    } catch (error) {
+        console.error('Rates Fetch Error:', error);
+        rateTable.innerHTML = error.name === 'AbortError'
+            ? '<div class="error">Loading timeout❕ Please refresh.</div>'
+            : '<div class="error">Failed to load rates 🥺 .</div>';
+    }
 }
 
-// Fee Table Functions
+// Fetch Fee Table
 let feeDataCache = {};
 
 async function fetchFeeData(bank) {
@@ -115,110 +108,58 @@ async function fetchFeeData(bank) {
     const cachedData = localStorage.getItem(cacheKey);
 
     if (cachedData) {
-        const parsedData = JSON.parse(cachedData);
-        const now = Date.now();
-        const cacheExpiryTime = 60 * 60 * 1000; // 1 hour
-
-        if (now - parsedData.timestamp < cacheExpiryTime) {
-            return parsedData.data;
-        }
+        const parsed = JSON.parse(cachedData);
+        if (Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000) return parsed.data;
     }
 
     const urls = {
-        uab: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=245625530&single=true&output=csv',
-        aya: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=1640510518&single=true&output=csv',
-        cb: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=605862732&single=true&output=csv',
-        kbz: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=1744659778&single=true&output=csv',
-        mab: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=1796926669&single=true&output=csv'
+        uab: '...sheetName=uab',
+        aya: '...sheetName=aya',
+        cb: '...sheetName=cb',
+        kbz: '...sheetName=kbz',
+        mab: '...sheetName=mab'
     };
 
     try {
-        const response = await fetch(urls[bank]);
-        if (!response.ok) throw new Error('Network response was not ok');
-        
-        const data = await response.text();
-        const rows = data.split('\n').map(row => row.split(','));
-
-        const cacheData = {
-            data: rows,
-            timestamp: Date.now()
-        };
-
-        localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+        const data = await fetchWithRetry(urls[bank], 10000, 1);
+        const rows = data.split('\n').map(r => r.split(','));
+        localStorage.setItem(cacheKey, JSON.stringify({ data: rows, timestamp: Date.now() }));
         return rows;
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Fee Fetch Error:', error);
         return null;
     }
 }
 
 async function showFeeTable(bank) {
     if (!feeTablesDiv) return;
-    
-    const existingTable = document.getElementById(`fee-table-${bank}`);
-    if (existingTable) {
-        existingTable.remove();
-        return;
-    }
+
+    const existing = document.getElementById(`fee-table-${bank}`);
+    if (existing) return existing.remove();
 
     feeTablesDiv.innerHTML = '<div class="loading">Loading fee table...</div>';
-
     const rows = await fetchFeeData(bank);
 
     if (rows) {
-        let tableHTML = `<table class="fee-table" id="fee-table-${bank}"><thead><tr>`;
-        rows[0].forEach(header => {
-            tableHTML += `<th>${header}</th>`;
-        });
-        tableHTML += '</tr></thead><tbody>';
-
+        let html = `<table class="fee-table" id="fee-table-${bank}"><thead><tr>`;
+        rows[0].forEach(h => html += `<th>${h}</th>`);
+        html += '</tr></thead><tbody>';
         for (let i = 1; i < rows.length; i++) {
-            tableHTML += '<tr>';
-            rows[i].forEach((cell, index) => {
-                const cellValue = cell.trim();
-                tableHTML += `<td>${index > 0 && !isNaN(cellValue) ? parseInt(cellValue).toLocaleString() + ' Ks' : cellValue}</td>`;
+            html += '<tr>';
+            rows[i].forEach((cell, idx) => {
+                const value = cell.trim();
+                html += `<td>${idx > 0 && !isNaN(value) ? parseInt(value).toLocaleString() + ' Ks' : value}</td>`;
             });
-            tableHTML += '</tr>';
+            html += '</tr>';
         }
-        tableHTML += '</tbody></table>';
-
-        feeTablesDiv.innerHTML = tableHTML;
+        html += '</tbody></table>';
+        feeTablesDiv.innerHTML = html;
     } else {
         feeTablesDiv.innerHTML = '<div class="error">Failed to load fee table.</div>';
     }
 }
-// Initialize on DOM Load
-document.addEventListener('DOMContentLoaded', function() {
-    // Theme setup
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (body && icon) {
-        if (savedTheme === 'light') {
-            body.classList.remove('dark-theme');
-            body.classList.add('light-theme');
-            icon.className = 'fas fa-moon';
-        }
-    }
-    
-    // Load rates
-    if (rateTable) {
-        fetchRates();
-        setInterval(fetchRates, 30000);
-    }
 
-    // Preload fee data
-    preloadFeeData();
-
-    // Footer scroll effect
-    if (footer) {
-        let lastScrollTop = 0;
-        window.addEventListener('scroll', function() {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            footer.style.bottom = scrollTop > lastScrollTop ? '-100px' : '0';
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-        });
-    }
-});
-
+// Preload Fee Tables
 async function preloadFeeData() {
     const banks = ['uab', 'aya', 'cb', 'kbz', 'mab'];
     for (const bank of banks) {
@@ -226,70 +167,66 @@ async function preloadFeeData() {
     }
 }
 
-// သင့် main JavaScript ဖိုင်ထဲမှာ
-const SHEET_TYPES = ['uab', 'aya', 'cb', 'kbz', 'mab', 'exchange'];
-
-// Service Worker Registration
+// Service Worker
 function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(registration => {
-        console.log('SW registered for scope:', registration.scope);
-        
-        // Listen for updates from SW
-        navigator.serviceWorker.addEventListener('message', event => {
-          if (event.data.type === 'DATA_UPDATED') {
-            const { sheetType } = event.data;
-            if (sheetType === currentActiveTab) { // currentActiveTab က လက်ရှိ active tab
-              fetchData(sheetType);
-            }
-          }
-        });
-      })
-      .catch(err => console.error('SW registration failed:', err));
-  }
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => {
+                console.log('SW registered:', reg.scope);
+                navigator.serviceWorker.addEventListener('message', event => {
+                    if (event.data.type === 'DATA_UPDATED') {
+                        const { sheetType } = event.data;
+                        if (sheetType === currentActiveTab) fetchData(sheetType);
+                    }
+                });
+            })
+            .catch(err => console.error('SW failed:', err));
+    }
 }
 
-// Fetch Data with Cache First Strategy
+// Fetch Data (optional for multi-sheet tabs)
 async function fetchData(sheetType) {
-  const url = `https://docs.google.com/spreadsheets/d/e/...${sheetType}...`;
-  
-  try {
-    // Try cache first
-    const cache = await caches.open('visa-topup-cache-v3');
-    const cachedResponse = await cache.match(url);
-    
-    if (cachedResponse) {
-      const data = await cachedResponse.text();
-      renderTable(data, sheetType);
+    const url = `https://.../exec?sheetName=${sheetType}`;
+    try {
+        const cache = await caches.open('visa-topup-cache-v3');
+        const cached = await cache.match(url);
+        if (cached) renderTable(await cached.text(), sheetType);
+
+        const netRes = await fetchWithRetry(`${url}&t=${Date.now()}`, 10000, 1);
+        renderTable(netRes, sheetType);
+        await cache.put(url, new Response(netRes));
+
+        if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({
+                type: 'UPDATE_SHEET',
+                sheetType,
+                data: netRes
+            });
+        }
+    } catch (err) {
+        console.error(`Fetch ${sheetType} Error:`, err);
     }
-    
-    // Then fetch fresh data
-    const networkResponse = await fetch(`${url}&t=${Date.now()}`);
-    const freshData = await networkResponse.text();
-    renderTable(freshData, sheetType);
-    
-    // Update cache
-    const response = new Response(freshData);
-    await cache.put(url, response);
-    
-    // Notify other tabs
-    if (navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        type: 'UPDATE_SHEET',
-        sheetType: sheetType,
-        data: freshData
-      });
-    }
-  } catch (error) {
-    console.error(`Error fetching ${sheetType} data:`, error);
-  }
 }
 
-// Initialize
+// Init
 document.addEventListener('DOMContentLoaded', () => {
-  registerServiceWorker();
-  
-  // Load initial data
-  fetchData('uab'); // Default load UAB data
+    const theme = localStorage.getItem('theme') || 'dark';
+    body.classList.toggle('light-theme', theme === 'light');
+    body.classList.toggle('dark-theme', theme !== 'light');
+    icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+
+    fetchRates();
+    setInterval(fetchRates, 60000); // every 1 minute
+    preloadFeeData();
+    registerServiceWorker();
+
+    // Footer scroll animation
+    if (footer) {
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            footer.style.bottom = scrollTop > lastScrollTop ? '-100px' : '0';
+            lastScrollTop = Math.max(scrollTop, 0);
+        });
+    }
 });
