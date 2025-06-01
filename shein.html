@@ -83,19 +83,31 @@
             width: auto;
         }
 
+        /* Keyframes for the gradient flow animation */
+        @keyframes flowGradient {
+            100% { background-position: 0% 50%; }
+            0% { background-position: 100% 50%; }
+        }
+
         .site-title {
             font-size: 28px;
             font-weight: 600;
             margin: 0;
             text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
                          0 0 40px rgba(59, 130, 246, 0.3);
-            background: linear-gradient(135deg, #ffffff, #3b82f6);
+            /* ADDED/MODIFIED: Gradient and animation for continuous flow */
+            background: linear-gradient(90deg, var(--accent-blue-dark), var(--accent-blue), #ffffff, var(--accent-blue), var(--accent-blue-dark));
+            background-size: 300% 100%; /* Wider gradient to allow smooth movement */
+            animation: flowGradient 3s linear infinite; /* 3s duration, linear, infinite */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         body.light-theme .site-title {
-            background: linear-gradient(135deg, #1a1a1a, #2563eb);
+            /* ADDED/MODIFIED: Light Theme Gradient and animation */
+            background: linear-gradient(90deg, var(--accent-blue-dark), #1a1a1a, #f0f0f0, #1a1a1a, var(--accent-blue-dark));
+            background-size: 300% 100%;
+            animation: flowGradient 3s linear infinite;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
@@ -279,6 +291,20 @@
             background: rgba(59, 130, 246, 0.2);
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(59, 130, 246, 0.1);
+        }
+
+        /* NEW: Styles for individual table rows animation */
+        .subpage-table tbody tr {
+            opacity: 0; /* Initial state: invisible */
+            transform: translateY(20px); /* Initial state: slightly below */
+            /* This transition will be used when the 'fade-in-up' class is added */
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Sufficient transition time */
+        }
+
+        /* NEW: Class added by JavaScript when row is in view */
+        .subpage-table tbody tr.fade-in-up {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Loading and Error States */
@@ -528,6 +554,21 @@
             text-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
         }
 
+        /* NEW: Copyright text styling */
+        #copyright-text {
+            color: var(--text-secondary-dark); /* Using an existing variable for silver-like color */
+            text-align: center;
+            font-size: small;
+            margin-top: 20px; /* Space between content and copyright */
+            margin-bottom: 80px; /* Space above footer or return-to-top */
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        body.light-theme #copyright-text {
+            color: var(--text-secondary-light);
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .site-title {
@@ -665,6 +706,9 @@
             <div class="carousel-track"></div>
         </div>
     </div>
+    
+    <!-- NEW: Copyright text element -->
+    <p id="copyright-text"></p>
 
     <div id="return-to-top" onclick="scrollToTop()">
         <i class="fas fa-arrow-up"></i>
@@ -696,6 +740,52 @@
                 skeletonHTML += '<div class="skeleton-row"></div>';
             }
             container.innerHTML = skeletonHTML;
+        }
+
+        // Global variable to store the observer for subpage table rows
+        let currentSubpageTableObserver = null;
+
+        // NEW function to initialize row animations for subpage table
+        function initializeTableRowAnimations() {
+            // Disconnect any previous observer if it exists to clean up
+            if (currentSubpageTableObserver) {
+                currentSubpageTableObserver.disconnect();
+                currentSubpageTableObserver = null;
+            }
+
+            const subpageTable = document.querySelector('.subpage-table');
+            if (!subpageTable) return; // No subpage table found to animate
+
+            // Select all table body rows (exclude header rows)
+            const rows = subpageTable.querySelectorAll('tbody tr');
+
+            const observerOptions = {
+                root: null, // Use the viewport as the root
+                rootMargin: '0px',
+                threshold: 0.1 // Trigger when 10% of the row is visible
+            };
+
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Add the animation class when the row enters the viewport
+                        entry.target.classList.add('fade-in-up');
+                        // Stop observing this row once it has animated
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            // Create a new IntersectionObserver instance
+            currentSubpageTableObserver = new IntersectionObserver(observerCallback, observerOptions);
+
+            // Observe each row
+            rows.forEach((row, index) => {
+                // Set a staggered delay for each row's animation
+                // Using 0.02s (20ms) as 0.001s is too fast to notice staggering
+                row.style.transitionDelay = `${index * 0.02}s`; 
+                currentSubpageTableObserver.observe(row); 
+            });
         }
 
         // Table Render Function
@@ -739,10 +829,20 @@
 
                 // Initialize carousel
                 initializeCarousel(rows);
+
+                // NEW LINE: Initialize row animations after the table is rendered
+                // Using setTimeout to ensure the table is fully rendered before observing
+                setTimeout(() => {
+                    initializeTableRowAnimations();
+                }, 100); 
+
             } catch (error) {
                 console.error('Error rendering table:', error);
                 document.getElementById('subpageTableContainer').innerHTML = 
-                    '<div class="error">Error rendering data: ' + error.message + '</div>';
+                    '<div class="error">Failed to load data: ' + error.message + '. Using fallback data.</div>';
+                
+                // Use fallback data if fetch fails
+                renderTable(FALLBACK_DATA);
             }
         }
        // Carousel Functionality with Infinite Wheel-Like Rotation
@@ -912,6 +1012,13 @@ function initializeCarousel(dataRows) {
             // Refresh data periodically
             setInterval(fetchData, CACHE_DURATION);
             
+            // Set copyright text
+            const copyrightElement = document.getElementById('copyright-text');
+            if (copyrightElement) {
+                const currentYear = new Date().getFullYear();
+                copyrightElement.textContent = `2019 - ${currentYear} copyright @Visa Topup Myanmar`;
+            }
+
             // Set up scroll to top button
             window.onscroll = function() {
                 if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
