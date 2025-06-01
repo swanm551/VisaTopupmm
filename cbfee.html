@@ -82,27 +82,38 @@
             height: 40px;
             width: auto;
             }
-        .site-title {
-    font-size: 28px;
-    font-weight: 600;
-    margin: 0;
-    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
-                 0 0 40px rgba(59, 130, 246, 0.3);
-    background: linear-gradient(135deg, #ffffff, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
 
-body.light-theme .site-title {
-    background: linear-gradient(135deg, #1a1a1a, #2563eb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-}
-@keyframes waveText{
-0%{ background-position: 0% 50%; }
-100% {background-position: 100% 50% ; }
-}
+        /* NEW: Keyframes for the gradient flow animation */
+        @keyframes flowGradient {
+            100% { background-position: 0% 50%; }
+            0% { background-position: 100% 50%; }
+        }
+
+        .site-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                         0 0 40px rgba(59, 130, 246, 0.3);
+            /* MODIFIED: Changed gradient and animation for continuous flow */
+            /* Dark Theme Gradient: Blue -> White -> Blue */
+            background: linear-gradient(90deg, var(--accent-blue-dark), var(--accent-blue), #ffffff, var(--accent-blue), var(--accent-blue-dark));
+            background-size: 300% 100%; /* Wider gradient to allow smooth movement */
+            animation: flowGradient 2s linear infinite; /* 2s duration, linear, infinite */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.light-theme .site-title {
+            /* MODIFIED: Changed gradient and animation for continuous flow */
+            /* Light Theme Gradient: Dark Blue -> Dark Gray -> Dark Blue */
+            background: linear-gradient(90deg, var(--accent-blue-dark), #1a1a1a, #f0f0f0, #1a1a1a, var(--accent-blue-dark));
+            background-size: 300% 100%; /* Apply also for light theme */
+            animation: flowGradient 2s linear infinite; /* Apply also for light theme */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+        }
 
         .theme-toggle {
             width: 44px;
@@ -147,7 +158,7 @@ body.light-theme .site-title {
         .subpage-container {
             max-width: 1000px;
             margin: 0px auto;
-            padding: 5px;
+            padding: 0px;
             border-radius: 20px;
             transition: all 0.3s ease;
         }
@@ -284,6 +295,20 @@ body.light-theme .site-title {
             box-shadow: 0 4px 8px rgba(59, 130, 246, 0.1);
         }
 
+        /* NEW: Styles for individual table rows animation */
+        .subpage-table tbody tr {
+            opacity: 0; /* Initial state: invisible */
+            transform: translateY(20px); /* Initial state: slightly below */
+            /* This transition will be used when the 'fade-in-up' class is added */
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Sufficient transition time */
+        }
+
+        /* NEW: Class added by JavaScript when row is in view */
+        .subpage-table tbody tr.fade-in-up {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* Loading and Error States */
         .loading {
             text-align: center;
@@ -413,6 +438,21 @@ body.light-theme .site-title {
             transform: translateY(2px);
         }
 
+        /* NEW: Copyright text styling */
+        #copyright-text {
+            color: var(--text-secondary-dark); /* Using an existing variable for silver-like color */
+            text-align: center;
+            font-size: small;
+            margin-top: 20px; /* Space between content and copyright */
+            margin-bottom: 80px; /* Space above footer or return-to-top */
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        body.light-theme #copyright-text {
+            color: var(--text-secondary-light);
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .site-title {
@@ -492,19 +532,19 @@ body.light-theme .site-title {
                 padding: 10px 6px;
             }
         /* Logo Link Hover Effects */
-.logo-section a {
-    transition: all 0.3s ease;
-}
+        .logo-section a {
+            transition: all 0.3s ease;
+        }
 
-.logo-section a:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
+        .logo-section a:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
 
-.logo-section a:active {
-    transform: translateY(1px);
-}
-}
+        .logo-section a:active {
+            transform: translateY(1px);
+        }
+        }
     </style>
 </head>
 <body class="dark-theme">
@@ -526,6 +566,9 @@ body.light-theme .site-title {
             <div class="loading">Loading fee table...</div>
         </div>
     </div>
+
+    <!-- NEW: Copyright text element -->
+    <p id="copyright-text"></p>
 
     <div id="return-to-top" onclick="scrollToTop()">
         <i class="fas fa-arrow-up"></i>
@@ -556,6 +599,52 @@ body.light-theme .site-title {
             container.innerHTML = skeletonHTML;
         }
 
+        // Global variable to store the observer for subpage table rows
+        let currentSubpageTableObserver = null;
+
+        // NEW function to initialize row animations for subpage table
+        function initializeTableRowAnimations() {
+            // Disconnect any previous observer if it exists to clean up
+            if (currentSubpageTableObserver) {
+                currentSubpageTableObserver.disconnect();
+                currentSubpageTableObserver = null;
+            }
+
+            const subpageTable = document.querySelector('.subpage-table');
+            if (!subpageTable) return; // No subpage table found to animate
+
+            // Select all table body rows (exclude header rows)
+            const rows = subpageTable.querySelectorAll('tbody tr');
+
+            const observerOptions = {
+                root: null, // Use the viewport as the root
+                rootMargin: '0px',
+                threshold: 0.1 // Trigger when 10% of the row is visible
+            };
+
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Add the animation class when the row enters the viewport
+                        entry.target.classList.add('fade-in-up');
+                        // Stop observing this row once it has animated
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            // Create a new IntersectionObserver instance
+            currentSubpageTableObserver = new IntersectionObserver(observerCallback, observerOptions);
+
+            // Observe each row
+            rows.forEach((row, index) => {
+                // Set a staggered delay for each row's animation
+                // Using 0.02s (20ms) as 0.001s is too fast to notice staggering
+                row.style.transitionDelay = `${index * 0.01}s`;
+                currentSubpageTableObserver.observe(row);
+            });
+        }
+
         // Table Render Function
         function renderTable(csvData) {
             const rows = csvData.split('\n').map(row => row.split(','));
@@ -569,6 +658,8 @@ body.light-theme .site-title {
             
             // Data Rows
             for (let i = 1; i < rows.length; i++) {
+                // Ensure row is not empty
+                if (!rows[i] || rows[i].length === 0 || (rows[i].length === 1 && rows[i][0].trim() === '')) continue;
                 tableHTML += '<tr>';
                 rows[i].forEach((cell, index) => {
                     const cellValue = cell.trim();
@@ -589,6 +680,12 @@ body.light-theme .site-title {
                 data: csvData,
                 timestamp: lastFetchTime
             }));
+
+            // NEW LINE: Initialize row animations after the table is rendered
+            // Using setTimeout to ensure the table is fully rendered before observing
+            setTimeout(() => {
+                initializeTableRowAnimations();
+            }, 100); 
         }
 
         // Data Fetch Function
@@ -669,6 +766,13 @@ body.light-theme .site-title {
             // Refresh data periodically
             setInterval(fetchData, CACHE_DURATION);
             
+            // Set copyright text
+            const copyrightElement = document.getElementById('copyright-text');
+            if (copyrightElement) {
+                const currentYear = new Date().getFullYear();
+                copyrightElement.textContent = `2019 - ${currentYear} copyright @Visa Topup Myanmar`;
+            }
+
             // Set up scroll to top button
             window.onscroll = function() {
                 if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
