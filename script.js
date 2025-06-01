@@ -259,9 +259,54 @@ async function fetchFeeData(bank) {
     }
 }
 
-// Display/Hide Fee Table
+// Global variable to store the observer for fee table rows
+let currentFeeTableObserver = null;
+
+// NEW function to initialize row animations
+function initializeTableRowAnimations() {
+    // Disconnect any previous observer if it exists to clean up
+    if (currentFeeTableObserver) {
+        currentFeeTableObserver.disconnect();
+        currentFeeTableObserver = null;
+    }
+
+    const feeTable = feeTablesDiv.querySelector('.fee-table');
+    if (!feeTable) return; // No fee table found to animate
+
+    // Select all table body rows (exclude header rows)
+    const rows = feeTable.querySelectorAll('tbody tr');
+
+    const observerOptions = {
+        root: null, // Use the viewport as the root
+        rootMargin: '0px',
+        threshold: 0.1 // Trigger when 10% of the row is visible
+    };
+
+    const observerCallback = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Add the animation class when the row enters the viewport
+                entry.target.classList.add('fade-in-up');
+                // Stop observing this row once it has animated
+                observer.unobserve(entry.target);
+            }
+        });
+    };
+
+    // Create a new IntersectionObserver instance
+    currentFeeTableObserver = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Observe each row
+    rows.forEach((row, index) => {
+        // Set a staggered delay for each row's animation
+        row.style.transitionDelay = `${index * 0.01}s`; 
+        currentFeeTableObserver.observe(row); 
+    });
+}
+
+// MODIFIED showFeeTable function
 async function showFeeTable(bank) {
-    if (!feeTablesDiv || !imageCopyrightContainer || !feeButtonsDiv) return; // Ensure all elements exist
+    if (!feeTablesDiv || !imageCopyrightContainer || !feeButtonsDiv) return;
 
     const existing = document.getElementById(`fee-table-${bank}`);
     
@@ -269,15 +314,27 @@ async function showFeeTable(bank) {
     const imageIsCurrentlyInFeeTablesDiv = feeTablesDiv.contains(imageCopyrightContainer);
 
     if (existing) {
-        // If the table is already displayed, hide it
-        existing.remove(); 
-        feeTablesDiv.innerHTML = ''; // Clear feeTablesDiv after removing table
+        // If the table is already displayed, hide it with a fade-out animation
+        // Set opacity and transform to initial hidden state to trigger CSS transition
+        existing.style.opacity = '0';
+        existing.style.transform = 'translateY(20px)';
         
-        // Move image & copyright back to original position (below fee-buttons)
-        // Ensure originalImageParent and originalImageNextSibling are correctly set
-        if (originalImageParent && imageCopyrightContainer) {
-             originalImageParent.insertBefore(imageCopyrightContainer, originalImageNextSibling);
+        // Disconnect observer for the table being hidden to prevent memory leaks
+        if (currentFeeTableObserver) {
+            currentFeeTableObserver.disconnect();
+            currentFeeTableObserver = null;
         }
+
+        // Delay removal from DOM to allow the fade-out transition to complete
+        setTimeout(() => {
+            existing.remove(); 
+            feeTablesDiv.innerHTML = ''; // Clear feeTablesDiv content after removal
+            
+            // Move image & copyright back to original position
+            if (originalImageParent && imageCopyrightContainer) {
+                 originalImageParent.insertBefore(imageCopyrightContainer, originalImageNextSibling);
+            }
+        }, 500); // The timeout duration should match the CSS transition duration (0.5s)
         return;
     }
 
@@ -285,9 +342,8 @@ async function showFeeTable(bank) {
     feeTablesDiv.innerHTML = '<div class="loading">Loading fee table...</div>';
     
     // If the image was in its original spot, remove it before loading the table
-    // This prevents a brief flash where it might appear above the loading text
     if (!imageIsCurrentlyInFeeTablesDiv && imageCopyrightContainer && imageCopyrightContainer.parentNode) {
-        imageCopyrightContainer.remove(); // Temporarily remove from its original position
+        imageCopyrightContainer.remove();
     }
 
     const rows = await fetchFeeData(bank);
@@ -297,18 +353,19 @@ async function showFeeTable(bank) {
         rows[0].forEach(h => html += `<th>${h}</th>`);
         html += '</tr></thead><tbody>';
         for (let i = 1; i < rows.length; i++) {
-            // Ensure row is not empty
             if (rows[i].length === 0 || (rows[i].length === 1 && rows[i][0].trim() === '')) continue; 
-            html += '<tr>';
+            html += '<tr>'; // Each row will start invisible and slide up, then be revealed by JS
             rows[i].forEach((cell, idx) => {
                 const value = cell.trim();
-                // Format numbers with 'Ks' and add thousands separators
                 html += `<td>${idx > 0 && !isNaN(value) ? parseInt(value).toLocaleString() + ' Ks' : value}</td>`;
             });
             html += '</tr>';
         }
         html += '</tbody></table>';
         feeTablesDiv.innerHTML = html; // Display the fetched table
+
+        // NEW LINE: Initialize row animations after the table is rendered
+        initializeTableRowAnimations();
 
         // After displaying table, append image and copyright below it
         if (imageCopyrightContainer) {
