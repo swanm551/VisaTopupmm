@@ -479,7 +479,8 @@ body.dark-theme .fee-table tr:nth-child(even) {
     color: silver; /* Silver color as requested */
     text-align: center;
     font-size: small;
-    margin-top: 10px; /* Space between image and copyright text */
+    margin-top: 15px; /* Space between image and copyright text */
+    margin-bottom: 60px;
 }
 
 
