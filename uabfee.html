@@ -637,7 +637,7 @@
             rows.forEach((row, index) => {
                 // Set a staggered delay for each row's animation
                 // Using 0.02s (20ms) as 0.001s is too fast to notice staggering
-                row.style.transitionDelay = `${index * 0.02}s`;
+                row.style.transitionDelay = `${index * 0.01}s`;
                 currentSubpageTableObserver.observe(row);
             });
         }
