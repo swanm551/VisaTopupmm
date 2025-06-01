@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visa Topup Myanmar</title>
-    <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjOd1ufKHkNXLPmTI4s1feQWObG7DwY1cpIkYwBbMJJqm7JOLEKrKMAdNIE565tOmPKGbm9Ku_SdUbsKXN6YcANjGBHMLvJpsQgelcjFabjrb2_TJGLssQLmQWOfDvFPd7A1erbv_IGfK626zMfMpVfNJtZNNtR2pIsOK0HTdLqXnProNxWiPaWwAvZ2Gez/s1600/Webp.net-resizeimage.png">
+    <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjOd1ufKHkNXLPtTI4s1feQWObG7DwY1cpIkYwBbMJJqm7JOLEKrKMAdNIE565tOmPKGbm9Ku_SdUbsKXN6YcANjGBHMLvJpsQgelcjFabjrb2_TJGLssQLmQWOfDvFPd7A1erbv_IGfK626zMfMpVfNJtZNNtR2pIsOK0HTdLqXnProNxWiPaWwAvZ2Gez/s1600/Webp.net-resizeimage.png">
     <link rel="stylesheet" href="style.css">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="dark-theme">
@@ -24,7 +25,43 @@
 
     <main>
         <div class="exchange-table" id="rateTable">
-            <div class="loading">Loading rates...</div>
+            <!-- Skeleton Loading HTML - This content will be replaced by actual data -->
+            <table class="skeleton-table">
+                <thead>
+                    <tr>
+                        <th><span class="loading-skeleton"></span></th>
+                        <th><span class="loading-skeleton"></span></th>
+                        <th><span class="loading-skeleton"></span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="loading-skeleton"></span></td>
+                        <td><span class="loading-skeleton"></span></td>
+                        <td><span class="loading-skeleton"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="loading-skeleton"></span></td>
+                        <td><span class="loading-skeleton"></span></td>
+                        <td><span class="loading-skeleton"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="loading-skeleton"></span></td>
+                        <td><span class="loading-skeleton"></span></td>
+                        <td><span class="loading-skeleton"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="loading-skeleton"></span></td>
+                        <td><span class="loading-skeleton"></span></td>
+                        <td><span class="loading-skeleton"></span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="loading-skeleton"></span></td>
+                        <td><span class="loading-skeleton"></span></td>
+                        <td><span class="loading-skeleton"></span></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div class="update-time" id="updateTime"></div>
         <div class="fee-buttons">
@@ -34,6 +71,14 @@
             <button class="fee-button" onclick="showFeeTable('kbz')">KBZ Topup Fee</button>
             <button class="fee-button" onclick="showFeeTable('mab')">MAB Topup Fee</button>
         </div>
+        <!-- NEW SECTION: Image and Copyright -->
+        <div id="image-copyright-container">
+            <!-- Reverted to single PNG image with lazy loading -->
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEixfJ_VKeLa_6VDLLYAHQxcv2_pfVA1uA1h8u9WZuRWotfW3ZRjmAeqi6Af8_0AxCais-irZisvuR2zu5foPyWgFc8RVRxCVBHvZmhq-PkrUDOwOTliDurryH-sXzj9IVRmsEcOdlW5h7LAUuPtiwB8pt0DpLDhyphenhyphenUPw0FhWnajD5HY59Aiz2vpffsw7WjUy/s1600-rw/vtm%20transp%20%281%29.png"
+                 alt="Visa Topup Myanmar Logo" style="max-width: 100%; height: auto; display: block; margin: 0 auto;" loading="lazy">
+            <p id="copyright-text"></p>
+        </div>
+        <!-- END NEW SECTION -->
         <div class="fee-tables" id="feeTables"></div>
     </main>
 
@@ -63,5 +108,6 @@
     </footer>
 
     <script src="script.js"></script>
+
 </body>
 </html>
