@@ -19,7 +19,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Inter', sans-serif;
-    transition: all 0.1s ease;
+    /* MODIFIED: Smoother overall transition for theme change */
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
 body.dark-theme {
@@ -40,7 +41,8 @@ body.light-theme {
     position: sticky;
     top: 0;
     z-index: 100;
-    transition: all 0.3s ease;
+    /* MODIFIED: Smoother header transition for theme change */
+    transition: background 0.5s ease-in-out, border-bottom 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out;
     backdrop-filter: blur(5px);
 }
 
@@ -65,19 +67,33 @@ body.light-theme .header {
     width: auto;
 }
 
+/* Keyframes for the gradient flow animation */
+@keyframes flowGradient {
+    100% { background-position: 0% 50%; }
+    0% { background-position: 100% 50%; }
+}
+
 .site-title {
     font-size: 28px;
     font-weight: 600;
     margin: 0;
     text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
                  0 0 40px rgba(59, 130, 246, 0.3);
-    background: linear-gradient(135deg, #ffffff, #3b82f6);
+    /* MODIFIED: Changed gradient and animation for continuous flow */
+    /* Dark Theme Gradient: Blue -> White -> Blue */
+    background: linear-gradient(90deg, var(--accent-blue-dark), var(--accent-blue), #ffffff, var(--accent-blue), var(--accent-blue-dark));
+    background-size: 300% 100%; /* Wider gradient to allow smooth movement */
+    animation: flowGradient 3s linear infinite; /* 3s duration, linear, infinite */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 body.light-theme .site-title {
-    background: linear-gradient(135deg, #1a1a1a, #2563eb);
+    /* MODIFIED: Changed gradient and animation for continuous flow */
+    /* Light Theme Gradient: Dark Blue -> Dark Gray -> Dark Blue */
+    background: linear-gradient(90deg, var(--accent-blue-dark), #1a1a1a, #f5f5f5, #1a1a1a, var(--accent-blue-dark));
+    background-size: 300% 100%; /* Apply also for light theme */
+    animation: flowGradient 3s linear infinite; /* Apply also for light theme */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
@@ -93,7 +109,8 @@ body.light-theme .site-title {
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            transition: all 0.3s ease;
+            /* MODIFIED: Smoother theme toggle transition */
+            transition: background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, transform 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -138,6 +155,9 @@ body.light-theme .site-title {
     border-radius: 16px;
     position: relative;
     animation: borderGlow 3s ease-in-out infinite;
+    /* Glass Morphism Enhancements */
+    backdrop-filter: blur(12px); /* Slightly increased blur for stronger effect */
+    transition: background 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out;
 }
 
 @keyframes borderGlow {
@@ -146,11 +166,11 @@ body.light-theme .site-title {
 }
 
 body.dark-theme .exchange-table {
-    background: rgba(26, 26, 26, 0.8);
+    background: rgba(26, 26, 26, 0.75); /* Slightly more transparent */
 }
 
 body.light-theme .exchange-table {
-    background: rgba(245, 245, 245, 0.8);
+    background: rgba(245, 245, 245, 0.75); /* Slightly more transparent */
 }
 
 .exchange-table table {
@@ -170,7 +190,8 @@ body.light-theme .exchange-table {
 .exchange-table td {
     padding: 12px;
     text-align: center;
-    transition: all 0.3s ease;
+    /* Glass Morphism Borders */
+    transition: background 0.3s ease, border-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
 .exchange-table td:nth-child(1),
@@ -179,18 +200,85 @@ body.light-theme .exchange-table {
 }
 
 .exchange-table tr:hover td {
-    background: rgba(59, 130, 246, 0.1);
+    background: rgba(59, 130, 246, 0.15); /* Slightly stronger hover effect */
 }
 
 body.dark-theme .exchange-table td {
-    border: 1px solid var(--border-color-dark);
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Subtle, translucent white border for dark theme */
     color: var(--text-primary-dark);
 }
 
 body.light-theme .exchange-table td {
-    border: 1px solid var(--border-color-light);
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle, translucent black border for light theme */
     color: var(--text-primary-light);
 }
+
+/* Skeleton Loading styles */
+.skeleton-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.skeleton-table th,
+.skeleton-table td {
+    padding: 12px;
+    text-align: center;
+    /* Skeleton borders should also reflect the new glass border style */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Default to dark theme skeleton border */
+}
+
+body.light-theme .skeleton-table th,
+body.light-theme .skeleton-table td {
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Light theme skeleton border */
+}
+
+/* Skeleton header background should match the table container background */
+body.dark-theme .skeleton-table th {
+    background: rgba(26, 26, 26, 0.75); /* Matches .exchange-table background */
+    color: transparent; /* Ensures no residual text color interferes with skeleton */
+}
+
+body.light-theme .skeleton-table th {
+    background: rgba(245, 245, 245, 0.75); /* Matches .exchange-table background for light theme */
+    color: transparent; /* Ensures no residual text color interferes with skeleton */
+}
+
+/* General skeleton shimmer bar for both header and data cells */
+.loading-skeleton {
+    background: linear-gradient(90deg, 
+        var(--bg-secondary-dark) 0%, 
+        rgba(59, 130, 246, 0.1) 20%, 
+        var(--bg-secondary-dark) 40%);
+    background-size: 200% 100%;
+    animation: loadingShimmer 1.5s infinite forwards;
+    border-radius: 4px;
+    display: inline-block; /* Essential for applying width/height */
+    height: 1em; /* Default height for data cells */
+    width: 80%; /* Simulate varying text lengths */
+    vertical-align: middle; /* Align with potential text */
+    color: transparent; /* Ensure any default text color is hidden */
+}
+
+body.light-theme .loading-skeleton {
+    background: linear-gradient(90deg, 
+        var(--bg-secondary-light) 0%, 
+        rgba(59, 130, 246, 0.1) 20%, 
+        rgba(59, 130, 246, 0.1) 40%); /* Adjusted color for light theme */
+    background-size: 200% 100%;
+}
+
+/* Specific adjustments for skeleton within a header cell */
+.skeleton-table th .loading-skeleton {
+    height: 1.2em; /* Slightly taller for headers */
+    width: 60%; /* Shorter width for header text */
+    font-size: 1em; /* Ensures 'em' unit works relative to parent's font size if needed */
+}
+
+@keyframes loadingShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
 
 .fee-table {
     width: 100%;
@@ -202,7 +290,8 @@ body.light-theme .exchange-table td {
     border-radius: 6px;
     overflow: hidden;
     font-size: 14px;
-    transition: all 0.3s ease;
+    /* MODIFIED: Smoother fee table transition */
+    transition: background 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
 }
 
 body.dark-theme .fee-table {
@@ -234,9 +323,8 @@ body.light-theme .fee-table {
 .fee-table td {
     padding: 12px;
     text-align: center;
-    transition: all 0.2s ease;
-    border-bottom: 1px solid var(--border-color-dark);
-    border-right: 1px solid var(--border-color-dark);
+    /* MODIFIED: Smoother border transition for theme change */
+    transition: background 0.2s ease, border-color 0.5s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 body.light-theme .fee-table td {
@@ -367,6 +455,34 @@ body.dark-theme .fee-table tr:nth-child(even) {
     overflow-x: auto;
 }
 
+/* New CSS for image and copyright container */
+#image-copyright-container {
+    text-align: center;
+    margin-top: 30px; /* Space above the image */
+    margin-bottom: 20px; /* Space below the copyright text */
+    /* Align with other content max-width */
+    max-width: 1000px; 
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px; /* Add some padding on smaller screens */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+#image-copyright-container img {
+    max-width: 100%; /* Ensures image is responsive */
+    height: auto; /* Maintains aspect ratio */
+    display: block; /* Removes extra space below image */
+    margin: 0 auto; /* Center the image if it's smaller than its container */
+}
+
+#copyright-text {
+    color: silver; /* Silver color as requested */
+    text-align: center;
+    font-size: small;
+    margin-top: 10px; /* Space between image and copyright text */
+}
+
+
 #return-to-top {
     position: fixed;
     bottom: 80px;
@@ -398,7 +514,8 @@ body.dark-theme .fee-table tr:nth-child(even) {
     display: flex;
     justify-content: center;
     gap: 20px;
-    transition: all 0.3s ease;
+    /* MODIFIED: Smoother footer transition for theme change */
+    transition: background 0.5s ease-in-out, border-top 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out, bottom 0.3s ease;
     backdrop-filter: blur(2px);
 }
 
