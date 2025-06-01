@@ -291,8 +291,27 @@ body.light-theme .loading-skeleton {
     overflow: hidden;
     font-size: 14px;
     /* MODIFIED: Smoother fee table transition */
-    transition: background 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+    transition: background 0.5s ease-in-out, box-shadow 0.5s ease-in-out, opacity 0.5s ease-out, transform 0.5s ease-out; /* Added opacity and transform transitions */
+
+    /* NEW: Initial state for appearance animation */
+    opacity: 0; 
+    transform: translateY(20px); 
+    /* NEW: Apply the appearance animation */
+    animation: fadeInSlideUp 0.5s ease-out forwards; 
 }
+
+/* NEW: Keyframes for table appearance animation */
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 
 body.dark-theme .fee-table {
     background: var(--bg-secondary-dark);
@@ -360,6 +379,21 @@ body.dark-theme .fee-table tr:nth-child(even) {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(59, 130, 246, 0.1);
 }
+
+/* NEW: Styles for individual table rows animation */
+.fee-table tbody tr {
+    opacity: 0; /* Initial state: invisible */
+    transform: translateY(20px); /* Initial state: slightly below */
+    /* This transition will be used when the 'fade-in-up' class is added */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out; 
+}
+
+/* NEW: Class added by JavaScript when row is in view */
+.fee-table tbody tr.fade-in-up {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 
 @media (max-width: 768px) {
     .fee-table {
