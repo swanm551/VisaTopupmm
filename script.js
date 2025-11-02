@@ -115,7 +115,7 @@ async function fetchWithRetry(url, timeout = 10000, retries = 1) {
             clearTimeout(timeoutId); // Clear timeout if fetch completes
 
             if (!response.ok) throw new Error('Network response was not ok');
-            return await response.text();
+            return await response.json();
         } catch (err) {
             // If it's the last attempt, re-throw the error
             if (attempt === retries) throw err;
@@ -160,7 +160,7 @@ const EXCHANGE_RATE_CACHE_EXPIRY_MS = 60 * 1000; // 1 minute cache expiry for ex
 async function fetchRates() {
     if (!rateTable || !updateTimeElement) return;
 
-    const url = 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec';
+    const url = 'https://ratecache.htunlwinaung-hla03.workers.dev';
     
     // 1. Try to load from cache
     const cachedData = localStorage.getItem(EXCHANGE_RATE_CACHE_KEY);
