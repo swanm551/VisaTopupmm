@@ -4,1189 +4,280 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visa Topup Myanmar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjOd1ufKHkNXLPtTI4s1feQWObG7DwY1cpIkYwBbMJJqm7JOLEKrKMAdNIE565tOmPKGbm9Ku_SdUbsKXN6YcANjGBHMLvJpsQgelcjFabjrb2_TJGLssQLmQWOfDvFPd7A1erbv_IGfK626zMfMpVfNJtZNNtR2pIsOK0HTdLqXnProNxWiPaWwAvZ2Gez/s1600/Webp.net-resizeimage.png">
+    
     <style>
-  :root {
-    --bg-primary-light: #ffffff;
-    --bg-secondary-light: #f5f5f5;
-    --text-primary-light: #000000;
-    --text-secondary-light: #666666;
-    --border-color-light: #e5e5e5;
-    
-    --bg-primary-dark: #0A0A0A;
-    --bg-secondary-dark: #1A1A1A;
-    --text-primary-dark: #ffffff;
-    --text-secondary-dark: #A1A1AA;
-    --border-color-dark: #27272A;
-    
-    --accent-blue: #3B82F6;
-    --accent-blue-dark: #2563EB;
-}
+        :root {
+            --bg-primary-light: #ffffff;
+            --bg-secondary-light: #f5f5f5;
+            --text-primary-light: #000000;
+            --text-secondary-light: #666666;
+            --border-color-light: #e5e5e5;
+            --bg-primary-dark: #0A0A0A;
+            --bg-secondary-dark: #1A1A1A;
+            --text-primary-dark: #ffffff;
+            --text-secondary-dark: #A1A1AA;
+            --border-color-dark: #27272A;
+            --accent-blue: #3B82F6;
+            --accent-blue-dark: #2563EB;
+        }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', sans-serif;
-    /* MODIFIED: Smoother overall transition for theme change */
-    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
-}
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+        }
 
-body.dark-theme {
-    background: var(--bg-primary-dark);
-    color: var(--text-primary-dark);
-}
+        body.dark-theme { background: var(--bg-primary-dark); color: var(--text-primary-dark); }
+        body.light-theme { background: var(--bg-primary-light); color: var(--text-primary-light); }
 
-body.light-theme {
-    background: var(--bg-primary-light);
-    color: var(--text-primary-light);
-}
-
-.header {
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    /* MODIFIED: Smoother header transition for theme change */
-    transition: background 0.5s ease-in-out, border-bottom 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out;
-    backdrop-filter: blur(5px);
-}
-
-body.dark-theme .header {
-    background: rgba(26, 26, 26, 0.8);
-    border-bottom: 1px solid var(--border-color-dark);
-}
-
-body.light-theme .header {
-    background: rgba(245, 245, 245, 0.8);
-    border-bottom: 1px solid var(--border-color-light);
-}
-
-.logo-section {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.logo {
-    height: 40px;
-    width: auto;
-}
-
-/* Keyframes for the gradient flow animation */
-@keyframes flowGradient {
-    100% { background-position: 0% 50%; }
-    0% { background-position: 100% 50%; }
-}
-
-.site-title {
-    font-size: 28px;
-    font-weight: 600;
-    margin: 0;
-    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
-                 0 0 40px rgba(59, 130, 246, 0.3);
-    /* MODIFIED: Changed gradient and animation for continuous flow */
-    /* Dark Theme Gradient: Blue -> White -> Blue */
-    background: linear-gradient(90deg, var(--accent-blue-dark), var(--accent-blue), #ffffff, var(--accent-blue), var(--accent-blue-dark));
-    background-size: 300% 100%; /* Wider gradient to allow smooth movement */
-    animation: flowGradient 3s linear infinite; /* 3s duration, linear, infinite */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-body.light-theme .site-title {
-    /* MODIFIED: Changed gradient and animation for continuous flow */
-    /* Light Theme Gradient: Dark Blue -> Dark Gray -> Dark Blue */
-    background: linear-gradient(90deg, var(--accent-blue-dark), #1a1a1a, #f5f5f5, #1a1a1a, var(--accent-blue-dark));
-    background-size: 300% 100%; /* Apply also for light theme */
-    animation: flowGradient 3s linear infinite; /* Apply also for light theme */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
-}
-
-.theme-toggle {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            /* MODIFIED: Smoother theme toggle transition */
-            transition: background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, transform 0.3s ease;
-            position: relative;
+        /* --- Swiper Slider Custom CSS --- */
+        .card-slider-section {
+            width: 100%;
+            padding: 40px 0;
             overflow: hidden;
         }
 
-        body.dark-theme .theme-toggle {
-            background: var(--bg-secondary-dark);
-            color: var(--text-primary-dark);
-            box-shadow: 
-                6px 6px 12px rgba(0, 0, 0, 0.3),
-                -6px -6px 12px rgba(70, 70, 70, 0.1);
+        .swiper {
+            width: 100%;
+            padding-bottom: 50px;
         }
 
-        body.light-theme .theme-toggle {
-            background: var(--bg-secondary-light);
-            color: var(--text-primary-light);
-            box-shadow: 
-                6px 6px 12px rgba(0, 0, 0, 0.1),
-                -6px -6px 12px rgba(255, 255, 255, 0.8);
+        .swiper-slide {
+            background-position: center;
+            background-size: cover;
+            width: 320px; /* Card size */
+            height: auto;
+            transition: 0.3s;
         }
 
-        .theme-toggle:hover {
-            transform: translateY(-2px);
+        /* ဘေးကကတ်တွေကို နည်းနည်းမှိန်ထားပြီး အလယ်ကတ်ကို ကြည်အောင်လုပ်ခြင်း */
+        .swiper-slide:not(.swiper-slide-active) {
+            opacity: 0.4;
+            filter: blur(1px);
         }
 
-        .theme-toggle:active {
-            transform: translateY(1px);
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            border-radius: 18px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
-.opening-hours {
-    text-align: right;
-    padding: 10px 20px;
-    color: silver;
-    font-size: 14px;
-    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1));
-}
 
-.exchange-table {
-    width: 85%;
-    max-width: 1000px;
-    margin: 0px auto;
-    margin-top: 10px;
-    overflow-x: auto;
-    border-radius: 16px;
-    position: relative;
-    animation: borderGlow 3s ease-in-out infinite;
-    /* Glass Morphism Enhancements */
-    backdrop-filter: blur(12px); /* Slightly increased blur for stronger effect */
-    transition: background 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out;
-}
-
-@keyframes borderGlow {
-    0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-    50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); }
-}
-
-body.dark-theme .exchange-table {
-    background: rgba(26, 26, 26, 0.75); /* Slightly more transparent */
-}
-
-body.light-theme .exchange-table {
-    background: rgba(245, 245, 245, 0.75); /* Slightly more transparent */
-}
-
-.exchange-table table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.exchange-table th {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-    color: white;
-    padding: 15px;
-    font-size: 18px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-}
-
-.exchange-table td {
-    padding: 12px;
-    text-align: center;
-    /* Glass Morphism Borders */
-    transition: background 0.3s ease, border-color 0.5s ease-in-out, color 0.5s ease-in-out;
-}
-
-.exchange-table td:nth-child(1),
-.exchange-table td:nth-child(2) {
-    font-weight: bold;
-}
-
-.exchange-table tr:hover td {
-    background: rgba(59, 130, 246, 0.15); /* Slightly stronger hover effect */
-}
-
-body.dark-theme .exchange-table td {
-    border: 1px solid rgba(255, 255, 255, 0.15); /* Subtle, translucent white border for dark theme */
-    color: var(--text-primary-dark);
-}
-
-body.light-theme .exchange-table td {
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle, translucent black border for light theme */
-    color: var(--text-primary-light);
-}
-
-/* Skeleton Loading styles */
-.skeleton-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.skeleton-table th,
-.skeleton-table td {
-    padding: 12px;
-    text-align: center;
-    /* Skeleton borders should also reflect the new glass border style */
-    border: 1px solid rgba(255, 255, 255, 0.15); /* Default to dark theme skeleton border */
-}
-
-body.light-theme .skeleton-table th,
-body.light-theme .skeleton-table td {
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Light theme skeleton border */
-}
-
-/* Skeleton header background should match the table container background */
-body.dark-theme .skeleton-table th {
-    background: rgba(26, 26, 26, 0.75); /* Matches .exchange-table background */
-    color: transparent; /* Ensures no residual text color interferes with skeleton */
-}
-
-body.light-theme .skeleton-table th {
-    background: rgba(245, 245, 245, 0.75); /* Matches .exchange-table background for light theme */
-    color: transparent; /* Ensures no residual text color interferes with skeleton */
-}
-
-/* General skeleton shimmer bar for both header and data cells */
-.loading-skeleton {
-    background: linear-gradient(90deg, 
-        var(--bg-secondary-dark) 0%, 
-        rgba(59, 130, 246, 0.1) 20%, 
-        var(--bg-secondary-dark) 40%);
-    background-size: 200% 100%;
-    animation: loadingShimmer 1.5s infinite forwards;
-    border-radius: 4px;
-    display: inline-block; /* Essential for applying width/height */
-    height: 1em; /* Default height for data cells */
-    width: 80%; /* Simulate varying text lengths */
-    vertical-align: middle; /* Align with potential text */
-    color: transparent; /* Ensure any default text color is hidden */
-}
-
-body.light-theme .loading-skeleton {
-    background: linear-gradient(90deg, 
-        var(--bg-secondary-light) 0%, 
-        rgba(59, 130, 246, 0.1) 20%, 
-        rgba(59, 130, 246, 0.1) 40%); /* Adjusted color for light theme */
-    background-size: 200% 100%;
-}
-
-/* Specific adjustments for skeleton within a header cell */
-.skeleton-table th .loading-skeleton {
-    height: 1.2em; /* Slightly taller for headers */
-    width: 60%; /* Shorter width for header text */
-    font-size: 1em; /* Ensures 'em' unit works relative to parent's font size if needed */
-}
-
-@keyframes loadingShimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-}
-
-
-.fee-table {
-    width: 100%;
-    max-width: 1000px;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: 0 auto;
-    margin-bottom: 30px;
-    border-radius: 6px;
-    overflow: hidden;
-    font-size: 14px;
-    /* MODIFIED: Smoother fee table transition */
-    transition: background 0.5s ease-in-out, box-shadow 0.5s ease-in-out, opacity 0.5s ease-out, transform 0.5s ease-out; /* Added opacity and transform transitions */
-
-    /* NEW: Initial state for appearance animation */
-    opacity: 0; 
-    transform: translateY(20px); 
-    /* NEW: Apply the appearance animation */
-    animation: fadeInSlideUp 0.5s ease-out forwards; 
-}
-
-/* NEW: Keyframes for table appearance animation */
-@keyframes fadeInSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-
-body.dark-theme .fee-table {
-    background: var(--bg-secondary-dark);
-    box-shadow: 
-        12px 12px 24px rgba(0, 0, 0, 0.4),
-        -12px -12px 24px rgba(50, 50, 50, 0.2);
-}
-
-body.light-theme .fee-table {
-    background: var(--bg-secondary-light);
-    box-shadow: 
-        12px 12px 24px rgba(0, 0, 0, 0.1),
-        -12px -12px 24px rgba(255, 255, 255, 0.7);
-}
-
-.fee-table th {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-    color: white;
-    padding: 16px;
-    text-align: center;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 13px;
-    border: none;
-}
-
-.fee-table td {
-    padding: 12px;
-    text-align: center;
-    /* MODIFIED: Smoother border transition for theme change */
-    transition: background 0.2s ease, border-color 0.5s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-body.light-theme .fee-table td {
-    border-color: var(--border-color-light);
-}
-
-.fee-table tr:first-child th:first-child {
-    border-top-left-radius: 6px;
-}
-
-.fee-table tr:first-child th:last-child {
-    border-top-right-radius: 6px;
-}
-
-.fee-table tr:last-child td:first-child {
-    border-bottom-left-radius: 6px;
-}
-
-.fee-table tr:last-child td:last-child {
-    border-bottom-right-radius: 6px;
-}
-
-.fee-table tr:nth-child(even) {
-    background-color: rgba(59, 130, 246, 0.05);
-}
-
-body.dark-theme .fee-table tr:nth-child(even) {
-    background-color: rgba(59, 130, 246, 0.1);
-}
-
-.fee-table tr:hover td {
-    background: rgba(59, 130, 246, 0.2);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.1);
-}
-
-/* NEW: Styles for individual table rows animation */
-.fee-table tbody tr {
-    opacity: 0; /* Initial state: invisible */
-    transform: translateY(20px); /* Initial state: slightly below */
-    /* This transition will be used when the 'fade-in-up' class is added */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out; 
-}
-
-/* NEW: Class added by JavaScript when row is in view */
-.fee-table tbody tr.fade-in-up {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-@media (max-width: 768px) {
-    .fee-table {
-        font-size: 13px;
-    }
-    
-    .fee-table th, 
-    .fee-table td {
-        padding: 12px 8px;
-    }
-}
-
-@media (max-width: 480px) {
-    .fee-table {
-        font-size: 12px;
-        border-radius: 6px;
-    }
-    
-    .fee-table th, 
-    .fee-table td {
-        padding: 10px 6px;
-    }
-} 
-.loading, .error {
-    text-align: center;
-    padding: 20px;
-    color: var(--text-secondary-dark);
-}
-
-.error {
-    color: #ff4444;
-}
-
-.update-time {
-    text-align: center;
-    color: #ff4444;
-    font-size: 12px;
-    margin: 20px 0;
-    text-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
-}
-
-.fee-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 30px;
-    flex-wrap: wrap;
-    position: relative;
-}
-
-.fee-button {
-    padding: 12px 24px;
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.fee-button::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, #00ffd5, #002bff, #7a00ff, #ff00c8);
-    border-radius: 10px;
-    z-index: -1;
-    filter: blur(8px);
-    background-size: 400%;
-    animation: neonGlow 8s linear infinite;
-}
-
-@keyframes neonGlow {
-    0% { background-position: 0 0; }
-    50% { background-position: 400% 0; }
-    100% { background-position: 0 0; }
-}
-
-.fee-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-}
-
-.fee-tables {
-    margin: 20px;
-    overflow-x: auto;
-}
-
-/* New CSS for image and copyright container */
-#image-copyright-container {
-    text-align: center;
-    margin-top: 30px; /* Space above the image */
-    margin-bottom: 20px; /* Space below the copyright text */
-    /* Align with other content max-width */
-    max-width: 1000px; 
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 20px; /* Add some padding on smaller screens */
-    box-sizing: border-box; /* Include padding in width calculation */
-}
-
-#image-copyright-container img {
-    max-width: 100%; /* Ensures image is responsive */
-    height: auto; /* Maintains aspect ratio */
-    display: block; /* Removes extra space below image */
-    margin: 0 auto; /* Center the image if it's smaller than its container */
-}
-
-#copyright-text {
-    color: silver; /* Silver color as requested */
-    text-align: center;
-    font-size: small;
-    margin-top: 15px; /* Space between image and copyright text */
-    margin-bottom: 60px;
-}
-
-
-#return-to-top {
-    position: fixed;
-    bottom: 20px; /* MODIFIED: Adjusted for removed fixed footer */
-    right: 20px;
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 1000;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-}
-
-#return-to-top:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-}
-
-/* MODIFIED: Footer is now a static element at the end of the page */
-.footer {
-    padding: 20px 10px;
-    margin-top: 40px; /* Add space above the footer */
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    border-top: 1px solid; /* Add a top border */
-    transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
-}
-
-body.dark-theme .footer {
-    background: var(--bg-secondary-dark); /* Solid background */
-    border-color: var(--border-color-dark);
-}
-
-body.light-theme .footer {
-    background: var(--bg-secondary-light); /* Solid background */
-    border-color: var(--border-color-light);
-}
-
-.social-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-size: 20px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
-.social-button:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-}
-
-.call-btn { 
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-}
-
-.messenger-btn { 
-    background: linear-gradient(135deg, #0084FF, #0077e6);
-}
-
-.facebook-btn { 
-    background: linear-gradient(135deg, #1877F2, #166fe5);
-}
-
-.messenger-broadcast-btn { 
-    background: linear-gradient(135deg, #0084FF, #0077e6);
-}
-
-.telegram-btn { 
-    background: linear-gradient(135deg, #0088cc, #0077b3);
-}
-
-.viber-btn { 
-    background: linear-gradient(135deg, #665CAC, #5c539b);
-}
-
-@media (max-width: 768px) {
-    .site-title {
-        font-size: 20px;
-    }
-    
-    .logo {
-        height: 32px;
-    }
-
-    .fee-buttons {
-        flex-direction: row;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding: 5px;
-        justify-content: flex-start;
-        gap: 5px;
-        margin: 15px 5px;
-    }
-
-    .fee-button {
-        flex: 0 0 auto;
-        white-space: nowrap;
-        padding: 8px 12px;
-        font-size: 11px;
-        min-width: auto;
-    }
-
-    .social-button {
-        width: 35px;
-        height: 35px;
-        font-size: 16px;
-    }
-}
-  </style>
+        .swiper-pagination-bullet {
+            background: var(--accent-blue);
+        }
+
+        /* --- Header & Title --- */
+        .header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            transition: background 0.5s ease-in-out;
+        }
+
+        body.dark-theme .header { background: rgba(26, 26, 26, 0.8); border-bottom: 1px solid var(--border-color-dark); }
+        body.light-theme .header { background: rgba(245, 245, 245, 0.8); border-bottom: 1px solid var(--border-color-light); }
+
+        .logo { height: 40px; width: auto; }
+
+        @keyframes flowGradient {
+            100% { background-position: 0% 50%; }
+            0% { background-position: 100% 50%; }
+        }
+
+        .site-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            background: linear-gradient(90deg, var(--accent-blue-dark), var(--accent-blue), #ffffff, var(--accent-blue), var(--accent-blue-dark));
+            background-size: 300% 100%;
+            animation: flowGradient 3s linear infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .theme-toggle {
+            width: 44px; height: 44px; border-radius: 12px; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 20px;
+            transition: 0.3s;
+        }
+
+        body.dark-theme .theme-toggle { background: var(--bg-secondary-dark); color: #fff; }
+        body.light-theme .theme-toggle { background: var(--bg-secondary-light); color: #000; }
+
+        .opening-hours { text-align: right; padding: 10px 20px; color: silver; font-size: 14px; }
+
+        /* --- Tables & Buttons --- */
+        .exchange-table { width: 85%; max-width: 1000px; margin: 20px auto; border-radius: 16px; backdrop-filter: blur(12px); overflow: hidden; }
+        .exchange-table table { width: 100%; border-collapse: collapse; }
+        .exchange-table th { background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark)); color: white; padding: 15px; }
+        .exchange-table td { padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+
+        .fee-buttons { display: flex; justify-content: center; gap: 10px; margin: 20px; flex-wrap: wrap; }
+        .fee-button { padding: 12px 20px; background: var(--accent-blue); color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .fee-button:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); }
+
+        .footer { padding: 40px 20px; display: flex; justify-content: center; gap: 20px; border-top: 1px solid var(--border-color-dark); margin-top: 50px; }
+        .social-button { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; font-size: 20px; }
+        
+        /* Your Table Animations & Other Styles... */
+        .loading-skeleton { background: linear-gradient(90deg, #222 0%, #333 50%, #222 100%); background-size: 200% 100%; animation: loadingShimmer 1.5s infinite; height: 15px; width: 80%; display: inline-block; border-radius: 4px; }
+        @keyframes loadingShimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        #copyright-text { color: silver; text-align: center; font-size: 12px; margin-top: 20px; }
+
+        @media (max-width: 768px) {
+            .site-title { font-size: 18px; }
+            .swiper-slide { width: 260px; }
+        }
+    </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="dark-theme">
+
     <header class="header">
         <div class="logo-section">
             <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-        <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
-        <h1 class="site-title">Visa Topup Myanmar</h1>
-    </a>
+                <img alt="Logo" class="logo" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiyYzrsGtCZ9Z18oQA9UDjT4dQp5pskqPam205oyGqEhDFr_FfLPIcFdbz7HOOXuViYH7ETAeazSnyf6IM6yCIKLVFNLpITVo-oGTd9zIVCNcGXFvPMnNqAbJh31RgiA-8fqNor-xgDLJme6j9Jiic5dXE7Nh8SGbqAzXjQ2reshMfc_XPnpUMfbbVnbsFD/s1600/VTM%20logo.png">
+                <h1 class="site-title">Visa Topup Myanmar</h1>
+            </a>
         </div>
         <button class="theme-toggle" onclick="toggleTheme()">
             <i class="fas fa-sun"></i>
         </button>
     </header>
+
     <div class="opening-hours">Open hours: 9AM to 9PM </div>
 
     <main>
+        <section class="card-slider-section">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="assets/uab.png" alt="UAB Visa"></div>
+                    <div class="swiper-slide"><img src="assets/aya.png" alt="AYA Visa"></div>
+                    <div class="swiper-slide"><img src="assets/cb.png" alt="CB Visa"></div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+
         <div class="exchange-table" id="rateTable">
-            <!-- Skeleton Loading HTML - This content will be replaced by actual data -->
-            <table class="skeleton-table">
-                <thead>
-                    <tr>
-                        <th><span class="loading-skeleton"></span></th>
-                        <th><span class="loading-skeleton"></span></th>
-                        <th><span class="loading-skeleton"></span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><span class="loading-skeleton"></span></td>
-                        <td><span class="loading-skeleton"></span></td>
-                        <td><span class="loading-skeleton"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="loading-skeleton"></span></td>
-                        <td><span class="loading-skeleton"></span></td>
-                        <td><span class="loading-skeleton"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="loading-skeleton"></span></td>
-                        <td><span class="loading-skeleton"></span></td>
-                        <td><span class="loading-skeleton"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="loading-skeleton"></span></td>
-                        <td><span class="loading-skeleton"></span></td>
-                        <td><span class="loading-skeleton"></span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="loading-skeleton"></span></td>
-                        <td><span class="loading-skeleton"></span></td>
-                        <td><span class="loading-skeleton"></span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            </div>
+        
         <div class="update-time" id="updateTime"></div>
+
         <div class="fee-buttons">
-            <button class="fee-button" onclick="showFeeTable('uab')">UAB Topup Fee</button>
-            <button class="fee-button" onclick="showFeeTable('aya')">AYA Topup Fee</button>
-            <button class="fee-button" onclick="showFeeTable('cb')">CB Topup Fee</button>
-            <button class="fee-button" onclick="showFeeTable('kbz')">KBZ Topup Fee</button>
-            <button class="fee-button" onclick="showFeeTable('mab')">MAB Topup Fee</button>
+            <button class="fee-button" onclick="showFeeTable('uab')">UAB Fee</button>
+            <button class="fee-button" onclick="showFeeTable('aya')">AYA Fee</button>
+            <button class="fee-button" onclick="showFeeTable('cb')">CB Fee</button>
+            <button class="fee-button" onclick="showFeeTable('kbz')">KBZ Fee</button>
+            <button class="fee-button" onclick="showFeeTable('mab')">MAB Fee</button>
         </div>
-        <!-- NEW SECTION: Image and Copyright -->
-        <div id="image-copyright-container">
-            <!-- Reverted to single PNG image with lazy loading -->
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjg_LTndXKZHX73GT40Isc4c5NEA0Wt3LVl_4fICTzvu9aY-B1kIEi7lPOS1iVUI0t26p2omAII6Urtn-euUbiK_THoq8285ziflcfThEa6XGgR2ugcagfGnmFiq3pAkfeY4HfyqHrbhYkCxpgET9qkk9NwVQ4saJsmANTon9Itl4UfQ6r1JDpeDnklMrsJ/s1600-rw/vtm%20carousel.png"
-                 alt="Visa Topup Myanmar Logo" style="max-width: 100%; height: auto; display: block; margin: 0 auto;" loading="lazy">
-            <p id="copyright-text"></p>
-        </div>
-        <!-- END NEW SECTION -->
+
         <div class="fee-tables" id="feeTables"></div>
+        
+        <p id="copyright-text"></p>
     </main>
 
-    <div id="return-to-top" onclick="scrollToTop()">
-        <i class="fas fa-arrow-up"></i>
-    </div>
-
     <footer class="footer">
-        <a class="social-button call-btn" href="tel:+959770770640">
-            <i class="fas fa-phone"></i>
-        </a>
-        <a class="social-button messenger-btn" href="https://m.me/VisaTopup.mm">
-            <i class="fab fa-facebook-messenger"></i>
-        </a>
-        <a class="social-button facebook-btn" href="https://www.facebook.com/VisaTopup.mm">
-            <i class="fab fa-facebook-f"></i>
-        </a>
-        <a class="social-button messenger-broadcast-btn" href="https://www.messenger.com/channel/VisaTopup.mm">
-            <i class="fas fa-broadcast-tower"></i>
-        </a>
-        <a class="social-button telegram-btn" href="https://t.me/visatopupmm">
-            <i class="fab fa-telegram"></i>
-        </a>
-        <a class="social-button viber-btn" href="https://connect.viber.com/business/bd431ce0-b17d-11ef-9d00-aaf31c97cca2">
-            <i class="fab fa-viber"></i>
-        </a>
+        <a class="social-button" style="background:#4CAF50" href="tel:+959770770640"><i class="fas fa-phone"></i></a>
+        <a class="social-button" style="background:#0084FF" href="https://m.me/VisaTopup.mm"><i class="fab fa-facebook-messenger"></i></a>
+        <a class="social-button" style="background:#1877F2" href="https://www.facebook.com/VisaTopup.mm"><i class="fab fa-facebook-f"></i></a>
+        <a class="social-button" style="background:#0088cc" href="https://t.me/visatopupmm"><i class="fab fa-telegram"></i></a>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     <script>
-// DOM Elements
-const body = document.body;
-const icon = document.querySelector('.theme-toggle i');
-const returnToTopBtn = document.getElementById('return-to-top');
-const rateTable = document.getElementById('rateTable');
-const updateTimeElement = document.getElementById('updateTime');
-const feeTablesDiv = document.getElementById('feeTables');
-const footer = document.querySelector('.footer');
-// NEW: Get reference to the image and copyright container
-const imageCopyrightContainer = document.getElementById('image-copyright-container');
-// NEW: Get reference to the fee buttons div (to determine insertion point later)
-const feeButtonsDiv = document.querySelector('.fee-buttons');
-
-// NEW: Store original position for the image and copyright container
-let originalImageParent = null;
-let originalImageNextSibling = null;
-
-
-// Skeleton HTML for exchange table
-// This will be used to reset the table content to skeleton state before fetching data
-const exchangeTableSkeleton = `
-    <table class="skeleton-table">
-        <thead>
-            <tr>
-                <th><span class="loading-skeleton"></span></th>
-                <th><span class="loading-skeleton"></span></th>
-                <th><span class="loading-skeleton"></span></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><span class="loading-skeleton"></span></td>
-                <td><span class="loading-skeleton"></span></td>
-                <td><span class="loading-skeleton"></span></td>
-            </tr>
-            <tr>
-                <td><span class="loading-skeleton"></span></td>
-                <td><span class="loading-skeleton"></span></td>
-                <td><span class="loading-skeleton"></span></td>
-            </tr>
-            <tr>
-                <td><span class="loading-skeleton"></span></td>
-                <td><span class="loading-skeleton"></span></td>
-                <td><span class="loading-skeleton"></span></td>
-            </tr>
-            <tr>
-                <td><span class="loading-skeleton"></span></td>
-                <td><span class="loading-skeleton"></span></td>
-                <td><span class="loading-skeleton"></span></td>
-            </tr>
-            <tr>
-                <td><span class="loading-skeleton"></span></td>
-                <td><span class="loading-skeleton"></span></td>
-                <td><span class="loading-skeleton"></span></td>
-            </tr>
-                </tbody>
-            </table>
-`;
-
-
-// Theme Toggle
-function toggleTheme() {
-    if (!body || !icon) return;
-
-    const isDark = body.classList.contains('dark-theme');
-    body.classList.toggle('dark-theme', !isDark);
-    body.classList.toggle('light-theme', isDark);
-    icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun'; // Toggle icon
-    localStorage.setItem('theme', isDark ? 'light' : 'dark');
-}
-
-// Scroll to Top
-if (returnToTopBtn) {
-    window.onscroll = () => {
-        returnToTopBtn.style.display = (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) ? 'flex' : 'none';
-    };
-}
-
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// Update Time - now also accepts a timestamp for when the data was last updated
-function updateTime(timestamp = null) {
-    if (!updateTimeElement) return;
-
-    let displayDate;
-    if (timestamp) {
-        displayDate = new Date(timestamp);
-    } else {
-        displayDate = new Date();
-    }
-    
-    const day = displayDate.getDate();
-    const month = displayDate.toLocaleString('en-US', { month: 'long' });
-    const year = displayDate.getFullYear();
-    let hours = displayDate.getHours();
-    const minutes = displayDate.getMinutes().toString().padStart(2, '0');
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12;
-
-    const formattedTime = `${hours}:${minutes} ${ampm}`;
-    const formattedDate = `${year} ${month} ${day}`;
-    updateTimeElement.textContent = `Exchange rate last updated: ${formattedDate}, ${formattedTime}`;
-}
-
-// Retry logic wrapper for fetching data
-async function fetchWithRetry(url, timeout = 10000, retries = 1) {
-    for (let attempt = 0; attempt <= retries; attempt++) {
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeout); // Set timeout
-
-            const response = await fetch(url, { signal: controller.signal });
-            clearTimeout(timeoutId); // Clear timeout if fetch completes
-
-            if (!response.ok) throw new Error('Network response was not ok');
-            return await response.text();
-        } catch (err) {
-            // If it's the last attempt, re-throw the error
-            if (attempt === retries) throw err;
-            // Otherwise, wait a bit before retrying (optional: add exponential backoff)
-            await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1))); 
-        }
-    }
-}
-
-// Helper function to render the table HTML
-function renderExchangeTable(rows) {
-    if (!rateTable) return;
-
-    let html = '<table><thead><tr>';
-    rows[0].forEach(h => html += `<th>${h}</th>`);
-    html += '</tr></thead><tbody>';
-    for (let i = 1; i < rows.length; i++) {
-        // Ensure row is not empty and has valid cells
-        if (rows[i].length === 0 || (rows[i].length === 1 && rows[i][0].trim() === '')) continue; 
-        html += '<tr>';
-        rows[i].forEach((cell, idx) => {
-            const value = cell.trim();
-            let displayValue = value;
-            // Check if it's the second column (idx === 1) AND it's a number
-            if (idx === 1 && !isNaN(value)) {
-                displayValue = value + ' Ks'; // Display without commas
-            } else if (idx > 0 && !isNaN(value)) { // For other numeric columns (index > 0, excluding column 1)
-                displayValue = parseInt(value).toLocaleString() + ' Ks'; // Display with commas
-            }
-            html += `<td>${displayValue}</td>`;
+        // 1. Swiper Slider Configuration
+        const swiper = new Swiper(".mySwiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            loop: true, // Infinite Loop
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            coverflowEffect: {
+                rotate: 15,
+                stretch: 0,
+                depth: 300,
+                modifier: 1,
+                slideShadows: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
         });
-        html += '</tr>';
-    }
-    html += '</tbody></table>';
-    rateTable.innerHTML = html;
-}
 
-const EXCHANGE_RATE_CACHE_KEY = 'exchangeRatesCache';
-const EXCHANGE_RATE_CACHE_EXPIRY_MS = 60 * 1000; // 1 minute cache expiry for exchange rates
-
-// Fetch Exchange Rates with caching
-async function fetchRates() {
-    if (!rateTable || !updateTimeElement) return;
-
-    const url = 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec';
-    
-    // 1. Try to load from cache
-    const cachedData = localStorage.getItem(EXCHANGE_RATE_CACHE_KEY);
-    let renderedFromCache = false;
-
-    if (cachedData) {
-        try {
-            const parsedCache = JSON.parse(cachedData);
-            // Check if cache is fresh enough
-            if (Date.now() - parsedCache.timestamp < EXCHANGE_RATE_CACHE_EXPIRY_MS) {
-                console.log('Using cached exchange rates.');
-                // Pass the raw string data to render and then parse it inside renderExchangeTable
-                const rows = parsedCache.data.split('\n').map(row => row.split(','));
-                renderExchangeTable(rows);
-                updateTime(parsedCache.timestamp); // Use cached timestamp
-                renderedFromCache = true;
-            }
-        } catch (e) {
-            console.warn('Error parsing cached exchange rates:', e);
-            localStorage.removeItem(EXCHANGE_RATE_CACHE_KEY); // Clear corrupt cache
-        }
-    }
-
-    // 2. If not rendered from cache, show skeleton
-    if (!renderedFromCache) {
-        rateTable.innerHTML = exchangeTableSkeleton;
-        updateTimeElement.textContent = 'Loading exchange rates...';
-    }
-
-    // 3. Always try to fetch fresh data (even if cached data was rendered, to revalidate)
-    try {
-        const freshDataString = await fetchWithRetry(url, 10000, 1); // 10s timeout, 1 retry
-        const rows = freshDataString.split('\n').map(row => row.split(','));
-
-        if (rows.length === 0 || rows[0].length === 0) {
-            throw new Error('No data received from API.');
+        // 2. Original Theme & Functions
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.querySelector('.theme-toggle i');
+            const isDark = body.classList.contains('dark-theme');
+            body.classList.toggle('dark-theme', !isDark);
+            body.classList.toggle('light-theme', isDark);
+            icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
 
-        // Only update if data is different or if it wasn't rendered from cache
-        const currentTimestamp = Date.now();
-        localStorage.setItem(EXCHANGE_RATE_CACHE_KEY, JSON.stringify({ data: freshDataString, timestamp: currentTimestamp }));
-        renderExchangeTable(rows); // Render the fresh data
-        updateTime(currentTimestamp); // Update with current time
-
-    } catch (error) {
-        console.error('Rates Fetch Error:', error);
-        if (!renderedFromCache) { // Only show error if no data (cached or network) was displayed
-            rateTable.innerHTML = error.name === 'AbortError'
-                ? '<div class="error">Loading timeout❕ Please refresh.</div>'
-                : '<div class="error">Failed to load rates 🥺 . Please check your internet connection.</div>';
-            updateTimeElement.textContent = 'Failed to load exchange rates.'; // Indicate error time
-        } else {
-            console.warn('Network fetch failed, but cached data was already displayed.');
-            // Keep the previously displayed cached data, don't show an error over it.
-        }
-    }
-}
-
-// Fetch Fee Table Data (with caching)
-let feeDataCache = {}; // Global cache for fee data
-
-async function fetchFeeData(bank) {
-    const cacheKey = `feeData-${bank}`;
-    const cachedData = localStorage.getItem(cacheKey);
-
-    if (cachedData) {
-        try {
-            const parsed = JSON.parse(cachedData);
-            // Cache valid for 24 hours (86,400,000 milliseconds)
-            if (Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000) {
-                console.log(`Using cached data for ${bank}`);
-                return parsed.data; 
-            }
-        } catch (e) {
-            console.warn('Error parsing cached fee data:', e);
-            localStorage.removeItem(cacheKey); // Clear corrupt cache
-        }
-    }
-
-    const urls = {
-        uab: 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=uab',
-        aya: 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=aya',
-        cb: 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=cb',
-        kbz: 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=kbz',
-        mab: 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec?sheetName=mab'
-    };
-
-    try {
-        const data = await fetchWithRetry(urls[bank], 10000, 1);
-        const rows = data.split('\n').map(r => r.split(','));
-        localStorage.setItem(cacheKey, JSON.stringify({ data: rows, timestamp: Date.now() }));
-        return rows;
-    } catch (error) {
-        console.error(`Fee Fetch Error for ${bank}:`, error);
-        return null;
-    }
-}
-
-// Global variable to store the observer for fee table rows
-let currentFeeTableObserver = null;
-
-// NEW function to initialize row animations
-function initializeTableRowAnimations() {
-    // Disconnect any previous observer if it exists to clean up
-    if (currentFeeTableObserver) {
-        currentFeeTableObserver.disconnect();
-        currentFeeTableObserver = null;
-    }
-
-    const feeTable = feeTablesDiv.querySelector('.fee-table');
-    if (!feeTable) return; // No fee table found to animate
-
-    // Select all table body rows (exclude header rows)
-    const rows = feeTable.querySelectorAll('tbody tr');
-
-    const observerOptions = {
-        root: null, // Use the viewport as the root
-        rootMargin: '0px',
-        threshold: 0.1 // Trigger when 10% of the row is visible
-    };
-
-    const observerCallback = (entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Add the animation class when the row enters the viewport
-                entry.target.classList.add('fade-in-up');
-                // Stop observing this row once it has animated
-                observer.unobserve(entry.target);
-            }
-        });
-    };
-
-    // Create a new IntersectionObserver instance
-    currentFeeTableObserver = new IntersectionObserver(observerCallback, observerOptions);
-
-    // Observe each row
-    rows.forEach((row, index) => {
-        // Set a staggered delay for each row's animation
-        row.style.transitionDelay = `${index * 0.01}s`; 
-        currentFeeTableObserver.observe(row); 
-    });
-}
-
-// MODIFIED showFeeTable function
-async function showFeeTable(bank) {
-    if (!feeTablesDiv || !imageCopyrightContainer || !feeButtonsDiv) return;
-
-    const existing = document.getElementById(`fee-table-${bank}`);
-    
-    // Check if the image/copyright is currently within the feeTablesDiv
-    const imageIsCurrentlyInFeeTablesDiv = feeTablesDiv.contains(imageCopyrightContainer);
-
-    if (existing) {
-        // If the table is already displayed, hide it with a fade-out animation
-        // Set opacity and transform to initial hidden state to trigger CSS transition
-        existing.style.opacity = '0';
-        existing.style.transform = 'translateY(20px)';
+        // --- Fetch Rates & Others ---
+        // (သင့်ရဲ့ ကျန်ရှိနေတဲ့ JavaScript function တွေကို ဒီအောက်မှာ ဆက်ထည့်နိုင်ပါတယ်)
         
-        // Disconnect observer for the table being hidden to prevent memory leaks
-        if (currentFeeTableObserver) {
-            currentFeeTableObserver.disconnect();
-            currentFeeTableObserver = null;
-        }
-
-        // Delay removal from DOM to allow the fade-out transition to complete
-        setTimeout(() => {
-            existing.remove(); 
-            feeTablesDiv.innerHTML = ''; // Clear feeTablesDiv content after removal
+        document.addEventListener('DOMContentLoaded', () => {
+            // Copyright Year
+            const copy = document.getElementById('copyright-text');
+            if(copy) copy.textContent = `2019 - ${new Date().getFullYear()} copyright @Visa Topup Myanmar`;
             
-            // Move image & copyright back to original position
-            if (originalImageParent && imageCopyrightContainer) {
-                 originalImageParent.insertBefore(imageCopyrightContainer, originalImageNextSibling);
+            // Initial Theme
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.className = savedTheme + '-theme';
+
+            // Start Fetching Data
+            fetchRates();
+        });
+
+        async function fetchRates() {
+            const rateTable = document.getElementById('rateTable');
+            rateTable.innerHTML = `<div class="loading-skeleton" style="width:100%; height:200px;"></div>`;
+            
+            try {
+                const res = await fetch('https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec');
+                const data = await res.text();
+                const rows = data.split('\n').map(r => r.split(','));
+                
+                let html = '<table><thead><tr>';
+                rows[0].forEach(h => html += `<th>${h}</th>`);
+                html += '</tr></thead><tbody>';
+                for (let i = 1; i < rows.length; i++) {
+                    if (!rows[i][0]) continue;
+                    html += '<tr>';
+                    rows[i].forEach((c, idx) => {
+                        html += `<td>${idx > 0 && !isNaN(c) ? parseInt(c).toLocaleString() + ' Ks' : c}</td>`;
+                    });
+                    html += '</tr>';
+                }
+                html += '</tbody></table>';
+                rateTable.innerHTML = html;
+                document.getElementById('updateTime').textContent = "Last updated: " + new Date().toLocaleString();
+            } catch (e) {
+                rateTable.innerHTML = "Failed to load rates.";
             }
-        }, 500); // The timeout duration should match the CSS transition duration (0.5s)
-        return;
-    }
-
-    // Clear any previously loaded fee tables and show loading state
-    feeTablesDiv.innerHTML = '<div class="loading">Loading fee table...</div>';
-    
-    // If the image was in its original spot, remove it before loading the table
-    if (!imageIsCurrentlyInFeeTablesDiv && imageCopyrightContainer && imageCopyrightContainer.parentNode) {
-        imageCopyrightContainer.remove();
-    }
-
-    const rows = await fetchFeeData(bank);
-
-    if (rows) {
-        let html = `<table class="fee-table" id="fee-table-${bank}"><thead><tr>`;
-        rows[0].forEach(h => html += `<th>${h}</th>`);
-        html += '</tr></thead><tbody>';
-        for (let i = 1; i < rows.length; i++) {
-            if (rows[i].length === 0 || (rows[i].length === 1 && rows[i][0].trim() === '')) continue; 
-            html += '<tr>'; // Each row will start invisible and slide up, then be revealed by JS
-            rows[i].forEach((cell, idx) => {
-                const value = cell.trim();
-                html += `<td>${idx > 0 && !isNaN(value) ? parseInt(value).toLocaleString() + ' Ks' : value}</td>`;
-            });
-            html += '</tr>';
         }
-        html += '</tbody></table>';
-        feeTablesDiv.innerHTML = html; // Display the fetched table
 
-        // NEW LINE: Initialize row animations after the table is rendered
-        initializeTableRowAnimations();
-
-        // After displaying table, append image and copyright below it
-        if (imageCopyrightContainer) {
-            feeTablesDiv.appendChild(imageCopyrightContainer);
-        }
-    } else {
-        feeTablesDiv.innerHTML = '<div class="error">Failed to load fee table. Please try again later.</div>';
-        // If an error occurs, ensure the image goes back to its original spot if it was moved
-        if (imageCopyrightContainer && originalImageParent && !originalImageParent.contains(imageCopyrightContainer)) {
-             originalImageParent.insertBefore(imageCopyrightContainer, originalImageNextSibling);
-        }
-    }
-}
-
-// Preload Fee Tables (fetches data and stores in cache, doesn't display)
-async function preloadFeeData() {
-    const banks = ['uab', 'aya', 'cb', 'kbz', 'mab'];
-    for (const bank of banks) {
-        await fetchFeeData(bank);
-    }
-}
-
-// Service Worker (Optional - for PWA features like offline support)
-function registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-            .then(reg => {
-                console.log('Service Worker Registered:', reg.scope);
-            })
-            .catch(err => console.error('Service Worker Registration Failed:', err));
-    }
-}
-
-// Initialization on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Apply theme from localStorage on page load
-    const theme = localStorage.getItem('theme') || 'dark'; // Default to dark if no theme found
-    body.classList.toggle('light-theme', theme === 'light');
-    body.classList.toggle('dark-theme', theme !== 'light');
-    icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
-
-    // Set copyright text
-    const copyrightElement = document.getElementById('copyright-text');
-    if (copyrightElement) {
-        const currentYear = new Date().getFullYear();
-        copyrightElement.textContent = `2019 - ${currentYear} copyright @Visa Topup Myanmar`;
-    }
-
-    // Store the original position of the image-copyright-container AFTER the DOM is fully loaded
-    // This is crucial to ensure originalImageParent and originalImageNextSibling are valid
-    if (imageCopyrightContainer && feeButtonsDiv) {
-        originalImageParent = imageCopyrightContainer.parentNode;
-        originalImageNextSibling = imageCopyrightContainer.nextSibling;
-    }
-
-
-    // Fetch and display exchange rates when the page loads
-    fetchRates();
-    // Set interval to refresh rates every 1 minute (60000 milliseconds)
-    // The fetchRates function itself now handles showing cache and revalidating.
-    // So, we just need to call it periodically to trigger the refresh.
-    setInterval(fetchRates, 60000); 
-
-    // Preload fee data into cache for faster display when buttons are clicked
-    preloadFeeData();
-
-    // Register service worker (if sw.js file exists in root)
-    registerServiceWorker();
-
-    // REMOVED: The footer scroll animation logic is no longer needed.
-});
-  </script>
+        // showFeeTable function logic goes here...
+    </script>
 </body>
 </html>
