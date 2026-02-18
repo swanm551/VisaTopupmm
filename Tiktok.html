@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiktok coin price</title>
-    <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjOd1ufKHkNXLPmTI4s1feQWObG7DwY1cpIkYwBbMJJqm7JOLEKrKMAdNIE565tOmPKGbm9Ku_SdUbsKXN6YcANjGBHMLvJpsQgelcjFabjrb2_TJGLssQLmQWOfDvFPd7A1erbv_IGfK626zMfMpVfNJtZNNtR2pIsOK0HTdLqXnProNxWiPaWwAvZ2Gez/s1600/Webp.net-resizeimage.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/logo.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* CSS Variables */
+       /* CSS Variables */
         :root {
             --bg-primary-light: #f0f0f0;
             --bg-secondary-light: #e0e0e0;
@@ -151,14 +152,22 @@
         .theme-toggle:active {
             transform: translateY(1px);
         }
-
+.subpageTableContainer {
+    position: relative;
+    z-index: 5 !important; /* Title (1) ထက် ကြီးရမယ် */
+    margin-top: -110px !important; /* ပုံထဲကထက် ပိုတက်လာအောင် -110 ခန့် ထားကြည့်ပါ */
+    overflow: visible !important;
+}
         /* Subpage Content Styles */
         .subpage-container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0px auto;
+            margin-bottom: -120px;
+            margin-top: -10px;
             padding: 5px;
             border-radius: 20px;
             transition: all 0.3s ease;
+          
         }
 
         body.dark-theme .subpage-container {
@@ -175,67 +184,56 @@
                 -12px -12px 24px rgba(255, 255, 255, 0.8);
         }
 
-        .subpage-title {
-            text-align: center;
-            color: var(--accent-blue);
-            margin-bottom: 30px;
-            font-size: 22px;
-            font-weight: 600;
-            padding: 15px;
-            border-radius: 12px;
-        }
+       /* Subpage Title ပြင်ဆင်ချက် */
+       .subpage-title {
+    position: relative;
+    z-index: 1 !important; /* Table ထက် နိမ့်နေရမယ် */
+    
+    text-align: center;
+    color: silver; 
+    font-size: clamp(52px, 10vw, 80px);
+    font-weight: 900;
+    line-height: 0.8;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    opacity: 1; /* ဒုတိယပုံထဲမှာ မှိန်နေတာကြောင့် ၁ ပြန်ထားပေးပါ */
+    pointer-events: none;
 
-        body.dark-theme .subpage-title {
-            background: rgba(59, 130, 246, 0.1);
-            box-shadow: 
-                inset 3px 3px 6px rgba(0, 0, 0, 0.3),
-                inset -3px -3px 6px rgba(70, 130, 246, 0.1);
-        }
+}
 
+        /* Dark/Light theme မှာပါ Background မပေါ်အောင် */
+        body.dark-theme .subpage-title,
         body.light-theme .subpage-title {
-            background: rgba(59, 130, 246, 0.1);
-            box-shadow: 
-                inset 3px 3px 6px rgba(0, 0, 0, 0.1),
-                inset -3px -3px 6px rgba(255, 255, 255, 0.5);
+            background: none !important;
+            box-shadow: none !important;
         }
 
-        /* Table Styles */
-        .subpageTableContainer {
-            width: 100%;
-            overflow-x: auto;
-            margin-bottom: 0px;
-            min-height: 200px;
-            border-radius: 20px;
-            padding: 5px;
-        }
+     
 
         .subpage-table {
-            width: 100%;
-            max-width: 1000px;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin: 0 auto;
-            margin-bottom: 5px;
-            border-radius: 6px;
-            overflow: hidden;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            box-shadow: none;
-        }
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 2;
+    
+    /* Glassmorphism Logic */
+    backdrop-filter: blur(15px) saturate(150%);
+    -webkit-backdrop-filter: blur(15px) saturate(150%);
+    background: rgba(255, 255, 255, 0.1) !important; /* အကြည်ရောင် ပိုထားခြင်း */
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    transition: all 0.2s ease;
+}
 
-        body.dark-theme .subpage-table {
-            background: var(--bg-secondary-dark);
-            box-shadow: 
-                12px 12px 24px rgba(0, 0, 0, 0.4),
-                -12px -12px 24px rgba(50, 50, 50, 0.2);
-        }
+/* Theme အလိုက် Glassmorphism အရောင် ပြောင်းလဲခြင်း */
+body.dark-theme .subpage-table {
+    background: rgba(30, 41, 59, 0.5) !important; /* Dark mode မှာ အမှောင်ဖက်သွားတဲ့ မှန်ကြည် */
+}
 
-        body.light-theme .subpage-table {
-            background: var(--bg-secondary-light);
-            box-shadow: 
-                12px 12px 24px rgba(0, 0, 0, 0.1),
-                -12px -12px 24px rgba(255, 255, 255, 0.7);
-        }
+body.light-theme .subpage-table {
+    background: rgba(255, 255, 255, 0.2) !important; /* Light mode မှာ အလင်းဖက်သွားတဲ့ မှန်ကြည် */
+}
 
         .subpage-table th, 
         .subpage-table td {
@@ -244,20 +242,22 @@
             transition: all 0.2s ease;
         }
 
-        .subpage-table th {
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-            color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 13px;
-            border: none;
-        }
+       .subpage-table th {
+    /* အပြာရောင်ကို 70% လောက်ပဲ ထားပါ (0.7) */
+    background: rgba(59, 130, 246, 0.7) !important; 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    color: white !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none !important;
+}
 
         .subpage-table td {
-            border-bottom: 1px solid var(--border-color-dark);
-            border-right: 1px solid var(--border-color-dark);
-        }
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: transparent !important; /* Row အရောင်တွေကို ဖျောက်ပြီး မှန်ကြည်ပဲ ပေါ်စေရန် */
+}
 
         body.light-theme .subpage-table td {
             border-color: var(--border-color-light);
@@ -306,7 +306,26 @@
             opacity: 1;
             transform: translateY(0);
         }
-
+/* TikTok Coins Column ထဲက နံပါတ်နောက်မှာ ရွှေရောင် Coin လေးထည့်ခြင်း */
+.subpage-table td:first-child::after {
+    content: ""; /* ဒါကို အလွတ်ထားပေးပါ */
+    display: inline-block;
+    
+    /* ပုံရဲ့ URL ကို ဒီနေရာမှာ ထည့်ပါ */
+    background-image: url("assets/TikTokCoin.png");
+    
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* Coin ပုံရဲ့ အရွယ်အစားကို ဒီမှာ ညှိပါ */
+    width: 18px; 
+    height: 18px;
+    
+    /* စာသားနဲ့ အကွာအဝေး ညှိရန် */
+    margin-left: 8px;
+    vertical-align: middle;
+}
         /* Loading and Error States */
         .loading {
             text-align: center;
@@ -569,66 +588,46 @@
             color: var(--text-secondary-light);
         }
 
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .site-title {
-                font-size: 20px;
-            }
-            
-            .logo {
-                height: 36px;
-            }
-            
-            .subpage-title {
-                font-size: 16px;
-            }
-            
-            .subpage-table {
-                font-size: 13px;
-            }
-            
-            .subpage-table th, 
-            .subpage-table td {
-                padding: 12px 8px;
-            }
-            
-            .subpage-container {
-                padding: 15px;
-                margin: 10px;
-                border-radius: 16px;
-            }
-            
-            body.dark-theme .subpage-container {
-                box-shadow: 
-                    8px 8px 16px rgba(0, 0, 0, 0.3),
-                    -8px -8px 16px rgba(50, 50, 50, 0.1);
-            }
-            
-            body.light-theme .subpage-container {
-                box-shadow: 
-                    8px 8px 16px rgba(0, 0, 0, 0.1),
-                    -8px -8px 16px rgba(255, 255, 255, 0.7);
-            }
-            
-            #return-to-top {
-                width: 44px;
-                height: 44px;
-                bottom: 20px;
-                right: 20px;
-            }
+       /* Responsive Adjustments ပြင်ဆင်ရန် */
+@media (max-width: 768px) {
+    .site-title {
+        font-size: 20px;
+    }
+    
+    /* Mobile မှာ Title စာသား တစ်ဝက်ငုပ်နေစေရန် */
+    .subpage-title {
+        font-size: clamp(40px, 15vw, 60px) !important;
+        line-height: 0.7 !important;
+        margin-bottom: 0 !important;
+    }
 
-            .carousel-card {
-                flex: 0 0 180px;
-                height: 120px;
-                font-size: 14px;
-            }
+    .subpageTableContainer {
+        margin-top: -50px !important; /* Mobile အတွက် အပေါ်တက်မည့် အကွာအဝေးကို လျှော့ပေးပါ */
+    }
+    
+    .subpage-table {
+        font-size: 13px;
+    }
+    
+    .subpage-table th, 
+    .subpage-table td {
+        padding: 12px 8px;
+    }
+}
 
-            .shein-logo {
-                font-size: 16px;
-            }
-        }
-        
-        @media (max-width: 480px) {
+@media (max-width: 480px) {
+    .subpage-title {
+        font-size: 45px !important; /* ဖုန်းအသေးစားများအတွက် */
+    }
+    
+    .subpageTableContainer {
+        margin-top: -40px !important;
+    }
+
+    .subpage-table {
+        font-size: 11px;
+    }
+}
             .header {
                 padding: 15px;
             }
@@ -641,17 +640,10 @@
                 width: 40px;
                 height: 40px;
                 font-size: 18px;
+            
             }
             
-            .subpage-title {
-                font-size: 18px;
-                padding: 12px;
-            }
-            
-            .subpage-table {
-                font-size: 12px;
-                border-radius: 6px;
-            }
+           
             
             .subpage-table th, 
             .subpage-table td {
@@ -682,7 +674,7 @@
         .logo-section a:active {
             transform: translateY(1px);
         }
-    </style>
+ </style>
 </head>
 <body class="dark-theme">
     <header class="header">
@@ -727,16 +719,16 @@
         let cachedData = null;
         let lastFetchTime = 0;
         const CACHE_DURATION = 1 * 60 * 1000; // 1 minute
-        const CACHE_KEY = 'sheinFeeData'; // SHEIN specific cache key
+        const CACHE_KEY = 'TikTokCoin'; // TikTokCoin specific cache key
 
         // Fallback static data for testing
-        const FALLBACK_DATA = "Amount,Price\n100 ฿,15000\n200 ฿,30000\n500 ฿,75000";
+        const FALLBACK_DATA = "TikTok Coins,MMK\n100 ฿,15000\n200 ฿,30000\n500 ฿,75000";
 
         // Skeleton Loading UI
         function showSkeleton() {
             const container = document.getElementById('subpageTableContainer');
             let skeletonHTML = '';
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < 10; i++) {
                 skeletonHTML += '<div class="skeleton-row"></div>';
             }
             container.innerHTML = skeletonHTML;
