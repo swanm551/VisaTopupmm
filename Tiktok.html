@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiktok coin price</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjOd1ufKHkNXLPmTI4s1feQWObG7DwY1cpIkYwBbMJJqm7JOLEKrKMAdNIE565tOmPKGbm9Ku_SdUbsKXN6YcANjGBHMLvJpsQgelcjFabjrb2_TJGLssQLmQWOfDvFPd7A1erbv_IGfK626zMfMpVfNJtZNNtR2pIsOK0HTdLqXnProNxWiPaWwAvZ2Gez/s1600/Webp.net-resizeimage.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
        /* CSS Variables */
@@ -527,14 +527,14 @@ body.light-theme .subpage-table {
             transform: scale(1.1);
             z-index: 10;
             filter: none;
-            opacity: 1;
+            opacity: 0.8;
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
         }
 
         /* Inactive Cards */
         .carousel-card:not(.active) {
             filter: none;
-            opacity: 0.7;
+            opacity: 0.5;
         }
 
         /* Card Hover Effect */
@@ -596,7 +596,7 @@ body.light-theme .subpage-table {
     
     /* Mobile မှာ Title စာသား တစ်ဝက်ငုပ်နေစေရန် */
     .subpage-title {
-        font-size: clamp(40px, 15vw, 60px) !important;
+        font-size: clamp(30px, 15vw, 60px) !important;
         line-height: 0.7 !important;
         margin-bottom: 0 !important;
     }
@@ -617,7 +617,7 @@ body.light-theme .subpage-table {
 
 @media (max-width: 480px) {
     .subpage-title {
-        font-size: 45px !important; /* ဖုန်းအသေးစားများအတွက် */
+        font-size: 35px !important; /* ဖုန်းအသေးစားများအတွက် */
     }
     
     .subpageTableContainer {
@@ -722,7 +722,7 @@ body.light-theme .subpage-table {
         const CACHE_KEY = 'TikTokCoin'; // TikTokCoin specific cache key
 
         // Fallback static data for testing
-        const FALLBACK_DATA = "TikTok Coins,MMK\n100 ฿,15000\n200 ฿,30000\n500 ฿,75000";
+        const FALLBACK_DATA = null;
 
         // Skeleton Loading UI
         function showSkeleton() {
