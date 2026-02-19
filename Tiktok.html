@@ -219,8 +219,8 @@
     z-index: 2;
     
     /* Glassmorphism Logic */
-    backdrop-filter: blur(15px) saturate(150%);
-    -webkit-backdrop-filter: blur(15px) saturate(150%);
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
     background: rgba(255, 255, 255, 0.1) !important; /* အကြည်ရောင် ပိုထားခြင်း */
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     transition: all 0.2s ease;
@@ -494,8 +494,8 @@ body.light-theme .subpage-table {
             cursor: grab;
             transition: all 0.3s ease;
             position: relative;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 16px;
             font-weight: 500;
@@ -718,7 +718,7 @@ body.light-theme .subpage-table {
         // Cache variables for Shein
         let cachedData = null;
         let lastFetchTime = 0;
-        const CACHE_DURATION = 1 * 60 * 1000; // 1 minute
+        const CACHE_DURATION = 3 * 60 * 1000; // 1 minute
         const CACHE_KEY = 'TikTokCoin'; // TikTokCoin specific cache key
 
         // Fallback static data for testing
