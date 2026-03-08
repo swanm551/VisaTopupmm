@@ -107,86 +107,66 @@
     }
 
     /* ══════════════════════════════════════════════════════════
-       HERO SECTION
+       HERO WRAP
        ──────────────────────────────────────────────────────────
-       Structure:
-         .hero-wrap (position:relative, overflow:hidden)
-           ├── .title-layer  (position:absolute, full-size, z:1)
-           │     └── big title text  ← sits BEHIND glass
-           └── .glass-card   (position:relative, z:2, margin-top = expose title)
-                 ├── backdrop-filter: blur  ← blurs the title behind it
-                 └── table
-
-       The title is LITERALLY BEHIND the glass card.
-       backdrop-filter blurs whatever is behind the element,
-       so the title text that the glass card overlaps appears blurred.
-       The top portion of the title (above the card) is fully sharp.
+       .hero-wrap
+         ├── .title-layer   z-index:1  (big title, always fully visible)
+         └── .glass-card    z-index:2  (10% opacity bg + blur)
+                            margin-top negative → overlaps bottom of title
+                            backdrop-filter blurs title text behind it
     ══════════════════════════════════════════════════════════ */
     .hero-wrap {
         position: relative;
-        border-radius: 20px;
-        overflow: visible;
     }
 
-    /* Title layer: absolutely positioned, centered vertically
-       so that its CENTER aligns with the TOP EDGE of the glass card */
+    /* Title: sits in normal flow, z:1 */
     .title-layer {
         position: relative;
         z-index: 1;
         text-align: center;
         pointer-events: none;
         user-select: none;
-        /* Height = half the title so exactly half peeks above card */
         padding-bottom: 0;
     }
 
     .subpage-title {
-        display: inline-block;
+        display: block;
         font-family: 'Inter', sans-serif;
         font-weight: 800;
-        font-style: normal;
-        font-size: clamp(30px, 5vw, 52px);
-        line-height: 1.1;
+        font-size: clamp(28px, 5vw, 50px);
+        line-height: 1.15;
         letter-spacing: -0.5px;
-        white-space: nowrap;
     }
 
-    /* Dark theme: bright white title on dark bg */
-    body.dark-theme .subpage-title {
-        color: rgba(235, 238, 255, 0.95);
-        text-shadow: 0 2px 20px rgba(0,0,0,0.4);
-    }
+    body.dark-theme  .subpage-title { color: rgba(235,238,255,0.95); }
+    body.light-theme .subpage-title { color: rgba(20,25,50,0.90); }
 
-    /* Light theme: dark title on light bg */
-    body.light-theme .subpage-title {
-        color: rgba(20, 25, 50, 0.90);
-        text-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    }
-
-    /* Glass card: pulled UP over bottom half of title via negative margin */
+    /* ── Glass card: z:2, negative margin overlaps title ─── */
     .glass-card {
         position: relative;
         z-index: 2;
-        /* Negative margin = pull card up to overlap bottom half of title.
-           Adjust this value to control how much title is "behind" the glass */
-        margin-top: -30px;
+        /* Pull card up so it covers bottom half of title */
+        margin-top: -28px;
         border-radius: 18px;
         overflow: hidden;
-        /* THIS is what blurs the title text underneath */
-        backdrop-filter: blur(20px) saturate(150%);
-        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        /* Blur blurs the title that is literally behind this element */
+        backdrop-filter: blur(8px) saturate(120%);
+        -webkit-backdrop-filter: blur(8px) saturate(120%);
     }
 
+    /* ── 10% opacity background — so title is visible through it ── */
     body.dark-theme .glass-card {
-        background: rgba(20, 28, 50, 0.55);
-        border: 1px solid rgba(255,255,255,0.12);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07);
+        /* dark blue at only 10% opacity */
+        background: rgba(20, 35, 70, 0.10);
+        border: 1px solid rgba(255,255,255,0.10);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.30);
     }
 
     body.light-theme .glass-card {
-        background: rgba(255, 255, 255, 0.45);
-        border: 1px solid rgba(255,255,255,0.60);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8);
+        /* white at only 10% opacity */
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.25);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.10);
     }
 
     /* ══ TABLE ══════════════════════════════════════════════ */
@@ -198,45 +178,39 @@
     .subpage-table th,
     .subpage-table td {
         padding: 16px 20px; text-align: center;
-        transition: background 0.2s ease;
+        transition: background 0.15s ease;
     }
 
-    /* Header: transparent blue tint + blur */
+    /* Header: also very transparent */
     .subpage-table th {
-        background: rgba(59,130,246,0.30);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        /* Blue tint at ~20% only */
+        background: rgba(59,130,246,0.01);
+        backdrop-filter: blur(1px);
+        -webkit-backdrop-filter: blur(6px);
         font-weight: 700; font-size: 13px;
         text-transform: uppercase; letter-spacing: 0.07em;
-        border-bottom: 1px solid rgba(59,130,246,0.30);
+        border-bottom: 1px solid rgba(59,130,246,0.25);
     }
 
-    body.dark-theme .subpage-table th {
-        color: rgba(255,255,255,0.92);
-    }
-
-    body.light-theme .subpage-table th {
-        color: rgba(15,25,60,0.90);
-    }
+    body.dark-theme  .subpage-table th { color: rgba(255,255,255,0.90); }
+    body.light-theme .subpage-table th { color: rgba(15,25,60,0.88); }
 
     .subpage-table td {
         font-size: 15px;
-        border-bottom: 1px solid rgba(128,128,180,0.10);
+        border-bottom: 1px solid rgba(128,160,255,0.08);
     }
 
-    body.dark-theme  .subpage-table td { color: rgba(220,225,245,0.90); }
+    body.dark-theme  .subpage-table td { color: rgba(220,228,255,0.92); }
     body.light-theme .subpage-table td { color: rgba(20,25,50,0.85); }
 
-    body.dark-theme  .subpage-table tr:nth-child(even) td { background: rgba(59,130,246,0.06); }
-    body.light-theme .subpage-table tr:nth-child(even) td { background: rgba(59,130,246,0.04); }
+    /* Even rows: barely visible tint */
+    body.dark-theme  .subpage-table tr:nth-child(even) td { background: rgba(59,130,246,0.05); }
+    body.light-theme .subpage-table tr:nth-child(even) td { background: rgba(59,130,246,0.03); }
 
     .subpage-table tbody tr:last-child td { border-bottom: none; }
+    .subpage-table tr:hover td { background: rgba(59,130,246,0.12) !important; }
 
-    .subpage-table tr:hover td {
-        background: rgba(59,130,246,0.14) !important;
-    }
-
-    /* Coin icon after first-column cell */
+    /* Coin icon */
     .subpage-table td:first-child::after {
         content: "";
         display: inline-block;
@@ -247,12 +221,12 @@
 
     /* Row fade-in */
     .subpage-table tbody tr {
-        opacity: 0; transform: translateY(10px);
-        transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        opacity: 0; transform: translateY(8px);
+        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
     }
     .subpage-table tbody tr.fade-in-up { opacity: 1; transform: translateY(0); }
 
-    /* ══ LOADING / ERROR / SKELETON ════════════════════════ */
+    /* ══ LOADING / ERROR ════════════════════════════════════ */
     .loading {
         padding: 40px; text-align: center;
         font-family: 'Inter', sans-serif; font-size: 18px;
@@ -266,23 +240,17 @@
         font-family: 'Inter', sans-serif; font-size: 18px;
     }
 
+    /* Skeleton */
     .skeleton-row {
-        height: 40px; margin: 12px 0; border-radius: 10px;
+        height: 44px; margin: 6px 0; border-radius: 8px;
         position: relative; overflow: hidden;
-    }
-
-    body.dark-theme .skeleton-row {
-        background: linear-gradient(90deg,#2a2a2a 25%,#333 50%,#2a2a2a 75%);
-    }
-
-    body.light-theme .skeleton-row {
-        background: linear-gradient(90deg,#ddd 25%,#eee 50%,#ddd 75%);
+        background: rgba(255,255,255,0.04);
     }
 
     .skeleton-row::after {
         content: ''; position: absolute; inset: 0;
-        background: linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
-        animation: shimmer 1.5s infinite;
+        background: linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent);
+        animation: shimmer 1.2s infinite;
     }
 
     @keyframes shimmer {
@@ -322,8 +290,8 @@
 
     /* ══ RESPONSIVE ═════════════════════════════════════════ */
     @media (max-width: 768px) {
-        .site-title { font-size: clamp(22px, 6vw, 36px); white-space: normal; }
-        .glass-card { margin-top: -22px; }
+        .site-title { font-size: clamp(22px, 6vw, 36px); }
+        .glass-card { margin-top: -20px; }
         .subpage-table { font-size: 13px; }
         .subpage-table th, .subpage-table td { padding: 12px 8px; }
     }
@@ -332,13 +300,12 @@
         .header { padding: 15px; }
         .logo { height: 32px; }
         .theme-toggle { width: 40px; height: 40px; font-size: 18px; }
-        .site-title { font-size: 20px; white-space: normal; }
-        .glass-card { margin-top: -16px; }
-        .subpage-table { font-size: 11px; }
+        .site-title { font-size: 20px; }
+        .glass-card { margin-top: -14px; }
+        .subpage-table { font-size: 12px; }
         .subpage-table th, .subpage-table td { padding: 10px 6px; }
     }
 </style>
-
 </head>
 <body class="dark-theme">
 
@@ -357,23 +324,15 @@
 <div class="subpage-container">
     <div class="hero-wrap">
 
-        <!--
-            LAYER 1 (z:1): Title text — fully visible above the glass card.
-            The bottom portion of this text will be BEHIND the glass card,
-            and backdrop-filter will blur it.
-        -->
+        <!-- z:1 — title fully visible, bottom half will show through glass -->
         <div class="title-layer">
             <h2 class="subpage-title">TikTok coin price list</h2>
         </div>
 
-        <!--
-            LAYER 2 (z:2): Glass card with backdrop-filter blur.
-            Negative margin-top pulls it up to overlap the bottom of the title.
-            The blur applies to everything BEHIND this element — including the title.
-        -->
+        <!-- z:2 — 10% opacity glass, blur reveals title behind -->
         <div class="glass-card">
             <div id="subpageTableContainer">
-                <div class="loading">Loading coin price list...</div>
+                <div class="loading">Loading...</div>
             </div>
         </div>
 
@@ -394,36 +353,35 @@
     const SHEET_URL        = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQMEfkm2e1w-xg5P-iQGJNjGCECWkHW-qHKr-tDfm971K70C8874Grf66mMHow0kOkyskk4EaXPCng_/pub?gid=1012771992&single=true&output=csv';
     const REFRESH_INTERVAL = 3 * 60 * 1000;
     const MAX_RETRIES      = 3;
-    const RETRY_DELAY      = 3000;
+    const RETRY_DELAY      = 2000;
 
-    /* ── Skeleton ─────────────────────────────────────────── */
+    /* ── Skeleton (shown instantly before fetch) ──────────── */
     function showSkeleton() {
-        let html = '';
-        for (let i = 0; i < 10; i++) html += '<div class="skeleton-row"></div>';
+        let html = '<div style="padding:8px">';
+        for (let i = 0; i < 12; i++) html += '<div class="skeleton-row"></div>';
+        html += '</div>';
         document.getElementById('subpageTableContainer').innerHTML = html;
     }
 
     /* ── Row animation ────────────────────────────────────── */
-    let currentObserver = null;
+    let obs = null;
 
-    function initTableRowAnimations() {
-        if (currentObserver) { currentObserver.disconnect(); currentObserver = null; }
-        const table = document.querySelector('.subpage-table');
-        if (!table) return;
-        const rows = table.querySelectorAll('tbody tr');
-        currentObserver = new IntersectionObserver((entries, obs) => {
+    function initRowAnims() {
+        if (obs) { obs.disconnect(); obs = null; }
+        const rows = document.querySelectorAll('.subpage-table tbody tr');
+        obs = new IntersectionObserver((entries, o) => {
             entries.forEach(e => {
-                if (e.isIntersecting) { e.target.classList.add('fade-in-up'); obs.unobserve(e.target); }
+                if (e.isIntersecting) { e.target.classList.add('fade-in-up'); o.unobserve(e.target); }
             });
-        }, { threshold: 0.1 });
-        rows.forEach((r, i) => { r.style.transitionDelay = `${i * 0.02}s`; currentObserver.observe(r); });
+        }, { threshold: 0.05 });
+        rows.forEach((r, i) => { r.style.transitionDelay = `${i * 0.002}s`; obs.observe(r); });
     }
 
     /* ── Render table ─────────────────────────────────────── */
-    function renderTable(csvData) {
+    function renderTable(csv) {
         try {
-            const rows = csvData.split('\n').map(r => r.split(','));
-            if (rows.length < 2) throw new Error('CSV empty');
+            const rows = csv.trim().split('\n').map(r => r.split(','));
+            if (rows.length < 2) throw new Error('Empty CSV');
 
             let html = '<table class="subpage-table"><thead><tr>';
             rows[0].forEach(h => { html += `<th>${h.trim()}</th>`; });
@@ -433,42 +391,43 @@
                 if (!rows[i] || rows[i].length < 2) continue;
                 html += '<tr>';
                 rows[i].forEach((cell, idx) => {
-                    const v       = cell.trim();
-                    const numOnly = v.replace(/[^0-9.]/g, '');
-                    let display;
-                    if (numOnly !== '' && !isNaN(numOnly)) {
-                        const fmt = parseInt(numOnly).toLocaleString();
-                        display   = idx === 0 ? fmt : fmt + ' Ks';
-                    } else {
-                        display = v;
-                    }
-                    html += `<td>${display}</td>`;
+                    const v   = cell.trim();
+                    const num = v.replace(/[^0-9.]/g, '');
+                    let disp;
+                    if (num !== '' && !isNaN(num)) {
+                        const f = parseInt(num).toLocaleString();
+                        disp = idx === 0 ? f : f + ' Ks';
+                    } else { disp = v; }
+                    html += `<td>${disp}</td>`;
                 });
                 html += '</tr>';
             }
             html += '</tbody></table>';
-
             document.getElementById('subpageTableContainer').innerHTML = html;
-            setTimeout(initTableRowAnimations, 100);
-
-        } catch (err) {
-            console.error('Render error:', err);
+            // Kick off row animations right away (no setTimeout delay)
+            initRowAnims();
+        } catch (e) {
             document.getElementById('subpageTableContainer').innerHTML =
                 '<div class="error">Failed to load price table!</div>';
         }
     }
 
-    /* ── Fetch with retry ─────────────────────────────────── */
+    /* ── Fetch: no cache, with retry ──────────────────────── */
     async function fetchWithRetry(attempt = 0) {
+        const ctrl = new AbortController();
+        const tid  = setTimeout(() => ctrl.abort(), 8000); // 8s timeout
         try {
-            const res = await fetch(`${SHEET_URL}&t=${Date.now()}`, { cache: 'no-store' });
+            const res  = await fetch(`${SHEET_URL}&t=${Date.now()}`, {
+                cache: 'no-store', signal: ctrl.signal
+            });
+            clearTimeout(tid);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.text();
-            if (!data) throw new Error('Empty response');
+            if (!data) throw new Error('Empty');
             return data;
         } catch (err) {
+            clearTimeout(tid);
             if (attempt < MAX_RETRIES) {
-                console.warn(`Retry ${attempt + 1}/${MAX_RETRIES}…`);
                 await new Promise(r => setTimeout(r, RETRY_DELAY));
                 return fetchWithRetry(attempt + 1);
             }
@@ -480,24 +439,20 @@
     async function fetchData() {
         showSkeleton();
         try {
-            renderTable(await fetchWithRetry());
+            const data = await fetchWithRetry();
+            renderTable(data);
         } catch (err) {
-            console.error('All retries failed:', err);
             document.getElementById('subpageTableContainer').innerHTML =
                 '<div class="error">Failed to load price table!</div>';
         }
     }
 
     /* ── Service Worker ───────────────────────────────────── */
-    async function registerServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            try {
-                await navigator.serviceWorker.register('/sw.js');
-                navigator.serviceWorker.addEventListener('message', e => {
-                    if (e.data.type === 'NEW_DATA_AVAILABLE') fetchData();
-                });
-            } catch (e) { console.error('SW failed:', e); }
-        }
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+        navigator.serviceWorker.addEventListener('message', e => {
+            if (e.data?.type === 'NEW_DATA_AVAILABLE') fetchData();
+        });
     }
 
     /* ── Init ─────────────────────────────────────────────── */
@@ -508,7 +463,7 @@
             icon.className = 'fas fa-moon';
         }
 
-        registerServiceWorker();
+        // Fetch immediately — no delay
         fetchData();
         setInterval(fetchData, REFRESH_INTERVAL);
 
@@ -516,7 +471,7 @@
         if (copy) copy.textContent = `2019 - ${new Date().getFullYear()} copyright @Visa Topup Myanmar`;
 
         window.onscroll = () => {
-            returnToTopBtn.style.display = (scrollY > 100) ? 'flex' : 'none';
+            returnToTopBtn.style.display = scrollY > 100 ? 'flex' : 'none';
         };
     });
 
@@ -535,5 +490,6 @@
 
     function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 </script>
+
 </body>
 </html>
