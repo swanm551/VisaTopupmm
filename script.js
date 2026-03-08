@@ -118,33 +118,41 @@ function renderExchangeTable(rows) {
     rateTable.innerHTML = html;
 }
 
-const EXCHANGE_RATE_CACHE_KEY    = 'exchangeRatesCache';
-const EXCHANGE_RATE_CACHE_EXPIRY = 60 * 1000;
+const EXCHANGE_RATE_URL       = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSNDdKNRmuS_lu66UUjPilT7lUNXogFk3ByljcyJHDRIUoPh5Lk_PCQ0dp7I5Td-YL55KWe1_WCeku5/pub?gid=0&single=true&output=csv';
+const EXCHANGE_RATE_CACHE_KEY = 'exchangeRatesCache';
+const RATE_FRESH_MS           = 2  * 60 * 1000;   // 2 min  — fresh, no background refetch
+const RATE_STALE_MS           = 10 * 60 * 1000;   // 10 min — stale but still show, refetch in background
 
 async function fetchRates() {
     if (!rateTable || !updateTimeElement) return;
-    const url = 'https://script.google.com/macros/s/AKfycbzh8uaqQeliA3ermIXm39XHnkXg5swV42dgb_Hoex-mTaTcdK3MeVPCwkoaBLxamCYl/exec';
 
-    let renderedFromCache = false;
+    // ── 1. Stale-While-Revalidate: show cached data immediately ──
+    let hasStaleData = false;
     const cached = localStorage.getItem(EXCHANGE_RATE_CACHE_KEY);
     if (cached) {
         try {
-            const p = JSON.parse(cached);
-            if (Date.now() - p.timestamp < EXCHANGE_RATE_CACHE_EXPIRY) {
+            const p   = JSON.parse(cached);
+            const age = Date.now() - p.timestamp;
+            if (age < RATE_STALE_MS) {
+                // Show cached data right away — no skeleton flicker
                 renderExchangeTable(p.data.split('\n').map(r => r.split(',')));
                 updateTime(p.timestamp);
-                renderedFromCache = true;
+                hasStaleData = true;
+                if (age < RATE_FRESH_MS) return; // Still fresh — no need to refetch
+                // Stale: continue to background-refetch silently
             }
         } catch { localStorage.removeItem(EXCHANGE_RATE_CACHE_KEY); }
     }
 
-    if (!renderedFromCache) {
+    // Show skeleton only if nothing cached at all
+    if (!hasStaleData) {
         rateTable.innerHTML = exchangeTableSkeleton;
         updateTimeElement.textContent = 'Loading exchange rates...';
     }
 
+    // ── 2. Fetch fresh data (background if stale, foreground if empty) ──
     try {
-        const text = await fetchWithRetry(url, 10000, 1);
+        const text = await fetchWithRetry(EXCHANGE_RATE_URL, 8000, 1);
         const rows = text.split('\n').map(r => r.split(','));
         if (!rows.length || !rows[0].length) throw new Error('No data');
         const ts = Date.now();
@@ -153,12 +161,13 @@ async function fetchRates() {
         updateTime(ts);
     } catch (err) {
         console.error('Rates Fetch Error:', err);
-        if (!renderedFromCache) {
+        if (!hasStaleData) {
             rateTable.innerHTML = err.name === 'AbortError'
                 ? '<div class="error">Loading timeout❕ Please refresh.</div>'
                 : '<div class="error">Failed to load rates 🥺. Please check your internet connection.</div>';
             updateTimeElement.textContent = 'Failed to load exchange rates.';
         }
+        // If we had stale data, keep showing it silently — user sees nothing broken
     }
 }
 
@@ -277,8 +286,8 @@ async function showFeeTable(bank) {
 //  Preload bank fee data
 // ══════════════════════════════════════════════════════
 async function preloadFeeData() {
-    for (const bank of ['uab', 'aya', 'cb', 'kbz', 'mab'])
-        await fetchFeeData(bank);
+    // Parallel fetch — 5x faster than sequential
+    await Promise.all(['uab', 'aya', 'cb', 'kbz', 'mab'].map(fetchFeeData));
 }
 
 // ══════════════════════════════════════════════════════
