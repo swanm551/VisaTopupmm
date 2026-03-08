@@ -1,38 +1,53 @@
+/* ══════════════════════════════════════════════════════
+   ROOT VARIABLES
+══════════════════════════════════════════════════════ */
 :root {
-    --bg-primary-light: #ffffff;
-    --bg-secondary-light: #f5f5f5;
-    --text-primary-light: #000000;
-    --text-secondary-light: #666666;
-    --border-color-light: #e5e5e5;
-    
-    --bg-primary-dark: #0A0A0A;
-    --bg-secondary-dark: #1A1A1A;
-    --text-primary-dark: #ffffff;
+    --bg-primary-light:    #ffffff;
+    --bg-secondary-light:  #f5f5f5;
+    --text-primary-light:  #000000;
+    --text-secondary-light:#666666;
+    --border-color-light:  #e5e5e5;
+
+    --bg-primary-dark:     #0A0A0A;
+    --bg-secondary-dark:   #1A1A1A;
+    --text-primary-dark:   #ffffff;
     --text-secondary-dark: #A1A1AA;
-    --border-color-dark: #27272A;
-    
-    --accent-blue: #3B82F6;
-    --accent-blue-dark: #2563EB;
+    --border-color-dark:   #27272A;
+
+    --accent-blue:         #3B82F6;
+    --accent-blue-dark:    #2563EB;
+
+    /* Premium color accents for rate columns */
+    --rate-blue:  #60a5fa;
+    --rate-green: #34d399;
 }
 
+/* ══════════════════════════════════════════════════════
+   BASE — Premium Jakarta Sans font
+══════════════════════════════════════════════════════ */
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Inter', sans-serif;
-    /* MODIFIED: Smoother overall transition for theme change */
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
     transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
-body.dark-theme {
-    background: var(--bg-primary-dark);
-    color: var(--text-primary-dark);
+body.dark-theme  { background: var(--bg-primary-dark);  color: var(--text-primary-dark); }
+body.light-theme { background: var(--bg-primary-light); color: var(--text-primary-light); }
+
+/* ── Page fade-in on load ── */
+main {
+    animation: pageFadeIn 0.6s ease-out both;
 }
 
-body.light-theme {
-    background: var(--bg-primary-light);
-    color: var(--text-primary-light);
+@keyframes pageFadeIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ══════════════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════════════ */
 .header {
     padding: 20px;
     display: flex;
@@ -41,9 +56,8 @@ body.light-theme {
     position: sticky;
     top: 0;
     z-index: 100;
-    /* MODIFIED: Smoother header transition for theme change */
-    transition: background 0.5s ease-in-out, border-bottom 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out;
     backdrop-filter: blur(5px);
+    transition: background 0.5s ease-in-out, border-bottom 0.5s ease-in-out;
 }
 
 body.dark-theme .header {
@@ -56,587 +70,555 @@ body.light-theme .header {
     border-bottom: 1px solid var(--border-color-light);
 }
 
-.logo-section {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+.logo-section { display: flex; align-items: center; gap: 6px; }
+.logo { height: 40px; width: auto; }
 
-.logo {
-    height: 40px;
-    width: auto;
-}
-
-/* Keyframes for the gradient flow animation */
 @keyframes flowGradient {
+    0%   { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
-    0% { background-position: 100% 50%; }
 }
 
 .site-title {
     font-size: 28px;
-    font-weight: 600;
+    font-weight: 700;
     margin: 0;
-    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
-                 0 0 40px rgba(59, 130, 246, 0.3);
-    /* MODIFIED: Changed gradient and animation for continuous flow */
-    /* Dark Theme Gradient: Blue -> White -> Blue */
+    text-shadow: 0 0 20px rgba(59,130,246,0.5), 0 0 40px rgba(59,130,246,0.3);
     background: linear-gradient(90deg, var(--accent-blue-dark), var(--accent-blue), #ffffff, var(--accent-blue), var(--accent-blue-dark));
-    background-size: 300% 100%; /* Wider gradient to allow smooth movement */
-    animation: flowGradient 3s linear infinite; /* 3s duration, linear, infinite */
+    background-size: 300% 100%;
+    animation: flowGradient 3s linear infinite;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 body.light-theme .site-title {
-    /* MODIFIED: Changed gradient and animation for continuous flow */
-    /* Light Theme Gradient: Dark Blue -> Dark Gray -> Dark Blue */
     background: linear-gradient(90deg, var(--accent-blue-dark), #1a1a1a, #f5f5f5, #1a1a1a, var(--accent-blue-dark));
-    background-size: 300% 100%; /* Apply also for light theme */
-    animation: flowGradient 3s linear infinite; /* Apply also for light theme */
+    background-size: 300% 100%;
+    animation: flowGradient 3s linear infinite;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(59,130,246,0.2);
 }
 
 .theme-toggle {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            /* MODIFIED: Smoother theme toggle transition */
-            transition: background 0.5s ease-in-out, color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
+    width: 44px; height: 44px;
+    border-radius: 12px; border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    transition: background 0.5s ease-in-out, color 0.5s ease-in-out,
+                box-shadow 0.5s ease-in-out, transform 0.3s ease;
+    position: relative; overflow: hidden;
+}
 
-        body.dark-theme .theme-toggle {
-            background: var(--bg-secondary-dark);
-            color: var(--text-primary-dark);
-            box-shadow: 
-                6px 6px 12px rgba(0, 0, 0, 0.3),
-                -6px -6px 12px rgba(70, 70, 70, 0.1);
-        }
+body.dark-theme .theme-toggle {
+    background: var(--bg-secondary-dark); color: var(--text-primary-dark);
+    box-shadow: 6px 6px 12px rgba(0,0,0,0.3), -6px -6px 12px rgba(70,70,70,0.1);
+}
 
-        body.light-theme .theme-toggle {
-            background: var(--bg-secondary-light);
-            color: var(--text-primary-light);
-            box-shadow: 
-                6px 6px 12px rgba(0, 0, 0, 0.1),
-                -6px -6px 12px rgba(255, 255, 255, 0.8);
-        }
+body.light-theme .theme-toggle {
+    background: var(--bg-secondary-light); color: var(--text-primary-light);
+    box-shadow: 6px 6px 12px rgba(0,0,0,0.1), -6px -6px 12px rgba(255,255,255,0.8);
+}
 
-        .theme-toggle:hover {
-            transform: translateY(-2px);
-        }
+.theme-toggle:hover  { transform: translateY(-2px); }
+.theme-toggle:active { transform: translateY(1px); }
 
-        .theme-toggle:active {
-            transform: translateY(1px);
-        }
+/* ══════════════════════════════════════════════════════
+   OPENING HOURS — live pulse dot
+══════════════════════════════════════════════════════ */
 .opening-hours {
-    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
     padding: 10px 20px;
     color: silver;
     font-size: 14px;
-    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1));
+    font-weight: 500;
+    background: linear-gradient(90deg, transparent, rgba(59,130,246,0.1));
 }
 
+.live-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: livePulse 2s ease-in-out infinite;
+    box-shadow: 0 0 6px rgba(34,197,94,0.6);
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1;   transform: scale(1); }
+    50%       { opacity: 0.35; transform: scale(0.85); }
+}
+
+/* ══════════════════════════════════════════════════════
+   TABLE LABEL
+══════════════════════════════════════════════════════ */
+.table-label {
+    text-align: center;
+    padding: 14px 20px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.45;
+}
+
+/* ══════════════════════════════════════════════════════
+   EXCHANGE RATE TABLE
+══════════════════════════════════════════════════════ */
 .exchange-table {
     width: 85%;
     max-width: 1000px;
-    margin: 0px auto;
-    margin-top: 10px;
+    margin: 6px auto 0;
     overflow-x: auto;
     border-radius: 16px;
     position: relative;
     animation: borderGlow 3s ease-in-out infinite;
-    /* Glass Morphism Enhancements */
-    backdrop-filter: blur(12px); /* Slightly increased blur for stronger effect */
+    backdrop-filter: blur(12px);
     transition: background 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out;
 }
 
 @keyframes borderGlow {
-    0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-    50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); }
+    0%, 100% { box-shadow: 0 0 15px rgba(59,130,246,0.3); }
+    50%       { box-shadow: 0 0 30px rgba(59,130,246,0.6); }
 }
 
-body.dark-theme .exchange-table {
-    background: rgba(26, 26, 26, 0.75); /* Slightly more transparent */
-}
+body.dark-theme  .exchange-table { background: rgba(26,26,26,0.75); }
+body.light-theme .exchange-table { background: rgba(245,245,245,0.75); }
 
-body.light-theme .exchange-table {
-    background: rgba(245, 245, 245, 0.75); /* Slightly more transparent */
-}
+.exchange-table table { width: 100%; border-collapse: collapse; }
 
-.exchange-table table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
+/* ── Glass morphism header — single color tint ── */
 .exchange-table th {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-    color: white;
+    background: rgba(59, 130, 246, 0.22);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    color: rgba(255, 255, 255, 0.92);
     padding: 15px;
     font-size: 18px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(59,130,246,0.35);
+    box-shadow: none;
+}
+
+body.light-theme .exchange-table th {
+    background: rgba(59, 130, 246, 0.18);
+    color: rgba(15, 30, 80, 0.90);
+    border-bottom: 1px solid rgba(59,130,246,0.25);
 }
 
 .exchange-table td {
     padding: 12px;
     text-align: center;
-    /* Glass Morphism Borders */
     transition: background 0.3s ease, border-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
 .exchange-table td:nth-child(1),
-.exchange-table td:nth-child(2) {
-    font-weight: bold;
-}
+.exchange-table td:nth-child(2) { font-weight: 700; }
 
-.exchange-table tr:hover td {
-    background: rgba(59, 130, 246, 0.15); /* Slightly stronger hover effect */
+/* Premium: color-coded rate columns */
+body.dark-theme  .exchange-table td:nth-child(2) { color: var(--rate-blue); }
+body.dark-theme  .exchange-table td:nth-child(3) { color: var(--rate-green); }
+body.light-theme .exchange-table td:nth-child(2) { color: #2563eb; }
+body.light-theme .exchange-table td:nth-child(3) { color: #059669; }
+
+/* Hover: left accent border on first cell */
+.exchange-table tr:hover td { background: rgba(59,130,246,0.15); }
+.exchange-table tr:hover td:first-child {
+    border-left: 3px solid var(--accent-blue);
 }
 
 body.dark-theme .exchange-table td {
-    border: 1px solid rgba(255, 255, 255, 0.15); /* Subtle, translucent white border for dark theme */
+    border: 1px solid rgba(255,255,255,0.15);
     color: var(--text-primary-dark);
 }
 
 body.light-theme .exchange-table td {
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle, translucent black border for light theme */
+    border: 1px solid rgba(0,0,0,0.1);
     color: var(--text-primary-light);
 }
 
-/* Skeleton Loading styles */
-.skeleton-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+/* ══════════════════════════════════════════════════════
+   SKELETON LOADING
+══════════════════════════════════════════════════════ */
+.skeleton-table { width: 100%; border-collapse: collapse; }
 
 .skeleton-table th,
 .skeleton-table td {
-    padding: 12px;
-    text-align: center;
-    /* Skeleton borders should also reflect the new glass border style */
-    border: 1px solid rgba(255, 255, 255, 0.15); /* Default to dark theme skeleton border */
+    padding: 12px; text-align: center;
+    border: 1px solid rgba(255,255,255,0.15);
 }
 
 body.light-theme .skeleton-table th,
-body.light-theme .skeleton-table td {
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Light theme skeleton border */
-}
+body.light-theme .skeleton-table td { border: 1px solid rgba(0,0,0,0.1); }
 
-/* Skeleton header background should match the table container background */
-body.dark-theme .skeleton-table th {
-    background: rgba(26, 26, 26, 0.75); /* Matches .exchange-table background */
-    color: transparent; /* Ensures no residual text color interferes with skeleton */
-}
+body.dark-theme  .skeleton-table th { background: rgba(26,26,26,0.75);    color: transparent; }
+body.light-theme .skeleton-table th { background: rgba(245,245,245,0.75); color: transparent; }
 
-body.light-theme .skeleton-table th {
-    background: rgba(245, 245, 245, 0.75); /* Matches .exchange-table background for light theme */
-    color: transparent; /* Ensures no residual text color interferes with skeleton */
-}
-
-/* General skeleton shimmer bar for both header and data cells */
 .loading-skeleton {
-    background: linear-gradient(90deg, 
-        var(--bg-secondary-dark) 0%, 
-        rgba(59, 130, 246, 0.1) 20%, 
+    background: linear-gradient(90deg,
+        var(--bg-secondary-dark) 0%,
+        rgba(59,130,246,0.1) 20%,
         var(--bg-secondary-dark) 40%);
     background-size: 200% 100%;
     animation: loadingShimmer 1.5s infinite forwards;
     border-radius: 4px;
-    display: inline-block; /* Essential for applying width/height */
-    height: 1em; /* Default height for data cells */
-    width: 80%; /* Simulate varying text lengths */
-    vertical-align: middle; /* Align with potential text */
-    color: transparent; /* Ensure any default text color is hidden */
+    display: inline-block;
+    height: 1em; width: 80%;
+    vertical-align: middle; color: transparent;
 }
 
 body.light-theme .loading-skeleton {
-    background: linear-gradient(90deg, 
-        var(--bg-secondary-light) 0%, 
-        rgba(59, 130, 246, 0.1) 20%, 
-        rgba(59, 130, 246, 0.1) 40%); /* Adjusted color for light theme */
+    background: linear-gradient(90deg,
+        var(--bg-secondary-light) 0%,
+        rgba(59,130,246,0.1) 20%,
+        rgba(59,130,246,0.1) 40%);
     background-size: 200% 100%;
 }
 
-/* Specific adjustments for skeleton within a header cell */
-.skeleton-table th .loading-skeleton {
-    height: 1.2em; /* Slightly taller for headers */
-    width: 60%; /* Shorter width for header text */
-    font-size: 1em; /* Ensures 'em' unit works relative to parent's font size if needed */
-}
+.skeleton-table th .loading-skeleton { height: 1.2em; width: 60%; }
 
 @keyframes loadingShimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
 }
 
-
+/* ══════════════════════════════════════════════════════
+   FEE TABLE
+══════════════════════════════════════════════════════ */
 .fee-table {
-    width: 100%;
-    max-width: 1000px;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: 0 auto;
-    margin-bottom: 30px;
-    border-radius: 6px;
-    overflow: hidden;
+    width: 100%; max-width: 1000px;
+    border-collapse: separate; border-spacing: 0;
+    margin: 0 auto 30px;
+    border-radius: 6px; overflow: hidden;
     font-size: 14px;
-    /* MODIFIED: Smoother fee table transition */
-    transition: background 0.5s ease-in-out, box-shadow 0.5s ease-in-out, opacity 0.5s ease-out, transform 0.5s ease-out; /* Added opacity and transform transitions */
-
-    /* NEW: Initial state for appearance animation */
-    opacity: 0; 
-    transform: translateY(20px); 
-    /* NEW: Apply the appearance animation */
-    animation: fadeInSlideUp 0.5s ease-out forwards; 
+    opacity: 0; transform: translateY(20px);
+    animation: fadeInSlideUp 0.5s ease-out forwards;
+    transition: background 0.5s ease-in-out, box-shadow 0.5s ease-in-out,
+                opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 
-/* NEW: Keyframes for table appearance animation */
 @keyframes fadeInSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
-
 
 body.dark-theme .fee-table {
     background: var(--bg-secondary-dark);
-    box-shadow: 
-        12px 12px 24px rgba(0, 0, 0, 0.4),
-        -12px -12px 24px rgba(50, 50, 50, 0.2);
+    box-shadow: 12px 12px 24px rgba(0,0,0,0.4), -12px -12px 24px rgba(50,50,50,0.2);
 }
 
 body.light-theme .fee-table {
     background: var(--bg-secondary-light);
-    box-shadow: 
-        12px 12px 24px rgba(0, 0, 0, 0.1),
-        -12px -12px 24px rgba(255, 255, 255, 0.7);
+    box-shadow: 12px 12px 24px rgba(0,0,0,0.1), -12px -12px 24px rgba(255,255,255,0.7);
 }
 
 .fee-table th {
     background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-    color: white;
-    padding: 16px;
-    text-align: center;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 13px;
-    border: none;
+    color: white; padding: 16px; text-align: center;
+    font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; font-size: 13px; border: none;
 }
 
 .fee-table td {
-    padding: 12px;
-    text-align: center;
-    /* MODIFIED: Smoother border transition for theme change */
-    transition: background 0.2s ease, border-color 0.5s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 12px; text-align: center;
+    transition: background 0.2s ease, border-color 0.5s ease-in-out,
+                transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-body.light-theme .fee-table td {
-    border-color: var(--border-color-light);
-}
+body.light-theme .fee-table td { border-color: var(--border-color-light); }
 
-.fee-table tr:first-child th:first-child {
-    border-top-left-radius: 6px;
-}
+.fee-table tr:first-child th:first-child { border-top-left-radius:    6px; }
+.fee-table tr:first-child th:last-child  { border-top-right-radius:   6px; }
+.fee-table tr:last-child  td:first-child { border-bottom-left-radius:  6px; }
+.fee-table tr:last-child  td:last-child  { border-bottom-right-radius: 6px; }
 
-.fee-table tr:first-child th:last-child {
-    border-top-right-radius: 6px;
-}
-
-.fee-table tr:last-child td:first-child {
-    border-bottom-left-radius: 6px;
-}
-
-.fee-table tr:last-child td:last-child {
-    border-bottom-right-radius: 6px;
-}
-
-.fee-table tr:nth-child(even) {
-    background-color: rgba(59, 130, 246, 0.05);
-}
-
-body.dark-theme .fee-table tr:nth-child(even) {
-    background-color: rgba(59, 130, 246, 0.1);
-}
+.fee-table tr:nth-child(even)            { background-color: rgba(59,130,246,0.05); }
+body.dark-theme .fee-table tr:nth-child(even) { background-color: rgba(59,130,246,0.10); }
 
 .fee-table tr:hover td {
-    background: rgba(59, 130, 246, 0.2);
+    background: rgba(59,130,246,0.2);
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 4px 8px rgba(59,130,246,0.1);
 }
 
-/* NEW: Styles for individual table rows animation */
 .fee-table tbody tr {
-    opacity: 0; /* Initial state: invisible */
-    transform: translateY(20px); /* Initial state: slightly below */
-    /* This transition will be used when the 'fade-in-up' class is added */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out; 
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-/* NEW: Class added by JavaScript when row is in view */
-.fee-table tbody tr.fade-in-up {
-    opacity: 1;
-    transform: translateY(0);
-}
+.fee-table tbody tr.fade-in-up { opacity: 1; transform: translateY(0); }
 
-
-@media (max-width: 768px) {
-    .fee-table {
-        font-size: 13px;
-    }
-    
-    .fee-table th, 
-    .fee-table td {
-        padding: 12px 8px;
-    }
-}
-
-@media (max-width: 480px) {
-    .fee-table {
-        font-size: 12px;
-        border-radius: 6px;
-    }
-    
-    .fee-table th, 
-    .fee-table td {
-        padding: 10px 6px;
-    }
-} 
+/* ══════════════════════════════════════════════════════
+   LOADING / ERROR
+══════════════════════════════════════════════════════ */
 .loading, .error {
-    text-align: center;
-    padding: 20px;
+    text-align: center; padding: 20px;
     color: var(--text-secondary-dark);
+    font-weight: 500;
 }
 
-.error {
-    color: #ff4444;
-}
+.error { color: #ff4444; }
 
 .update-time {
-    text-align: center;
-    color: #ff4444;
-    font-size: 12px;
+    text-align: center; color: #ff4444;
+    font-size: 12px; font-weight: 600;
     margin: 20px 0;
-    text-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+    text-shadow: 0 0 10px rgba(255,68,68,0.3);
 }
 
+/* ══════════════════════════════════════════════════════
+   FEE BUTTONS — GLASS MORPHISM
+══════════════════════════════════════════════════════ */
 .fee-buttons {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 12px;
     margin: 30px;
     flex-wrap: wrap;
     position: relative;
 }
 
 .fee-button {
-    padding: 12px 24px;
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-    color: white;
-    border: none;
-    border-radius: 8px;
+    padding: 11px 22px;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
     position: relative;
     overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
 }
 
+body.dark-theme .fee-button {
+    background: rgba(59,130,246,0.14);
+    color: rgba(210,225,255,0.92);
+    border-color: rgba(59,130,246,0.30);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+body.light-theme .fee-button {
+    background: rgba(59,130,246,0.10);
+    color: rgba(15,30,80,0.88);
+    border-color: rgba(59,130,246,0.22);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.60);
+}
+
+/* Shimmer sweep on hover */
 .fee-button::before {
     content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, #00ffd5, #002bff, #7a00ff, #ff00c8);
-    border-radius: 10px;
-    z-index: -1;
-    filter: blur(8px);
-    background-size: 400%;
-    animation: neonGlow 8s linear infinite;
+    position: absolute; inset: 0;
+    background: linear-gradient(120deg,
+        transparent 0%,
+        rgba(255,255,255,0.10) 40%,
+        transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
 }
 
-@keyframes neonGlow {
-    0% { background-position: 0 0; }
-    50% { background-position: 400% 0; }
-    100% { background-position: 0 0; }
-}
+.fee-button:hover::before { transform: translateX(100%); }
 
 .fee-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    transform: translateY(-3px);
+    border-color: rgba(59,130,246,0.55);
 }
 
-.fee-tables {
-    margin: 20px;
-    overflow-x: auto;
+body.dark-theme .fee-button:hover {
+    background: rgba(59,130,246,0.24);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35),
+                0 0 20px rgba(59,130,246,0.25),
+                inset 0 1px 0 rgba(255,255,255,0.14);
 }
 
-/* New CSS for image and copyright container */
+body.light-theme .fee-button:hover {
+    background: rgba(59,130,246,0.18);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10),
+                0 0 16px rgba(59,130,246,0.20),
+                inset 0 1px 0 rgba(255,255,255,0.70);
+}
+
+.fee-button:active { transform: translateY(0); }
+
+/* TikTok button — purple tint */
+.fee-button--tiktok {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+body.dark-theme .fee-button--tiktok {
+    background: rgba(30,10,50,0.28);
+    border-color: rgba(105,60,200,0.40);
+    color: rgba(220,200,255,0.92);
+}
+
+body.light-theme .fee-button--tiktok {
+    background: rgba(105,60,200,0.08);
+    border-color: rgba(105,60,200,0.25);
+    color: rgba(60,20,120,0.90);
+}
+
+body.dark-theme .fee-button--tiktok:hover {
+    background: rgba(105,60,200,0.28);
+    border-color: rgba(105,60,200,0.60);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35),
+                0 0 20px rgba(105,60,200,0.30),
+                inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+body.light-theme .fee-button--tiktok:hover {
+    background: rgba(105,60,200,0.14);
+    border-color: rgba(105,60,200,0.40);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10),
+                0 0 16px rgba(105,60,200,0.18),
+                inset 0 1px 0 rgba(255,255,255,0.60);
+}
+
+/* ══════════════════════════════════════════════════════
+   FEE TABLES CONTAINER
+══════════════════════════════════════════════════════ */
+.fee-tables { margin: 20px; overflow-x: auto; }
+
+/* ══════════════════════════════════════════════════════
+   IMAGE & COPYRIGHT
+══════════════════════════════════════════════════════ */
 #image-copyright-container {
     text-align: center;
-    margin-top: 30px; /* Space above the image */
-    margin-bottom: 20px; /* Space below the copyright text */
-    /* Align with other content max-width */
-    max-width: 1000px; 
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 20px; /* Add some padding on smaller screens */
-    box-sizing: border-box; /* Include padding in width calculation */
+    margin: 30px auto 20px;
+    max-width: 1000px;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 #image-copyright-container img {
-    max-width: 100%; /* Ensures image is responsive */
-    height: auto; /* Maintains aspect ratio */
-    display: block; /* Removes extra space below image */
-    margin: 0 auto; /* Center the image if it's smaller than its container */
+    max-width: 100%; height: auto;
+    display: block; margin: 0 auto;
 }
 
 #copyright-text {
-    color: silver; /* Silver color as requested */
-    text-align: center;
-    font-size: small;
-    margin-top: 15px; /* Space between image and copyright text */
-    margin-bottom: 60px;
+    color: silver; text-align: center;
+    font-size: small; font-weight: 500;
+    margin-top: 15px; margin-bottom: 60px;
 }
 
-
+/* ══════════════════════════════════════════════════════
+   RETURN TO TOP
+══════════════════════════════════════════════════════ */
 #return-to-top {
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
+    position: fixed; bottom: 20px; right: 20px;
     background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     border-radius: 50%;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    cursor: pointer;
+    display: none; align-items: center; justify-content: center;
+    color: white; cursor: pointer;
     transition: all 0.3s ease;
     z-index: 1000;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 0 15px rgba(59,130,246,0.3);
 }
 
 #return-to-top:hover {
     transform: translateY(-3px);
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 20px rgba(59,130,246,0.5);
 }
 
+/* ══════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════ */
 .footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    /* MODIFIED: Smoother footer transition for theme change */
-    transition: background 0.5s ease-in-out, border-top 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out, bottom 0.3s ease;
-    backdrop-filter: blur(2px);
+    padding: 20px 10px; margin-top: 40px;
+    display: flex; justify-content: center; gap: 20px;
+    border-top: 1px solid;
+    transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
 }
 
-body.dark-theme .footer {
-    background: rgba(26, 26, 26, 0.8);
-    border-top: 1px solid var(--border-color-dark);
-}
+body.dark-theme  .footer { background: var(--bg-secondary-dark);  border-color: var(--border-color-dark); }
+body.light-theme .footer { background: var(--bg-secondary-light); border-color: var(--border-color-light); }
 
-body.light-theme .footer {
-    background: rgba(245, 245, 245, 0.8);
-    border-top: 1px solid var(--border-color-light);
-}
-
+/* Social buttons with tooltip */
 .social-button {
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
+    display: flex; align-items: center; justify-content: center;
+    color: white; text-decoration: none;
     transition: all 0.3s ease;
     font-size: 20px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    position: relative;  /* needed for tooltip */
+}
+
+/* Tooltip */
+.social-button::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 10, 20, 0.85);
+    color: rgba(255,255,255,0.92);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    transform: translateX(-50%) translateY(4px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.10);
+}
+
+.social-button:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 .social-button:hover {
     transform: translateY(-6px);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
-.call-btn { 
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-}
+.call-btn                { background: linear-gradient(135deg, #4CAF50, #45a049); }
+.messenger-btn           { background: linear-gradient(135deg, #0084FF, #0077e6); }
+.facebook-btn            { background: linear-gradient(135deg, #1877F2, #166fe5); }
+.messenger-broadcast-btn { background: linear-gradient(135deg, #0084FF, #0077e6); }
+.telegram-btn            { background: linear-gradient(135deg, #0088cc, #0077b3); }
+.viber-btn               { background: linear-gradient(135deg, #665CAC, #5c539b); }
 
-.messenger-btn { 
-    background: linear-gradient(135deg, #0084FF, #0077e6);
-}
-
-.facebook-btn { 
-    background: linear-gradient(135deg, #1877F2, #166fe5);
-}
-
-.messenger-broadcast-btn { 
-    background: linear-gradient(135deg, #0084FF, #0077e6);
-}
-
-.telegram-btn { 
-    background: linear-gradient(135deg, #0088cc, #0077b3);
-}
-
-.viber-btn { 
-    background: linear-gradient(135deg, #665CAC, #5c539b);
-}
-
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-    .site-title {
-        font-size: 20px;
-    }
-    
-    .logo {
-        height: 32px;
-    }
+    .site-title { font-size: 20px; }
+    .logo { height: 32px; }
 
     .fee-buttons {
-        flex-direction: row;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding: 5px;
-        justify-content: flex-start;
-        gap: 5px;
-        margin: 15px 5px;
+        flex-direction: row; flex-wrap: nowrap;
+        overflow-x: auto; padding: 5px;
+        justify-content: flex-start; gap: 8px; margin: 15px 5px;
     }
 
-    .fee-button {
-        flex: 0 0 auto;
-        white-space: nowrap;
-        padding: 8px 12px;
-        font-size: 11px;
-        min-width: auto;
-    }
+    .fee-button { flex: 0 0 auto; white-space: nowrap; padding: 8px 14px; font-size: 11px; }
 
-    .social-button {
-        width: 35px;
-        height: 35px;
-        font-size: 16px;
-    }
+    .fee-table { font-size: 13px; }
+    .fee-table th, .fee-table td { padding: 12px 8px; }
+
+    .social-button { width: 35px; height: 35px; font-size: 16px; }
+}
+
+@media (max-width: 480px) {
+    .fee-table { font-size: 12px; border-radius: 6px; }
+    .fee-table th, .fee-table td { padding: 10px 6px; }
 }
