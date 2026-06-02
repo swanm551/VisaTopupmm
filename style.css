@@ -517,7 +517,7 @@ body.light-theme .fee-button--tiktok:hover {
    RETURN TO TOP
 ══════════════════════════════════════════════════════ */
 #return-to-top {
-    position: fixed; bottom: 20px; right: 20px;
+    position: fixed; bottom: 30px; right: 20px;
     background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
     width: 40px; height: 40px;
     border-radius: 50%;
