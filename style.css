@@ -596,6 +596,7 @@ body.light-theme .footer { background: var(--bg-secondary-light); border-color: 
 .messenger-broadcast-btn { background: linear-gradient(135deg, #0084FF, #0077e6); }
 .telegram-btn            { background: linear-gradient(135deg, #0088cc, #0077b3); }
 .viber-btn               { background: linear-gradient(135deg, #665CAC, #5c539b); }
+.tiktok-btn              { background: linear-gradient(135deg, #121212, #000000); }
 
 /* ══════════════════════════════════════════════════════
    RESPONSIVE
